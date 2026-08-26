@@ -1,0 +1,48 @@
+.project-modal { max-width: 1100px; margin-inline: auto; }
+
+.project-modal__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.project-modal__head .label { color: var(--light-70); display: block; margin-bottom: 0.75rem; }
+.project-modal__services { color: var(--light-70); }
+
+.project-modal__desc {
+  color: var(--light-70);
+  max-width: 46rem;
+  margin-bottom: 3rem;
+}
+
+.project-modal__section { margin-bottom: 3.5rem; }
+.project-modal__section > .label {
+  color: var(--light-70);
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.project-modal__ba {
+  display: grid;
+  gap: 2rem;
+}
+.project-modal__ba .ba__caption { color: var(--light-70); }
+
+.project-modal__gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.project-modal__gallery img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.project-modal__cta { padding-top: 1rem; }
+
+@media (max-width: 640px) {
+  .project-modal__gallery { grid-template-columns: 1fr; }
+}

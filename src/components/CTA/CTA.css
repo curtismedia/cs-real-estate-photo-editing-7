@@ -1,0 +1,21 @@
+.cta-band.section {
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  border-bottom: 1px solid var(--light-line);
+}
+.cta-band__inner {
+  max-width: 46rem;
+}
+.cta-band .label { display: block; margin-bottom: 1.5rem; }
+.cta-band__title { margin-bottom: 1.5rem; }
+.cta-band__text {
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  margin-bottom: 2.5rem;
+  max-width: 34rem;
+}
+.cta-band__actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.cta-band__secondary { color: var(--light); }

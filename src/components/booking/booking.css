@@ -1,0 +1,608 @@
+/* ---------- Wizard shell ---------- */
+.wizard {
+  min-height: 100vh;
+  padding-top: calc(var(--header-h) + clamp(2rem, 5vw, 4rem));
+  padding-bottom: 8rem; /* room for sticky summary bar */
+}
+.wizard__inner { max-width: 60rem; margin-inline: auto; }
+
+.wizard__progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.wizard__progress-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.wizard__progress-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--charcoal);
+  transform-origin: left;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.wizard__step-label { display: block; margin-bottom: 0.75rem; }
+.wizard__step-title { margin-bottom: 2.5rem; }
+
+/* ---------- Fields ---------- */
+.field { margin-bottom: 1.75rem; }
+.field__label {
+  display: block;
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--charcoal-55);
+  margin-bottom: 0.75rem;
+}
+.field__input,
+.field__textarea,
+.field__select {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 0.9rem 1rem;
+  font-size: var(--fs-body);
+  color: var(--charcoal);
+  transition: border-color var(--dur) var(--ease);
+}
+.field__input:focus,
+.field__textarea:focus,
+.field__select:focus {
+  outline: none;
+  border-color: var(--charcoal);
+}
+.field__textarea { resize: vertical; min-height: 7rem; }
+.field__hint { font-size: var(--fs-small); color: var(--charcoal-55); margin-top: 0.5rem; text-align: justify; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+
+/* Number stepper */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.stepper button {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.25rem;
+  color: var(--charcoal);
+  transition: background var(--dur) var(--ease);
+}
+.stepper button:hover { background: var(--ivory-deep); }
+.stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+.stepper button:disabled:hover { background: none; }
+.stepper input {
+  width: 5rem;
+  height: 3rem;
+  text-align: center;
+  border: none;
+  border-inline: 1px solid var(--line);
+  background: transparent;
+  font-size: var(--fs-body);
+  -moz-appearance: textfield;
+}
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.stepper-group { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+
+/* ---------- Free Test live counter ---------- */
+.free-test-capacity {
+  border: 1px solid var(--line);
+  background: var(--ivory-deep);
+  padding: 1.15rem 1.35rem 1.25rem;
+  margin-bottom: 1.75rem;
+}
+.free-test-capacity__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.free-test-capacity__label {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--charcoal-55);
+}
+.free-test-capacity__value {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.free-test-capacity__track {
+  height: 2px;
+  background: var(--line);
+  margin: 0.85rem 0 0.7rem;
+  overflow: hidden;
+}
+.free-test-capacity__fill {
+  height: 100%;
+  background: var(--charcoal);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+.free-test-capacity__remaining {
+  font-size: var(--fs-small);
+  color: var(--charcoal-80);
+}
+.free-test-capacity__note {
+  margin-top: 0.35rem;
+  font-size: var(--fs-small);
+  color: var(--charcoal-55);
+}
+
+/* Cards that can't be afforded with the credits left */
+.select-card.is-unavailable { opacity: 0.45; }
+.select-card.is-unavailable:hover { border-color: var(--line); }
+.select-card__toggle:disabled { cursor: not-allowed; }
+.select-card__price.is-advanced { color: var(--stone-deep); }
+.select-card__note {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: var(--fs-small);
+  color: var(--charcoal-55);
+}
+
+/* ---------- Selectable cards ---------- */
+.select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+.select-card {
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+/* The card body is the toggle; the quantity controls sit below it. */
+.select-card__toggle {
+  text-align: left;
+  width: 100%;
+  padding: 1.25rem 1.35rem;
+  background: none;
+  border: 0;
+  display: block;
+}
+.select-card:hover { border-color: var(--line-strong); }
+.select-card.is-selected {
+  border-color: var(--charcoal);
+  background: var(--ivory-deep);
+}
+.select-card__check {
+  position: absolute;
+  top: 1.15rem; right: 1.15rem;
+  width: 20px; height: 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  color: var(--ivory);
+}
+.select-card.is-selected .select-card__check {
+  background: var(--charcoal);
+  border-color: var(--charcoal);
+}
+.select-card__name { font-weight: 500; margin-bottom: 0.35rem; display: block; padding-right: 1.5rem; }
+.select-card__desc { font-size: var(--fs-small); color: var(--charcoal-55); }
+.select-card__price { font-size: var(--fs-small); color: var(--stone); margin-top: 0.6rem; display: block; }
+
+/* ---------- Review ---------- */
+.review__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.review__row:first-child { border-top: 1px solid var(--line); }
+.review__key { color: var(--charcoal-55); font-size: var(--fs-small); text-transform: uppercase; letter-spacing: 0.14em; }
+.review__val { text-align: right; }
+.review__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+}
+.review__total-amount { font-family: var(--font-display); font-size: 2rem; }
+
+/* ---------- Consent ---------- */
+.consent { display: flex; gap: 0.85rem; margin-bottom: 1.25rem; align-items: flex-start; }
+.consent input { margin-top: 0.3rem; width: 1.05rem; height: 1.05rem; flex-shrink: 0; accent-color: var(--charcoal); }
+.consent label { font-size: var(--fs-small); color: var(--charcoal-80); }
+
+/* ---------- Upsell (free test over limit) ---------- */
+.upsell {
+  border: 1px solid var(--line);
+  background: var(--ivory-deep);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.upsell p { font-size: var(--fs-small); color: var(--charcoal-80); text-align: justify; }
+
+/* ---------- Sticky summary bar ----------
+   Three-column grid. The TOTAL column is the flexible one (minmax(0, 1fr)),
+   so it absorbs the squeeze; Back and Continue are intrinsically sized and
+   never get shrunk past their text. Every child carries min-width: 0 and
+   border-box sizing, which is what actually stops Continue being pushed past
+   the viewport edge — no overflow-x: hidden anywhere.
+   ---------------------------------------- */
+.summary-bar {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%;
+  max-width: 100vw;
+  background: rgba(245, 242, 236, 0.94);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  z-index: 80;
+}
+.summary-bar__inner {
+  display: grid;
+  /* Total flexes (with a floor so it can't collapse); Back and Continue are
+     sized to their content and therefore never clipped. */
+  grid-template-columns: minmax(4.5rem, 1fr) auto max-content;
+  align-items: center;
+  gap: 1.5rem;
+  padding-block: 1rem;
+  box-sizing: border-box;
+}
+.summary-bar__total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  /* Hard stop: nothing in this column may paint over the Back button. */
+  overflow: hidden;
+}
+.summary-bar__label {
+  font-size: clamp(0.55rem, 2.2vw, var(--fs-label));
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+}
+.summary-bar__amount {
+  font-size: clamp(1.05rem, 5vw, 1.75rem);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+/* Back + Continue live directly in the grid so all three columns align. */
+.summary-bar__actions { display: contents; }
+.summary-bar__back {
+  justify-self: end;
+  white-space: nowrap;
+  min-width: 0;
+}
+.summary-bar__next {
+  justify-self: end;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  justify-content: center;
+  text-align: center;
+}
+.summary-bar__next-label {
+  min-width: 0;
+  white-space: nowrap;
+}
+.summary-bar__next-label--short { display: none; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 560px) {
+  .summary-bar__inner { gap: 0.7rem; padding-block: 0.8rem; }
+  /* Long estimate ranges wrap instead of running under the buttons. */
+  .summary-bar__amount {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: clamp(0.95rem, 4.4vw, 1.4rem);
+  }
+  .summary-bar__back.link { font-size: 0.7rem; letter-spacing: 0.1em; gap: 0.35em; }
+  .summary-bar__next.btn {
+    padding: 0.85rem 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    gap: 0.4em;
+  }
+  /* Swap the long submit wording for the short one. */
+  .summary-bar__next-label--full { display: none; }
+  .summary-bar__next-label--short { display: inline; }
+}
+
+/* Very narrow phones (320px) — trim tracking and drop the decorative arrow
+   before any label is allowed to clip. */
+@media (max-width: 380px) {
+  .summary-bar__inner { gap: 0.5rem; grid-template-columns: minmax(4rem, 1fr) auto max-content; }
+  .summary-bar__label { letter-spacing: 0.1em; }
+  .summary-bar__next.btn {
+    padding: 0.8rem 0.7rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+  }
+  .summary-bar__next .arrow { display: none; }
+  .summary-bar__back.link { font-size: 0.66rem; letter-spacing: 0.05em; }
+}
+
+/* ---------- Confirmation ---------- */
+.confirm {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+}
+.confirm__title { margin: 1.25rem 0; }
+.confirm__text { color: var(--charcoal-80); margin-bottom: 2rem; }
+
+/* ---------- Service quantity (inside a selected card) ---------- */
+.select-card__est { color: var(--charcoal-55); }
+.select-card__qty {
+  border-top: 1px solid var(--line);
+  padding: 1.1rem 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.select-card__qty-fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.select-card__qty .field__label { margin-bottom: 0.5rem; }
+.select-card__qty .stepper button { width: 2.4rem; height: 2.4rem; }
+.select-card__qty .stepper input { width: 3.4rem; height: 2.4rem; }
+.select-card__subtotal {
+  font-size: var(--fs-small);
+  color: var(--charcoal-80);
+}
+.select-card__subtotal strong { font-weight: 500; }
+
+/* ---------- Billing breakdown ---------- */
+.billing { border-top: 1px solid var(--line); margin-bottom: 2rem; }
+.billing__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.billing__line-main { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.billing__name { font-weight: 500; }
+.billing__qty { font-size: var(--fs-small); color: var(--charcoal-55); }
+.billing__amount { white-space: nowrap; text-align: right; }
+.billing__amount.is-estimate { color: var(--charcoal-80); }
+
+.review__section { margin-top: 2.5rem; }
+.review__section > .field__label { margin-bottom: 1rem; }
+
+/* ---------- Payment options ---------- */
+.payment-options {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.payment-option {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 1.25rem 1.35rem;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.payment-option:hover { border-color: var(--line-strong); }
+.payment-option.is-selected { border-color: var(--charcoal); background: var(--ivory-deep); }
+.payment-option input {
+  margin-top: 0.25rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  accent-color: var(--charcoal);
+}
+.payment-option:focus-within { border-color: var(--charcoal); }
+.payment-option__body { display: flex; flex-direction: column; gap: 0.35rem; }
+.payment-option__name { font-weight: 500; }
+.payment-option__desc { font-size: var(--fs-small); color: var(--charcoal-55); }
+
+.payment-summary {
+  border: 1px solid var(--line);
+  background: var(--ivory-deep);
+  padding: 1.35rem 1.5rem;
+}
+.payment-summary--lead { margin-bottom: 2.5rem; }
+.payment-summary__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  font-size: var(--fs-small);
+  color: var(--charcoal-80);
+}
+.payment-summary__row--strong {
+  font-size: 1.05rem;
+  color: var(--charcoal);
+  font-weight: 500;
+}
+.payment-summary .field__hint { margin-top: 0.75rem; }
+
+.payment-note { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.payment-note p { font-size: var(--fs-small); color: var(--charcoal-55); line-height: 1.6; text-align: justify; }
+
+/* ---------- Project type (Step 1) ---------- */
+.project-type-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+.project-type-card {
+  position: relative;
+  text-align: left;
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+.project-type-card__name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  padding-right: 1.5rem;
+}
+.project-type-card__desc { font-size: var(--fs-small); line-height: 1.55; }
+
+@media (max-width: 720px) {
+  .project-type-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Turnaround selector ---------- */
+.turnaround-options {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.turnaround-card {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.turnaround-card.is-selected { border-color: var(--charcoal); background: var(--ivory-deep); }
+/* Focus uses the SAME single border treatment as selection — never an
+   additional outline/box-shadow layered on top, which is what produced the
+   double-border look. */
+.turnaround-card:focus-within { border-color: var(--charcoal); }
+.turnaround-card__toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.25rem 1.35rem;
+  cursor: pointer;
+}
+.turnaround-card__toggle input {
+  margin-top: 0.3rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  accent-color: var(--charcoal);
+}
+.turnaround-card__body { display: flex; flex-direction: column; gap: 0.3rem; }
+.turnaround-card__name {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+.turnaround-card__range { font-size: var(--fs-small); color: var(--charcoal-80); }
+.turnaround-card__fee { font-size: var(--fs-small); color: var(--stone); }
+.turnaround-card__fee.is-free { color: var(--charcoal-55); }
+.turnaround-card__hours {
+  border-top: 1px solid var(--line);
+  padding: 1.1rem 1.35rem 1.25rem;
+}
+.field-inline { display: flex; align-items: center; gap: 0.6rem; max-width: 12rem; }
+.field-inline .field__input { width: 6rem; }
+.field__suffix { font-size: var(--fs-small); color: var(--charcoal-55); }
+.field__error { font-size: var(--fs-small); color: var(--charcoal); margin-top: 0.5rem; }
+
+@media (max-width: 720px) {
+  .turnaround-options { grid-template-columns: 1fr; }
+}
+
+/* ---------- Terms & policies ---------- */
+.policies { margin-bottom: 2rem; }
+.policies__list {
+  border-top: 1px solid var(--line);
+  padding-top: 1.75rem;
+  padding-right: 1rem;
+  max-height: 480px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.policies__list::-webkit-scrollbar { width: 6px; }
+.policies__list::-webkit-scrollbar-track { background: transparent; }
+.policies__list::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.policy { padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
+.policy:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+.policy__title {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--charcoal);
+  margin-bottom: 0.6rem;
+}
+.policy__text {
+  font-size: var(--fs-small);
+  color: var(--charcoal-80);
+  line-height: 1.65;
+  margin-bottom: 0.5rem;
+  text-align: justify;
+}
+.policy__text:last-child { margin-bottom: 0; }
+.policies__intro { margin-bottom: 1.5rem; font-size: var(--fs-small); text-align: justify; }
+
+@media (max-width: 560px) {
+  .policies__list { max-height: 400px; }
+}
+
+/* ---------- Submission error ---------- */
+.form-error {
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--charcoal);
+  background: var(--paper);
+  padding: 1.15rem 1.35rem;
+  margin-top: 1.5rem;
+}
+.form-error strong { display: block; margin-bottom: 0.4rem; }
+.form-error p { font-size: var(--fs-small); color: var(--charcoal-80); }
+
+/* Visually hidden but available to screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.confirm__text p { margin-bottom: 0.85rem; }
+
+@media (max-width: 720px) {
+  .payment-options { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .select-card__qty { flex-direction: column; align-items: flex-start; }
+  .billing__line { flex-direction: column; gap: 0.4rem; }
+  .billing__amount { text-align: left; }
+}

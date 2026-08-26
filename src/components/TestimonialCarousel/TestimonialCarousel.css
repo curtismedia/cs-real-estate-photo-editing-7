@@ -1,0 +1,49 @@
+.testi { width: 100%; }
+
+.testi__viewport {
+  overflow: hidden;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.testi__viewport:active { cursor: grabbing; }
+
+.testi__track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  will-change: transform;
+}
+
+.testi__card {
+  width: clamp(20rem, 32vw, 30rem);
+  flex: 0 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: clamp(1.75rem, 3vw, 2.75rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.testi__quote {
+  font-size: clamp(1.25rem, 1.9vw, 1.6rem);
+  line-height: 1.35;
+  font-weight: 300;
+}
+
+.testi__by {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.testi__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+.testi__name { display: block; font-weight: 500; }
+.testi__role { display: block; font-size: var(--fs-small); }

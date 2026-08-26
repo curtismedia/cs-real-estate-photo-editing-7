@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1a1917" />
+    <title>CS Real Estate Photo Editing</title>
+    <meta
+      name="description"
+      content="Premium real estate photo and video post-production for photographers, media companies and agencies. HDR, flambient, virtual staging, twilight, drone editing, floor plans and video."
+    />
+
+    <!-- Fonts: Fraunces (editorial display serif) + Archivo (utility sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!--
+      NETLIFY FORMS — static detection stubs.
+
+      Netlify's build bot discovers forms by parsing the deployed HTML. React
+      renders its forms at runtime, so the bot would never see them. These
+      hidden forms register the form names and every field with Netlify at
+      deploy time; the React app then POSTs to them (see src/lib/netlifyForms.js).
+
+      Keep these field lists in sync with src/lib/bookingSubmission.js.
+      Do not remove — removing them silently breaks submission storage.
+    -->
+    <form name="project-booking" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="project-booking" />
+      <input type="text" name="bot-field" />
+      <input type="text" name="customer-name" />
+      <input type="email" name="customer-email" />
+      <input type="text" name="company" />
+      <input type="text" name="phone" />
+      <input type="text" name="project-type" />
+      <textarea name="services"></textarea>
+      <input type="text" name="file-link" />
+      <input type="text" name="reference-link" />
+      <textarea name="instructions"></textarea>
+      <input type="text" name="turnaround-type" />
+      <input type="text" name="requested-turnaround-hours" />
+      <input type="text" name="rush-fee-percent" />
+      <input type="text" name="rush-fee-amount" />
+      <input type="text" name="service-subtotal" />
+      <input type="text" name="estimated-total" />
+      <input type="text" name="payment-option" />
+      <input type="text" name="amount-due" />
+      <input type="text" name="remaining-balance" />
+      <input type="text" name="policy-accepted" />
+      <input type="text" name="submitted-at" />
+    </form>
+
+    <form name="free-test-request" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="free-test-request" />
+      <input type="text" name="bot-field" />
+      <input type="text" name="customer-name" />
+      <input type="email" name="customer-email" />
+      <input type="text" name="company" />
+      <input type="text" name="phone" />
+      <input type="text" name="project-type" />
+      <textarea name="services"></textarea>
+      <input type="text" name="group-a-quantity" />
+      <input type="text" name="group-b-quantity" />
+      <input type="text" name="total-test-images" />
+      <input type="text" name="free-test-credits-used" />
+      <input type="text" name="free-test-capacity-used" />
+      <input type="text" name="file-link" />
+      <input type="text" name="reference-link" />
+      <textarea name="instructions"></textarea>
+      <input type="text" name="submitted-at" />
+    </form>
+
+    <form name="contact-message" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact-message" />
+      <input type="text" name="bot-field" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="company" />
+      <textarea name="message"></textarea>
+      <input type="text" name="submitted-at" />
+    </form>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

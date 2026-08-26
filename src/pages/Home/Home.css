@@ -1,0 +1,124 @@
+/* Selected work — grid on desktop, horizontal swipe carousel on mobile. */
+.home-work__scroller {
+  /* Desktop: plain container, grid does the layout. */
+}
+.home-work__track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 2.5vw, 2rem);
+  padding-inline: var(--gutter);
+  max-width: var(--max-w);
+  margin-inline: auto;
+}
+.home-work__track > *:nth-child(3n + 2) {
+  transform: translateY(clamp(1.5rem, 4vw, 3.5rem));
+}
+.home-work__item { min-width: 0; }
+/* The trailing "View All Work" slide only appears in the mobile carousel. */
+.home-work__cta { display: none; }
+
+/* Services horizontal scroller */
+.home-services__scroller {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-block: 0.5rem;
+}
+.home-services__scroller::-webkit-scrollbar { display: none; }
+.home-services__track {
+  display: flex;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  padding-inline: var(--gutter);
+  width: max-content;
+}
+.home-services__item {
+  width: clamp(16rem, 24vw, 21rem);
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+/* Approach */
+/* Editorial two-column: large image left, philosophy right. */
+.approach__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 7vw, 7rem);
+  align-items: center;
+}
+.approach__media {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: var(--ivory-deep);
+  aspect-ratio: 4 / 5;
+}
+.approach__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1200ms var(--ease);
+}
+.approach:hover .approach__media img { transform: scale(1.03); }
+
+.approach__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 34rem;
+}
+.approach__body .label { display: block; margin-bottom: -0.25rem; }
+.approach__title { max-width: 16ch; margin-bottom: 0.5rem; }
+
+@media (max-width: 900px) {
+  .home-work__track { grid-template-columns: repeat(2, 1fr); }
+  .home-work__track > *:nth-child(3n + 2) { transform: none; }
+  .approach__grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .approach__media { aspect-ratio: 3 / 2; }
+  .approach__body { max-width: none; }
+}
+@media (max-width: 560px) {
+  /* Horizontal swipe carousel — first card ~82% of viewport so the next
+     card peeks in at the edge, signalling there's more to scroll. */
+  .home-work__scroller {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-block: 0.25rem;
+  }
+  .home-work__scroller::-webkit-scrollbar { display: none; }
+  .home-work__track {
+    display: flex;
+    grid-template-columns: none;
+    gap: 1rem;
+    padding-inline: var(--gutter);
+    width: max-content;
+    max-width: none;
+  }
+  .home-work__item {
+    width: 82vw;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  .home-work__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 70vw;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    border: 1px solid var(--line);
+    background: var(--ivory-deep);
+    padding: 1.5rem;
+    color: inherit;
+  }
+  .home-work__cta-label {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    line-height: 1.2;
+  }
+}

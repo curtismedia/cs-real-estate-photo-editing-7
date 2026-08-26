@@ -1,0 +1,111 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  color: var(--light);
+  overflow: hidden;
+}
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+/* Crossfade slideshow — all slides stacked, only one at full opacity.
+   Stacking avoids any layout shift as the images swap. */
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 2200ms var(--ease), transform 8000ms linear;
+  will-change: opacity, transform;
+  user-select: none;
+}
+.hero__slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__slide { transition: none; transform: none; }
+  .hero__slide.is-active { transform: none; }
+}
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(18, 17, 16, 0.45) 0%,
+    rgba(18, 17, 16, 0.2) 35%,
+    rgba(18, 17, 16, 0.75) 100%
+  );
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  padding-bottom: clamp(4rem, 10vh, 8rem);
+  padding-top: calc(var(--header-h) + 2rem);
+  max-width: 60rem;
+}
+.hero__eyebrow {
+  color: var(--light-70);
+  display: block;
+  margin-bottom: 1.5rem;
+}
+.hero__title {
+  margin-bottom: 1.5rem;
+}
+.hero__sub {
+  max-width: 34rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  color: var(--light-70);
+  line-height: 1.55;
+  margin-bottom: 2.25rem;
+}
+.hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hero__work-link { color: var(--light); }
+
+.hero__scroll {
+  position: absolute;
+  right: var(--gutter);
+  bottom: clamp(4rem, 10vh, 8rem);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--light-70);
+  writing-mode: vertical-rl;
+}
+.hero__scroll-line {
+  width: 1px;
+  height: 60px;
+  background: var(--light-70);
+  animation: heroScroll 2.4s var(--ease) infinite;
+  transform-origin: top;
+}
+@keyframes heroScroll {
+  0% { transform: scaleY(0); }
+  40% { transform: scaleY(1); }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+@media (max-width: 640px) {
+  .hero { min-height: 75vh; }
+  .hero__scroll { display: none; }
+  .hero__actions { gap: 1.25rem; }
+}

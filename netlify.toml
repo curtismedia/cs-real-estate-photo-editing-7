@@ -1,0 +1,14 @@
+# Netlify configuration for CS Real Estate Photo Editing
+# Vite + React + React Router (single-page app)
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback: any direct URL (e.g. /work, /services) that isn't a real
+# file is served index.html so React Router can handle the route.
+# This is what makes browser refresh work on deep links.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
