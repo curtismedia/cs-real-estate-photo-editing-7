@@ -43,7 +43,17 @@ export default function ProjectModal({ project, onClose, onPrev, onNext }) {
             <span className="label">Gallery</span>
             <div className="project-modal__gallery">
               {project.gallery.map((src, i) => (
-                <img key={i} src={src} alt={`${project.title} ${i + 1}`} loading="lazy" />
+                <img
+                  key={src}
+                  src={src}
+                  alt={`${project.title} ${i + 1}`}
+                  /* First frame is visible as soon as the modal opens; the rest
+                     stream in as the user scrolls. The grid reserves space via
+                     `aspect-ratio` in CSS, so nothing shifts while they load. */
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={i === 0 ? 'high' : 'low'}
+                  decoding="async"
+                />
               ))}
             </div>
           </section>
