@@ -12,12 +12,9 @@ export default function ProjectModal({ project, onClose, onPrev, onNext }) {
       <div className="project-modal">
         <header className="project-modal__head">
           <div>
-            <span className="label">{project.location}</span>
+            <span className="label">{project.date}</span>
             <h2 className="h1 project-modal__title">{project.title}</h2>
           </div>
-          {project.services?.length > 0 && (
-            <p className="label project-modal__services">{project.services.join(' · ')}</p>
-          )}
         </header>
 
         {project.description && (
