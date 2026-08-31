@@ -12,10 +12,7 @@ export default function ProjectCard({ project, onOpen }) {
       <div className="project-card__meta">
         <h3 className="h3 project-card__title">{project.title}</h3>
         <div className="project-card__sub">
-          {project.location && <span className="muted">{project.location}</span>}
-          {project.services?.length > 0 && (
-            <span className="label project-card__services">{project.services.join(' · ')}</span>
-          )}
+          {project.date && <span className="muted">{project.date}</span>}
         </div>
       </div>
     </button>
