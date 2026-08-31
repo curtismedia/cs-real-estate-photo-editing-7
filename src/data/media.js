@@ -17,7 +17,7 @@
 
 /** Flip a key to `true` once the real files exist in /public for that folder. */
 export const LOCAL_MEDIA_READY = {
-  hero: false,
+  hero: true,
   home: false,
   'video-editing': false,
   'virtual-staging': false,
