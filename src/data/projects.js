@@ -9,20 +9,26 @@
 // The only line shown under a title is `date` (completion date, D/M/YYYY).
 // No property names, no locations, no service labels.
 //
-// MEDIA: Project 01 uses real uploaded files. Projects 02–06 still use
-// picsum placeholders until their real images are uploaded.
+// MEDIA: Projects 01 and 03 use real uploaded files. Projects 02, 04, 05, 06
+// still use picsum placeholders until their real images are uploaded.
 
 const img = (seed, w = 1600, h = 1067) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`
 
 // Real uploaded media. Files live in /public/images/work/<slug>/ and are named
-// <slug>-01.webp … <slug>-NN.webp. Filenames are NOT renamed by the code.
-const realImg = (slug, n) =>
-  `/images/work/${slug}/${slug}-${String(n).padStart(2, '0')}.webp`
+// <slug>-01.<ext> … <slug>-NN.<ext>. Filenames are NOT renamed by the code.
+// Extension varies per project, so pass it in: 'webp' (default) or 'jpg'.
+const realImg = (slug, n, ext = 'webp') =>
+  `/images/work/${slug}/${slug}-${String(n).padStart(2, '0')}.${ext}`
 
-/** Build an ordered list of real image paths: realGallery('project-01', 40). */
-const realGallery = (slug, count) =>
-  Array.from({ length: count }, (_, i) => realImg(slug, i + 1))
+/**
+ * Ordered list of real image paths, 01 … count.
+ * `count` must match the number of files actually present in the folder.
+ *   realGallery('project-01', 40)          → .webp
+ *   realGallery('project-03', 46, 'jpg')   → .jpg
+ */
+const realGallery = (slug, count, ext = 'webp') =>
+  Array.from({ length: count }, (_, i) => realImg(slug, i + 1, ext))
 
 export const projects = [
   {
@@ -30,7 +36,7 @@ export const projects = [
     slug: 'project-01',
     title: 'Project 01',
     date: '20/6/2026',
-    // Real media — no picsum fallback for this project.
+    // Real media — 40 .webp files, no picsum fallback for this project.
     cover: realImg('project-01', 1),
     gallery: realGallery('project-01', 40),
     // No real before/after pairs supplied yet, so the modal's Before/After
@@ -60,16 +66,12 @@ export const projects = [
     slug: 'project-03',
     title: 'Project 03',
     date: '20/6/2026',
-    cover: img('cs-project-03-cover'),
-    gallery: [
-      img('cs-project-03-1'),
-      img('cs-project-03-2'),
-      img('cs-project-03-3'),
-      img('cs-project-03-4'),
-    ],
-    beforeAfter: [
-      { before: img('cs-project-03-b1'), after: img('cs-project-03-a1'), label: 'Interior' },
-    ],
+    // Real media — 46 .jpg files, no picsum fallback for this project.
+    cover: realImg('project-03', 1, 'jpg'),
+    gallery: realGallery('project-03', 46, 'jpg'),
+    // No real before/after pairs supplied yet, so the modal's Before/After
+    // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
+    beforeAfter: [],
     videos: [],
   },
   {
