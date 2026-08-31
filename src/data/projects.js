@@ -18,6 +18,10 @@ const img = (seed, w = 1600, h = 1067) =>
 // Real uploaded media. Files live in /public/images/work/<slug>/ and are named
 // <slug>-01.<ext> … <slug>-NN.<ext>. Filenames are NOT renamed by the code.
 // Extension varies per project, so pass it in: 'webp' (default) or 'jpg'.
+//
+// `cover` and `gallery` are independent: the cover may point at ANY numbered
+// file, while the gallery always runs 01 … NN in numerical order. Choosing a
+// different cover therefore never reorders the gallery.
 const realImg = (slug, n, ext = 'webp') =>
   `/images/work/${slug}/${slug}-${String(n).padStart(2, '0')}.${ext}`
 
@@ -37,7 +41,8 @@ export const projects = [
     title: 'Project 01',
     date: '20/6/2026',
     // Real media — 63 .jpg files, no picsum fallback for this project.
-    cover: realImg('project-01', 1, 'jpg'),
+    // Cover is file 03; the gallery still starts at 01 and stays in order.
+    cover: realImg('project-01', 3, 'jpg'),
     gallery: realGallery('project-01', 63, 'jpg'),
     // No real before/after pairs supplied yet, so the modal's Before/After
     // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
@@ -67,7 +72,8 @@ export const projects = [
     title: 'Project 03',
     date: '20/6/2026',
     // Real media — 46 .jpg files, no picsum fallback for this project.
-    cover: realImg('project-03', 1, 'jpg'),
+    // Cover is file 06; the gallery still starts at 01 and stays in order.
+    cover: realImg('project-03', 6, 'jpg'),
     gallery: realGallery('project-03', 46, 'jpg'),
     // No real before/after pairs supplied yet, so the modal's Before/After
     // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
