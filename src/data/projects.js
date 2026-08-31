@@ -9,8 +9,8 @@
 // The only line shown under a title is `date` (completion date, D/M/YYYY).
 // No property names, no locations, no service labels.
 //
-// MEDIA: Projects 01 and 03 use real uploaded files. Projects 02, 04, 05, 06
-// still use picsum placeholders until their real images are uploaded.
+// MEDIA: Projects 01, 03 and 04 use real uploaded files. Projects 02, 05 and
+// 06 still use picsum placeholders until their real images are uploaded.
 
 const img = (seed, w = 1600, h = 1067) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`
@@ -79,15 +79,12 @@ export const projects = [
     slug: 'project-04',
     title: 'Project 04',
     date: '20/6/2026',
-    cover: img('cs-project-04-cover'),
-    gallery: [
-      img('cs-project-04-1'),
-      img('cs-project-04-2'),
-      img('cs-project-04-3'),
-    ],
-    beforeAfter: [
-      { before: img('cs-project-04-b1'), after: img('cs-project-04-a1'), label: 'Exterior' },
-    ],
+    // Real media — 21 .jpg files, no picsum fallback for this project.
+    cover: realImg('project-04', 1, 'jpg'),
+    gallery: realGallery('project-04', 21, 'jpg'),
+    // No real before/after pairs supplied yet, so the modal's Before/After
+    // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
+    beforeAfter: [],
     videos: [],
   },
   {
