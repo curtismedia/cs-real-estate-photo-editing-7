@@ -9,14 +9,20 @@
 // The only line shown under a title is `date` (completion date, D/M/YYYY).
 // No property names, no locations, no service labels.
 //
-// TO ADD A PROJECT: copy an object, bump `id`, `slug`, `title` and set `date`.
-// Nothing in Home.jsx or Work.jsx needs to change.
-//
-// MEDIA: still placeholder images (picsum.photos). Real files are not wired up
-// yet.
+// MEDIA: Project 01 uses real uploaded files. Projects 02–06 still use
+// picsum placeholders until their real images are uploaded.
 
 const img = (seed, w = 1600, h = 1067) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`
+
+// Real uploaded media. Files live in /public/images/work/<slug>/ and are named
+// <slug>-01.webp … <slug>-NN.webp. Filenames are NOT renamed by the code.
+const realImg = (slug, n) =>
+  `/images/work/${slug}/${slug}-${String(n).padStart(2, '0')}.webp`
+
+/** Build an ordered list of real image paths: realGallery('project-01', 40). */
+const realGallery = (slug, count) =>
+  Array.from({ length: count }, (_, i) => realImg(slug, i + 1))
 
 export const projects = [
   {
@@ -24,17 +30,12 @@ export const projects = [
     slug: 'project-01',
     title: 'Project 01',
     date: '20/6/2026',
-    cover: img('cs-project-01-cover'),
-    gallery: [
-      img('cs-project-01-1'),
-      img('cs-project-01-2'),
-      img('cs-project-01-3'),
-      img('cs-project-01-4'),
-    ],
-    beforeAfter: [
-      { before: img('cs-project-01-b1'), after: img('cs-project-01-a1'), label: 'Interior' },
-      { before: img('cs-project-01-b2'), after: img('cs-project-01-a2'), label: 'Exterior' },
-    ],
+    // Real media — no picsum fallback for this project.
+    cover: realImg('project-01', 1),
+    gallery: realGallery('project-01', 40),
+    // No real before/after pairs supplied yet, so the modal's Before/After
+    // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
+    beforeAfter: [],
     videos: [],
   },
   {
