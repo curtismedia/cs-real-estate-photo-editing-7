@@ -9,8 +9,8 @@
 // The only line shown under a title is `date` (completion date, D/M/YYYY).
 // No property names, no locations, no service labels.
 //
-// MEDIA: Projects 01 and 03–06 use real uploaded .jpg files. Project 02 still
-// uses picsum placeholders until its real images are uploaded.
+// MEDIA: every project uses real uploaded .jpg files. The picsum helper below
+// is kept only as a safe fallback for any project added before its images are.
 
 const img = (seed, w = 1600, h = 1067) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`
@@ -28,7 +28,7 @@ const realImg = (slug, n, ext = 'webp') =>
 /**
  * Ordered list of real image paths, 01 … count.
  * `count` must match the number of files actually present in the folder.
- *   realGallery('project-02', 12)          → .webp (default)
+ *   realGallery('project-07', 12)          → .webp (default)
  *   realGallery('project-01', 63, 'jpg')   → .jpg
  */
 const realGallery = (slug, count, ext = 'webp') =>
@@ -54,16 +54,13 @@ export const projects = [
     slug: 'project-02',
     title: 'Project 02',
     date: '20/6/2026',
-    cover: img('cs-project-02-cover'),
-    gallery: [
-      img('cs-project-02-1'),
-      img('cs-project-02-2'),
-      img('cs-project-02-3'),
-    ],
-    beforeAfter: [
-      { before: img('cs-project-02-b1'), after: img('cs-project-02-a1'), label: 'Living Room' },
-      { before: img('cs-project-02-b2'), after: img('cs-project-02-a2'), label: 'Bedroom' },
-    ],
+    // Real media — 102 .jpg files, numbered 01–102 with no gaps.
+    // Cover is file 74; the gallery still starts at 01 and stays in order.
+    cover: realImg('project-02', 74, 'jpg'),
+    gallery: realGallery('project-02', 102, 'jpg'),
+    // No real before/after pairs supplied yet, so the modal's Before/After
+    // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
+    beforeAfter: [],
     videos: [],
   },
   {
