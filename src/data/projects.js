@@ -85,9 +85,9 @@ export const projects = [
     slug: 'project-04',
     title: 'Project 04',
     date: '20/6/2026',
-    // Real media — 21 .jpg files, no picsum fallback for this project.
+    // Real media — 57 .jpg files, numbered 01–57 with no gaps.
     cover: realImg('project-04', 1, 'jpg'),
-    gallery: realGallery('project-04', 21, 'jpg'),
+    gallery: realGallery('project-04', 57, 'jpg'),
     // No real before/after pairs supplied yet, so the modal's Before/After
     // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
     beforeAfter: [],
