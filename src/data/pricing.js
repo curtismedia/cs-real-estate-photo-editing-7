@@ -27,8 +27,15 @@ export const PROMO = {
   active: true,
   /** Banner copy. */
   headline: 'UP TO 15% OFF ALL SERVICES',
-  /** Shown on the Paid Project card in Step 1. */
-  stepOneBadge: 'UP TO 15% OFF — TODAY ONLY',
+  export const PROMO = {
+  active: true,
+  /** Banner copy. */
+  headline: 'UP TO 15% OFF ALL SERVICES',
+  /** Countdown runs on this clock for every visitor, worldwide. */
+  timezone: 'America/Chicago',
+  /** Recorded on the order so support can see which promo was applied. */
+  submissionLabel: 'Up to 15% OFF — Today Only',
+}
   /** Countdown runs on this clock for every visitor, worldwide. */
   timezone: 'America/Chicago',
   /** Recorded on the order so support can see which promo was applied. */
