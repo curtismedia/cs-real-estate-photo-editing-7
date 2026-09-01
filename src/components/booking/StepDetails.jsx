@@ -51,35 +51,24 @@ export default function StepDetails() {
         )}
       </div>
 
-      <div className="field-row">
-        <div className="field">
-          <label className="field__label" htmlFor="phone">Phone number *</label>
-          <input
-            id="phone" type="tel" inputMode="tel" className="field__input" required
-            value={details.phone}
-            aria-invalid={showError('phone') ? 'true' : undefined}
-            aria-describedby={showError('phone') ? 'phone-error' : undefined}
-            onBlur={() => touch('phone')}
-            onChange={(e) => set({ phone: e.target.value })}
-          />
-          {showError('phone') && (
-            <p className="field__error" id="phone-error" role="alert">{errors.phone}</p>
-          )}
-        </div>
-        <div className="field">
-          <label className="field__label" htmlFor="whatsapp">WhatsApp *</label>
-          <input
-            id="whatsapp" type="tel" inputMode="tel" className="field__input" required
-            value={details.whatsapp}
-            aria-invalid={showError('whatsapp') ? 'true' : undefined}
-            aria-describedby={showError('whatsapp') ? 'whatsapp-error' : undefined}
-            onBlur={() => touch('whatsapp')}
-            onChange={(e) => set({ whatsapp: e.target.value })}
-          />
-          {showError('whatsapp') && (
-            <p className="field__error" id="whatsapp-error" role="alert">{errors.whatsapp}</p>
-          )}
-        </div>
+      <div className="field">
+        <label className="field__label" htmlFor="phone">Phone number / WhatsApp *</label>
+        <input
+          id="phone" type="tel" inputMode="tel" className="field__input" required
+          placeholder="+1 555 123 4567"
+          value={details.phone}
+          aria-invalid={showError('phone') ? 'true' : undefined}
+          aria-describedby={showError('phone') ? 'phone-error' : 'phone-hint'}
+          onBlur={() => touch('phone')}
+          onChange={(e) => set({ phone: e.target.value })}
+        />
+        {showError('phone') ? (
+          <p className="field__error" id="phone-error" role="alert">{errors.phone}</p>
+        ) : (
+          <p className="field__hint" id="phone-hint">
+            One number for both — we’ll call or message you on WhatsApp at this line.
+          </p>
+        )}
       </div>
 
       <div className="field">
@@ -90,8 +79,8 @@ export default function StepDetails() {
 
       <p className="field__hint">
         Project confirmation and payment instructions are sent to the email address above,
-        so please make sure it is correct. We use phone and WhatsApp to reach you quickly if
-        anything about the project needs clarifying.
+        so please make sure it is correct. We use your phone / WhatsApp number to reach you
+        quickly if anything about the project needs clarifying.
       </p>
     </div>
   )

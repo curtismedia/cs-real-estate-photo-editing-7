@@ -31,7 +31,7 @@ const allSteps = [
 
 export default function BookingWizard() {
   const {
-    step, setStep, order, freeTest, estimate, rushFee, total: orderTotal, payment,
+    step, setStep, order, freeTest, estimate, rushFee, totals, total: orderTotal, payment,
     status, setStatus, errorMessage, setErrorMessage, submitted,
   } = useBooking()
 
@@ -115,7 +115,7 @@ export default function BookingWizard() {
   const submit = async () => {
     // Last line of defence — never POST an order missing required contact info.
     if (!detailsValid(order.details)) {
-      setErrorMessage('Please complete your name, email, phone and WhatsApp before submitting.')
+      setErrorMessage('Please complete your name, email and phone / WhatsApp number before submitting.')
       setStatus('error')
       setStep(steps.findIndex((s) => s.key === 'details'))
       window.scrollTo({ top: 0 })
@@ -127,7 +127,7 @@ export default function BookingWizard() {
       const formName = freeTest ? FORM_NAMES.freeTest : FORM_NAMES.booking
       const payload = freeTest
         ? buildFreeTestPayload({ order })
-        : buildBookingPayload({ order, estimate, rushFee, total: orderTotal, payment })
+        : buildBookingPayload({ order, estimate, rushFee, totals, total: orderTotal, payment })
 
       await submitToNetlify(formName, payload)
 

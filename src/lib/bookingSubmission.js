@@ -39,7 +39,7 @@ const rangeAwareAmount = (block, prefixEstimated = true) =>
     : formatAmount(block.min, block.max)
 
 /** Paid project booking → `project-booking` form. */
-export function buildBookingPayload({ order, estimate, rushFee, total, payment }) {
+export function buildBookingPayload({ order, estimate, rushFee, totals, total, payment }) {
   const { details, files, turnaround } = order
   const turnaroundType = TURNAROUND_TYPES[turnaround.type]
 
@@ -58,8 +58,10 @@ export function buildBookingPayload({ order, estimate, rushFee, total, payment }
     'customer-name': fullName(details) || 'Not provided',
     'customer-email': details.email,
     company: details.company || 'Not provided',
+    // One field on the form now. The legacy `whatsapp` key is kept and mapped
+    // to the same value so existing Netlify notifications/exports still line up.
     phone: details.phone,
-    whatsapp: details.whatsapp,
+    whatsapp: details.phone,
     'project-type': 'Paid Project',
     promotion: PROMO.active ? PROMO.submissionLabel : 'None',
     services: formatServicesForSubmission(estimate),
@@ -69,14 +71,18 @@ export function buildBookingPayload({ order, estimate, rushFee, total, payment }
     'turnaround-type': turnaroundType?.label || turnaround.type,
     'requested-turnaround-hours': `${turnaround.hours} hours`,
     'rush-fee-percent': rushFee.hasFee ? `+${rushFee.percent}%` : '0%',
+    'rush-fee-basis': 'Original (pre-sale) service subtotal',
     'rush-fee-amount': rushFeeAmountText,
-    // Pre-sale figure, kept only so support can see what was discounted.
+    // Full-price service subtotal — the basis for the turnaround fee.
     'compare-subtotal': formatAmount(estimate.compareMin, estimate.compareMax),
-    // The real, discounted service subtotal — everything below builds on this.
+    // Service subtotal after the promotion.
     'service-subtotal': rangeAwareAmount(estimate, false),
-    'discount-savings': estimate.hasSavings
-      ? `-${formatAmount(estimate.savingsMin, estimate.savingsMax)}`
-      : '$0.00',
+    'discount-savings': totals.hasSavings ? `-${totals.savingsText}` : '$0.00',
+    // Total = compare subtotal + turnaround fee (before savings).
+    'order-total-before-savings': totals.totalText,
+    // Subtotal = Total − Savings = what the customer actually pays.
+    'order-subtotal': totals.subtotalText,
+    // Legacy key, kept in sync with the payable figure.
     'estimated-total': rangeAwareAmount(total),
     'payment-option': paymentLabel,
     'amount-due': dueText,
@@ -119,7 +125,7 @@ export function buildFreeTestPayload({ order }) {
     'customer-email': details.email,
     company: details.company || 'Not provided',
     phone: details.phone,
-    whatsapp: details.whatsapp,
+    whatsapp: details.phone,
     'project-type': 'Free Test',
     services: serviceList,
     'group-a-quantity': `${groupA} ${groupA === 1 ? 'image' : 'images'} × ${GROUP_A_CREDIT_COST} credit = ${groupA * GROUP_A_CREDIT_COST} credits`,

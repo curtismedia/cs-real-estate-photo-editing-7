@@ -30,16 +30,11 @@ export function detailsErrors(details = {}) {
   if (!email) errors.email = 'Please enter your email address.'
   else if (!EMAIL_RE.test(email)) errors.email = 'Please enter a valid email address.'
 
+  // One number covers both channels — we message the same line on WhatsApp.
   const phone = String(details.phone || '').trim()
-  if (!phone) errors.phone = 'Please enter a phone number.'
+  if (!phone) errors.phone = 'Please enter a phone / WhatsApp number.'
   else if (digitCount(phone) < MIN_PHONE_DIGITS) {
-    errors.phone = 'Please enter a complete phone number.'
-  }
-
-  const whatsapp = String(details.whatsapp || '').trim()
-  if (!whatsapp) errors.whatsapp = 'Please enter a WhatsApp number.'
-  else if (digitCount(whatsapp) < MIN_PHONE_DIGITS) {
-    errors.whatsapp = 'Please enter a complete WhatsApp number.'
+    errors.phone = 'Please enter a complete phone number, including country code.'
   }
 
   return errors

@@ -3,6 +3,7 @@ import {
   calculateEstimate,
   calculateRushFee,
   calculateProjectTotal,
+  calculateOrderTotals,
   calculatePayment,
   getServiceRate,
   getTurnaround,
@@ -39,7 +40,7 @@ const initialOrder = {
   files: { link: '', instructions: '', reference: '' },
   /** Requested turnaround — Paid Project only; unused (but harmless) in Free Test. */
   turnaround: DEFAULT_TURNAROUND,
-  details: { firstName: '', lastName: '', phone: '', whatsapp: '', email: '', company: '' },
+  details: { firstName: '', lastName: '', phone: '', email: '', company: '' },
   /** 'full' = pay in full, 'deposit' = 50% deposit. */
   paymentOption: 'full',
   consent: { policy: false },
@@ -190,6 +191,14 @@ export function BookingProvider({ initialMode = 'book', children }) {
     [estimate, order.turnaround]
   )
 
+  /** Total / Savings / Subtotal — the three figures shown in Step 6. */
+  const totals = useMemo(
+    () => calculateOrderTotals(estimate, rushFee),
+    [estimate, rushFee]
+  )
+
+  /** What the customer pays (= totals.subtotal), in the {min,max} shape the
+      payment summary and sticky bar already consume. */
   const total = useMemo(
     () => calculateProjectTotal(estimate, rushFee),
     [estimate, rushFee]
@@ -238,6 +247,7 @@ export function BookingProvider({ initialMode = 'book', children }) {
     setTurnaroundHours,
     estimate,
     rushFee,
+    totals,
     total,
     payment,
     freeTestCredits,

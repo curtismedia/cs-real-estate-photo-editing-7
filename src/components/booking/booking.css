@@ -690,3 +690,135 @@
   .select-card__badge { font-size: 0.54rem; letter-spacing: 0.08em; }
   .summary-bar__saving { font-size: 0.62rem; }
 }
+
+/* ---------------------------------------------------------------------------
+   DISCOUNT BADGES — colour driven by percentage, defined once.
+--------------------------------------------------------------------------- */
+.sale-badge {
+  flex-shrink: 0;
+  padding: 0.16rem 0.42rem;
+  font-family: var(--font-sans);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: #fff;
+  white-space: nowrap;
+}
+/* Deep, desaturated tones — premium rather than sale-sticker. Both clear
+   WCAG AA against white text. */
+.sale-badge.sale--15 { background: #6e1f1f; }  /* deep red   — HDR, Drone */
+.sale-badge.sale--10 { background: #1f4d33; }  /* deep green — everything else */
+.sale-badge.sale--neutral { background: var(--charcoal); }
+
+/* ---------------------------------------------------------------------------
+   STEP 2 — service card heading + quantity row
+--------------------------------------------------------------------------- */
+.select-card__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  width: 100%;
+}
+.select-card__heading .select-card__name { margin: 0; }
+
+/* Properties (left) and quantity (right) share one row so a selected card
+   does not double in height. */
+.select-card__qty-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  align-items: end;
+}
+/* A card with a single control keeps its natural width — no empty column. */
+.select-card__qty-fields > *:only-child { grid-column: 1 / -1; max-width: 50%; }
+
+@media (max-width: 420px) {
+  .select-card__qty-fields { grid-template-columns: 1fr; }
+  .select-card__qty-fields > *:only-child { max-width: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   PREFERRED PARTNER PRICING — informational, deliberately not a sale banner.
+--------------------------------------------------------------------------- */
+.partner {
+  margin: 0.75rem 0 1.75rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--ivory-deep);
+  border: 1px solid var(--charcoal-30);
+}
+.partner__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.partner__text {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--charcoal-80);
+  margin-bottom: 0.85rem;
+  max-width: 42rem;
+}
+.partner__actions { display: flex; flex-wrap: wrap; gap: 1.25rem; }
+.partner--compact { margin-top: 1.5rem; padding: 0.9rem 1rem; }
+.partner--compact .partner__text { font-size: 0.82rem; margin-bottom: 0.7rem; }
+
+/* ---------------------------------------------------------------------------
+   STEP 6 — two-column review, and the Total / Savings / Subtotal block
+--------------------------------------------------------------------------- */
+.review-grid { display: grid; gap: 2.5rem; }
+
+@media (min-width: 900px) {
+  .review-grid {
+    grid-template-columns: 55fr 45fr;
+    gap: 3rem;
+    align-items: start;
+  }
+}
+
+.billing__line--turnaround { border-top: 1px solid var(--charcoal-30); }
+.billing__name { display: inline-flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+.totals { margin-top: 1.5rem; }
+.totals__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+/* Labels stay quiet; the money column carries the weight. */
+.totals__label {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--charcoal-55);
+}
+.totals__value {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  color: var(--charcoal-80);
+  text-align: right;
+}
+.totals__value--save { color: var(--charcoal-80); }
+
+.totals__row--final {
+  border-top: 1px solid var(--charcoal);
+  margin-top: 0.35rem;
+  padding-top: 0.9rem;
+}
+.totals__row--final .totals__label { color: var(--charcoal); font-weight: 500; }
+.totals__row--final .totals__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--charcoal);
+  line-height: 1.1;
+}

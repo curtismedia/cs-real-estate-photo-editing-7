@@ -2,7 +2,7 @@ import { useBooking } from '../../context/BookingContext'
 import { TURNAROUND_TYPES, turnaroundOrder, isValidTurnaroundHours, formatAmount } from '../../data/pricing'
 
 export default function StepTurnaround() {
-  const { order, setTurnaroundType, setTurnaroundHours, estimate, rushFee } = useBooking()
+  const { order, setTurnaroundType, setTurnaroundHours, estimate, rushFee, totals } = useBooking()
   const { turnaround } = order
   const active = TURNAROUND_TYPES[turnaround.type]
   const hoursValid = isValidTurnaroundHours(turnaround.type, turnaround.hours)
@@ -70,13 +70,19 @@ export default function StepTurnaround() {
 
       {estimate.hasLines && rushFee.hasFee && (
         <div className="payment-summary" style={{ marginTop: '2rem' }}>
+          {/* The surcharge is a percentage of the FULL-PRICE service subtotal,
+              so that is the figure shown here. */}
           <div className="payment-summary__row">
-            <span>Service subtotal (after sale)</span>
-            <span>{estimate.variable ? 'Estimated ' : ''}{formatAmount(estimate.min, estimate.max)}</span>
+            <span>Service subtotal (before sale)</span>
+            <span>{formatAmount(estimate.compareMin, estimate.compareMax)}</span>
           </div>
           <div className="payment-summary__row payment-summary__row--strong">
             <span>{active.feeLabel}</span>
             <span>{rushFee.variable ? 'Estimated ' : ''}{rushFee.amountText}</span>
+          </div>
+          <div className="payment-summary__row">
+            <span>You pay after savings</span>
+            <span>{totals.subtotalText}</span>
           </div>
         </div>
       )}

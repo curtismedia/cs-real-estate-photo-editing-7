@@ -1,5 +1,7 @@
 import { useBooking } from '../../context/BookingContext'
-import { formatAmount, DEPOSIT_PERCENT, TURNAROUND_TYPES, PROMO } from '../../data/pricing'
+import { DEPOSIT_PERCENT, TURNAROUND_TYPES } from '../../data/pricing'
+import DiscountBadge from './DiscountBadge'
+import { PartnerReminder } from './PartnerPricing'
 import { getServiceName } from '../../data/services'
 import { paymentNotes } from '../../data/policies'
 import {
@@ -19,7 +21,7 @@ function Row({ k, v }) {
 }
 
 export default function StepReview() {
-  const { order, estimate, rushFee, total, payment, freeTest, freeTestCredits, update } = useBooking()
+  const { order, estimate, rushFee, totals, total, payment, freeTest, freeTestCredits, update } = useBooking()
 
   const name = [order.details.firstName, order.details.lastName].filter(Boolean).join(' ') || '—'
   const contactLine = `${name}${order.details.email ? ' · ' + order.details.email : ''}`
@@ -27,106 +29,179 @@ export default function StepReview() {
 
   return (
     <div>
-      {/* ---------- Services & quantities ---------- */}
-      <span className="field__label">Selected services</span>
-      <div className="billing">
-        {/* Free tests have no pricing — just list what was requested. */}
-        {freeTest ? (
-          order.services.length ? (
-            order.services.map((slug) => (
-              <div className="billing__line" key={slug}>
-                <div className="billing__line-main">
-                  <span className="billing__name">{getServiceName(slug)}</span>
-                  <span className="billing__qty">
-                    {order.quantities[slug]?.qty ?? 0}{' '}
-                    {(order.quantities[slug]?.qty ?? 0) === 1 ? 'image' : 'images'}
+      {/* ---------- Paid project: order review (left) + payment (right) ----
+          Two columns on desktop so the payment options sit beside the pricing
+          instead of a screen below it. Stacks on narrow viewports. */}
+      {!freeTest ? (
+        <div className="review-grid">
+          <div className="review-grid__main">
+            <span className="field__label">Selected services</span>
+            <div className="billing">
+              {estimate.hasLines ? (
+                estimate.lines.map((l) => (
+                  <div className="billing__line" key={l.slug}>
+                    <div className="billing__line-main">
+                      <span className="billing__name">
+                        {l.name}
+                        {l.discountPercent > 0 && <DiscountBadge percent={l.discountPercent} />}
+                      </span>
+                      <span className="billing__qty">
+                        {l.qtyText}
+                        {l.properties !== 1 && ` · ${l.properties} properties`}
+                      </span>
+                    </div>
+                    <span className={`billing__amount ${l.variable ? 'is-estimate' : ''}`}>
+                      {l.savingsMax > 0 && (
+                        <s className="billing__compare">{l.compareAmountText}</s>
+                      )}
+                      {l.amountText}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p className="muted">No services selected yet.</p>
+              )}
+
+              {/* Turnaround sits with the services it applies to, not down in
+                  the money column. */}
+              {estimate.hasLines && (
+                <div className="billing__line billing__line--turnaround">
+                  <div className="billing__line-main">
+                    <span className="billing__name">
+                      {turnaroundType.label}
+                      {rushFee.hasFee && ` (+${rushFee.percent}%)`}
+                    </span>
+                    <span className="billing__qty">
+                      Requested in {order.turnaround.hours} hours · {turnaroundType.rangeLabel}
+                    </span>
+                  </div>
+                  <span className="billing__amount">
+                    {rushFee.hasFee
+                      ? `+${rushFee.variable ? 'Est. ' : ''}${rushFee.amountText}`
+                      : 'No additional fee'}
                   </span>
                 </div>
-                <span className="billing__amount">
-                  {(order.quantities[slug]?.qty ?? 0) * creditCostFor(slug)} credits
-                </span>
-              </div>
-            ))
-          ) : (
-            <p className="muted">No services selected yet.</p>
-          )
-        ) : estimate.hasLines ? (
-          estimate.lines.map((l) => (
-            <div className="billing__line" key={l.slug}>
-              <div className="billing__line-main">
-                <span className="billing__name">{l.name}</span>
-                <span className="billing__qty">
-                  {l.qtyText}
-                  {l.properties !== 1 && ` · ${l.properties} properties`}
-                </span>
-              </div>
-              <span className={`billing__amount ${l.variable ? 'is-estimate' : ''}`}>
-                {l.savingsMax > 0 && (
-                  <s className="billing__compare">{l.compareAmountText}</s>
-                )}
-                {l.amountText}
-              </span>
+              )}
             </div>
-          ))
-        ) : (
-          <p className="muted">No services selected yet.</p>
-        )}
-      </div>
 
-      {/* ---------- Pricing — one compact breakdown, turnaround folded in ---------- */}
-      {!freeTest && estimate.hasLines && (
-        <div className="review__section">
-          <span className="field__label">Pricing</span>
-          {estimate.hasSavings && (
-            <Row
-              k="Services (before sale)"
-              v={<s>{formatAmount(estimate.compareMin, estimate.compareMax)}</s>}
-            />
-          )}
-          <Row k="Subtotal" v={`${estimate.variable ? 'Estimated ' : ''}${formatAmount(estimate.min, estimate.max)}`} />
-          {estimate.hasSavings && (
-            <Row
-              k={`Sale savings — ${PROMO.submissionLabel}`}
-              v={<span className="review__saving">−{formatAmount(estimate.savingsMin, estimate.savingsMax)}</span>}
-            />
-          )}
-          {rushFee.hasFee ? (
-            <Row
-              k={`${turnaroundType.label.replace(' Turnaround', '')} Turnaround ( +${rushFee.percent}% )`}
-              v={`${rushFee.variable ? 'Estimated ' : ''}+${rushFee.amountText}`}
-            />
-          ) : (
-            <Row k="Standard Turnaround" v="Included" />
-          )}
-        </div>
-      )}
+            {/* Three figures, one right-aligned money column. */}
+            {estimate.hasLines && (
+              <div className="totals">
+                <div className="totals__row">
+                  <span className="totals__label">Total</span>
+                  <span className="totals__value">{totals.totalText}</span>
+                </div>
+                <div className="totals__row">
+                  <span className="totals__label">Savings</span>
+                  <span className="totals__value totals__value--save">
+                    {totals.hasSavings ? `−${totals.savingsText}` : '$0.00'}
+                  </span>
+                </div>
+                <div className="totals__row totals__row--final">
+                  <span className="totals__label">Subtotal</span>
+                  <span className="totals__value">{totals.subtotalText}</span>
+                </div>
+              </div>
+            )}
 
-      {!freeTest && estimate.hasLines && (
-        <div className="review__total">
-          <span className="label">
-            {total.variable ? 'Estimated project total' : 'Project total'}
-          </span>
-          <span className="review__total-amount">
-            {formatAmount(total.min, total.max)}
-          </span>
-          {estimate.hasSavings && (
-            <span className="review__total-saving">
-              You save {formatAmount(estimate.savingsMin, estimate.savingsMax)}
-            </span>
-          )}
+            {estimate.hasLines && totals.variable && (
+              <p className="field__hint">
+                This project includes services with variable pricing, so the figures above are an
+                estimated range. Your final price is confirmed by our team after we review your
+                files and project requirements.
+              </p>
+            )}
+          </div>
+
+          <div className="review-grid__aside">
+            <span className="field__label">Payment options</span>
+
+            <fieldset className="payment-options">
+              <legend className="sr-only">Choose how you would like to pay</legend>
+
+              <label className={`payment-option ${order.paymentOption === 'full' ? 'is-selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="payment-option"
+                  value="full"
+                  checked={order.paymentOption === 'full'}
+                  onChange={() => update({ paymentOption: 'full' })}
+                />
+                <span className="payment-option__body">
+                  <span className="payment-option__name">Pay in Full — 100%</span>
+                  <span className="payment-option__desc">
+                    The full confirmed amount is requested once your project is approved.
+                  </span>
+                </span>
+              </label>
+
+              <label className={`payment-option ${order.paymentOption === 'deposit' ? 'is-selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="payment-option"
+                  value="deposit"
+                  checked={order.paymentOption === 'deposit'}
+                  onChange={() => update({ paymentOption: 'deposit' })}
+                />
+                <span className="payment-option__body">
+                  <span className="payment-option__name">{DEPOSIT_PERCENT}% Deposit</span>
+                  <span className="payment-option__desc">
+                    Pay half up front; the balance is due before final delivery.
+                  </span>
+                </span>
+              </label>
+            </fieldset>
+
+            <div className="payment-summary">
+              <div className="payment-summary__row payment-summary__row--strong">
+                <span>
+                  {payment.isDeposit
+                    ? total.variable ? 'Estimated deposit due' : 'Deposit due'
+                    : total.variable ? 'Estimated amount due' : 'Amount due'}
+                </span>
+                <span>{payment.dueText}</span>
+              </div>
+              {payment.isDeposit && (
+                <div className="payment-summary__row">
+                  <span>{total.variable ? 'Estimated remaining balance' : 'Remaining balance'}</span>
+                  <span>{payment.remainingText}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="payment-note">
+              {paymentNotes.map((note, i) => (
+                <p key={i}>{note}</p>
+              ))}
+            </div>
+
+            <PartnerReminder />
+          </div>
         </div>
-      )}
-      {!freeTest && estimate.hasLines && (
-        <p className="field__hint">
-          Requested turnaround: {order.turnaround.hours} hours ({turnaroundType.rangeLabel}).
-        </p>
-      )}
-      {!freeTest && total.variable && (
-        <p className="field__hint">
-          This project includes services with variable pricing, so the total above is an estimated
-          range. Your final price is confirmed by our team after we review your files and project
-          requirements.
-        </p>
+      ) : (
+        <>
+          <span className="field__label">Selected services</span>
+          <div className="billing">
+            {order.services.length ? (
+              order.services.map((slug) => (
+                <div className="billing__line" key={slug}>
+                  <div className="billing__line-main">
+                    <span className="billing__name">{getServiceName(slug)}</span>
+                    <span className="billing__qty">
+                      {order.quantities[slug]?.qty ?? 0}{' '}
+                      {(order.quantities[slug]?.qty ?? 0) === 1 ? 'image' : 'images'}
+                    </span>
+                  </div>
+                  <span className="billing__amount">
+                    {(order.quantities[slug]?.qty ?? 0) * creditCostFor(slug)} credits
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="muted">No services selected yet.</p>
+            )}
+          </div>
+        </>
       )}
 
       {/* ---------- Project details ---------- */}
@@ -137,76 +212,6 @@ export default function StepReview() {
         {order.files.reference && <Row k="Reference" v={order.files.reference} />}
         <Row k="Contact" v={contactLine} />
       </div>
-
-      {/* ---------- Payment option ---------- */}
-      {!freeTest && (
-        <div className="review__section">
-          <span className="field__label">Payment option</span>
-
-          <fieldset className="payment-options">
-            <legend className="sr-only">Choose how you would like to pay</legend>
-
-            <label className={`payment-option ${order.paymentOption === 'full' ? 'is-selected' : ''}`}>
-              <input
-                type="radio"
-                name="payment-option"
-                value="full"
-                checked={order.paymentOption === 'full'}
-                onChange={() => update({ paymentOption: 'full' })}
-              />
-              <span className="payment-option__body">
-                <span className="payment-option__name">Pay in Full — 100%</span>
-                <span className="payment-option__desc">
-                  The full confirmed amount is requested once your project is approved.
-                </span>
-              </span>
-            </label>
-
-            <label className={`payment-option ${order.paymentOption === 'deposit' ? 'is-selected' : ''}`}>
-              <input
-                type="radio"
-                name="payment-option"
-                value="deposit"
-                checked={order.paymentOption === 'deposit'}
-                onChange={() => update({ paymentOption: 'deposit' })}
-              />
-              <span className="payment-option__body">
-                <span className="payment-option__name">{DEPOSIT_PERCENT}% Deposit</span>
-                <span className="payment-option__desc">
-                  Pay half up front; the balance is due before final delivery.
-                </span>
-              </span>
-            </label>
-          </fieldset>
-
-          <div className="payment-summary">
-            <div className="payment-summary__row">
-              <span>{total.variable ? 'Estimated project total' : 'Project total'}</span>
-              <span>{payment.totalText}</span>
-            </div>
-            <div className="payment-summary__row payment-summary__row--strong">
-              <span>
-                {payment.isDeposit
-                  ? total.variable ? 'Estimated deposit due' : 'Deposit due'
-                  : total.variable ? 'Estimated amount due' : 'Amount due'}
-              </span>
-              <span>{payment.dueText}</span>
-            </div>
-            {payment.isDeposit && (
-              <div className="payment-summary__row">
-                <span>{total.variable ? 'Estimated remaining balance' : 'Remaining balance'}</span>
-                <span>{payment.remainingText}</span>
-              </div>
-            )}
-          </div>
-
-          <div className="payment-note">
-            {paymentNotes.map((note, i) => (
-              <p key={i}>{note}</p>
-            ))}
-          </div>
-        </div>
-      )}
 
       {freeTest && (
         <div className="review__section">

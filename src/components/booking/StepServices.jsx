@@ -3,6 +3,8 @@ import {
   pricedServices, formatRate, formatCompareRate, isDiscounted,
   unitLabel, formatAmount,
 } from '../../data/pricing'
+import DiscountBadge from './DiscountBadge'
+import PartnerPricing from './PartnerPricing'
 import {
   TOTAL_FREE_TEST_CREDITS,
   isFreeTestEligible,
@@ -89,6 +91,7 @@ export default function StepServices() {
       )}
 
       <span className="field__label">Select services</span>
+      {!freeTest && <PartnerPricing />}
       <div className="select-grid">
         {visibleServices.map((s) => {
           const selected = order.services.includes(s.slug)
@@ -121,16 +124,18 @@ export default function StepServices() {
                     <svg width="11" height="11" viewBox="0 0 11 11"><path d="M1 5.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="1.4" /></svg>
                   )}
                 </span>
-                <span className="select-card__name">{s.name}</span>
+                <span className="select-card__heading">
+                  <span className="select-card__name">{s.name}</span>
+                  {!freeTest && isDiscounted(s) && (
+                    <DiscountBadge percent={s.discountPercent} />
+                  )}
+                </span>
                 {!freeTest && (
                   <span className="select-card__price">
                     {isDiscounted(s) && (
                       <s className="select-card__compare">{formatCompareRate(s)}</s>
                     )}
                     <span className="select-card__sale">{formatRate(s)}</span>
-                    {isDiscounted(s) && (
-                      <span className="select-card__badge">{s.discountPercent}% OFF</span>
-                    )}
                     {s.type === 'range' && <span className="select-card__est"> · estimated</span>}
                   </span>
                 )}
@@ -150,19 +155,21 @@ export default function StepServices() {
 
               {selected && !freeTest && (
                 <div className="select-card__qty">
+                  {/* Properties on the left, quantity on the right, one row
+                      on desktop — stacking these doubled the card height. */}
                   <div className="select-card__qty-fields">
-                    <Stepper
-                      id={`qty-${s.slug}`}
-                      label={unitLabel(s.unit, 2)}
-                      value={qtyValue}
-                      onChange={(n) => setQuantity(s.slug, 'qty', n)}
-                    />
                     <Stepper
                       id={`props-${s.slug}`}
                       label="Properties"
                       value={propertiesValue}
                       min={1}
                       onChange={(n) => setQuantity(s.slug, 'properties', n)}
+                    />
+                    <Stepper
+                      id={`qty-${s.slug}`}
+                      label={unitLabel(s.unit, 2)}
+                      value={qtyValue}
+                      onChange={(n) => setQuantity(s.slug, 'qty', n)}
                     />
                   </div>
                   {line && (

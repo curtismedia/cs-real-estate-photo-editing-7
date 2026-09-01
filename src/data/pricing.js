@@ -26,13 +26,13 @@ import { services } from './services'
 export const PROMO = {
   active: true,
   /** Banner copy. */
-  headline: 'UP TO 20% OFF ALL SERVICES',
+  headline: 'UP TO 15% OFF ALL SERVICES',
   /** Shown on the Paid Project card in Step 1. */
-  stepOneBadge: 'UP TO 20% OFF — TODAY ONLY',
+  stepOneBadge: 'UP TO 15% OFF — TODAY ONLY',
   /** Countdown runs on this clock for every visitor, worldwide. */
   timezone: 'America/Chicago',
   /** Recorded on the order so support can see which promo was applied. */
-  submissionLabel: 'Up to 20% OFF — Today Only',
+  submissionLabel: 'Up to 15% OFF — Today Only',
 }
 
 const round2 = (n) => Math.round((Number(n) || 0) * 100) / 100
@@ -52,12 +52,12 @@ const saleOf = (compare, percent) =>
 const COMPARE_RATES = [
   { slug: 'video-editing',   type: 'range', min: 50,   max: 70,  unit: 'video', discountPercent: 10 },
   { slug: 'virtual-staging', type: 'range', min: 30,   max: 40,  unit: 'image', discountPercent: 10 },
-  { slug: 'hdr',             type: 'fixed', rate: 0.9,           unit: 'image', discountPercent: 20 },
+  { slug: 'hdr',             type: 'fixed', rate: 1.0,           unit: 'image', discountPercent: 15 },
   { slug: 'object-removal',  type: 'range', min: 2,    max: 5,   unit: 'image', discountPercent: 10 },
   { slug: 'flambient',       type: 'fixed', rate: 1.0,           unit: 'image', discountPercent: 10 },
   { slug: 'twilight',        type: 'fixed', rate: 3.0,           unit: 'image', discountPercent: 10 },
   { slug: 'day-to-dusk',     type: 'fixed', rate: 5.0,           unit: 'image', discountPercent: 10 },
-  { slug: 'drone-aerial',    type: 'fixed', rate: 0.9,           unit: 'image', discountPercent: 20 },
+  { slug: 'drone-aerial',    type: 'fixed', rate: 1.0,           unit: 'image', discountPercent: 15 },
   { slug: 'single',          type: 'fixed', rate: 0.7,           unit: 'image', discountPercent: 10 },
   { slug: 'floor-plan',      type: 'range', min: 25,   max: 35,  unit: 'plan',  discountPercent: 10 },
 ]
@@ -184,14 +184,14 @@ export const formatUSD = (n) =>
 export const formatAmount = (min, max) =>
   min === max ? formatUSD(min) : `${formatUSD(min)}–${formatUSD(max)}`
 
-/** "$0.72 / image" or "$1.80–$4.50 / image" — the per-unit SALE rate. */
+/** "$0.85 / image" or "$1.80–$4.50 / image" — the per-unit SALE rate. */
 export const formatRate = (rate) => {
   if (!rate) return ''
   const u = saleUnit(rate)
   return `${formatAmount(u.min, u.max)} / ${unitLabel(rate.unit, 1)}`
 }
 
-/** "$0.90 / image" — the struck-through compare-at rate. */
+/** "$1.00 / image" — the struck-through compare-at rate. */
 export const formatCompareRate = (rate) => {
   if (!rate) return ''
   const u = compareUnit(rate)
@@ -307,26 +307,29 @@ export function calculateEstimate(order = {}) {
 }
 
 /**
- * Rush surcharge on top of the service subtotal.
- * `Rush Fee = Service Subtotal × feePercent`. Ranges stay ranges.
+ * Turnaround surcharge.
  *
- * @param {{min:number,max:number,variable:boolean}} estimate  service subtotal
+ * IMPORTANT: the fee is a percentage of the COMPARE-AT (pre-sale) service
+ * subtotal, not the discounted one. Rush is a cost of doing the work fast —
+ * it is not part of what the promotion discounts.
+ *
+ * @param {{compareMin:number,compareMax:number,variable:boolean}} estimate
  * @param {{type:string,hours:number}} turnaround
  */
-export function calculateRushFee(estimate = { min: 0, max: 0 }, turnaround = {}) {
+export function calculateRushFee(estimate = { compareMin: 0, compareMax: 0 }, turnaround = {}) {
   const t = getTurnaround(turnaround.type) || TURNAROUND_TYPES.standard
   const percent = t.feePercent
-  // Round to cents here so the fee never carries a float artifact into the
-  // total (0.30 × 72 is 21.599999999999998 in binary floating point).
-  const feeMin = round2(estimate.min * (percent / 100))
-  const feeMax = round2(estimate.max * (percent / 100))
+  // Round to cents so a float artifact never reaches the total
+  // (0.30 × 25 is fine, but 0.30 × 72 is 21.599999999999998).
+  const feeMin = round2((estimate.compareMin || 0) * (percent / 100))
+  const feeMax = round2((estimate.compareMax || 0) * (percent / 100))
 
   return {
     type: t.key,
     percent,
     feeMin,
     feeMax,
-    variable: estimate.variable,
+    variable: Boolean(estimate.variable),
     hasFee: percent > 0,
     feeText: percent === 0 ? 'No additional fee' : `+${percent}%`,
     amountText: percent === 0 ? '$0.00' : formatAmount(feeMin, feeMax),
@@ -334,19 +337,61 @@ export function calculateRushFee(estimate = { min: 0, max: 0 }, turnaround = {})
 }
 
 /**
- * `Estimated Project Total = Service Subtotal + Rush Fee`.
+ * The three figures shown in the Step 6 summary.
  *
- * @param {{min:number,max:number}} estimate
- * @param {{feeMin:number,feeMax:number}} rushFee
+ *   Total    = compare-at service subtotal + turnaround fee
+ *              (what the order would cost at full price)
+ *   Savings  = compare-at subtotal − sale subtotal
+ *   Subtotal = Total − Savings   ← what the customer actually pays
+ *
+ * Because Savings is derived from the difference between two independently
+ * summed figures, the discount can never be applied twice.
+ *
+ * @param {ReturnType<calculateEstimate>} estimate
+ * @param {ReturnType<calculateRushFee>} rushFee
  */
-export function calculateProjectTotal(estimate = { min: 0, max: 0 }, rushFee = { feeMin: 0, feeMax: 0 }) {
-  const min = round2(estimate.min + rushFee.feeMin)
-  const max = round2(estimate.max + rushFee.feeMax)
+export function calculateOrderTotals(estimate, rushFee) {
+  const totalMin = round2(estimate.compareMin + rushFee.feeMin)
+  const totalMax = round2(estimate.compareMax + rushFee.feeMax)
+  const savingsMin = estimate.savingsMin
+  const savingsMax = estimate.savingsMax
+  const subtotalMin = round2(totalMin - savingsMin)
+  const subtotalMax = round2(totalMax - savingsMax)
+
   return {
-    min,
-    max,
-    variable: min !== max,
-    totalText: formatAmount(min, max),
+    totalMin,
+    totalMax,
+    totalText: formatAmount(totalMin, totalMax),
+    savingsMin,
+    savingsMax,
+    savingsText: formatAmount(savingsMin, savingsMax),
+    hasSavings: savingsMax > 0,
+    subtotalMin,
+    subtotalMax,
+    subtotalText: formatAmount(subtotalMin, subtotalMax),
+    variable: subtotalMin !== subtotalMax,
+  }
+}
+
+/**
+ * What the customer pays — the Subtotal from `calculateOrderTotals`, exposed
+ * in the {min,max} shape the payment/summary code already expects.
+ */
+export function calculateProjectTotal(estimate = {}, rushFee = { feeMin: 0, feeMax: 0 }) {
+  const t = calculateOrderTotals(
+    {
+      compareMin: estimate.compareMin || 0,
+      compareMax: estimate.compareMax || 0,
+      savingsMin: estimate.savingsMin || 0,
+      savingsMax: estimate.savingsMax || 0,
+    },
+    rushFee
+  )
+  return {
+    min: t.subtotalMin,
+    max: t.subtotalMax,
+    variable: t.subtotalMin !== t.subtotalMax,
+    totalText: t.subtotalText,
   }
 }
 
