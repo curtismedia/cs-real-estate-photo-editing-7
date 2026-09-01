@@ -89,7 +89,10 @@ export const services = [
     type: 'photo',
     tagline: 'Bracketed exposures, merged and balanced',
     mediaDir: '/images/services/hdr/',
-    cover: cover('hdr', 'cs-svc-hdr'),
+    // Homepage service card only. The Services page ignores `cover` for photo
+    // services and renders the first before/after pair instead, so this reuses
+    // a real HDR result rather than needing a separate cover.webp upload.
+    cover: '/images/services/hdr/after-12.jpg',
     description:
       'Bracketed exposures merged into one clean, natural frame — controlled highlights, open shadows, true window detail and accurate white balance. The dependable everyday workhorse of listing photography, delivered consistently across a full set.',
     // Real media — 33 complete .jpg before/after pairs, numbered 01 … 33.
