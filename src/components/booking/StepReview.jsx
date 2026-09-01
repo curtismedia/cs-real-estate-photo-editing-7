@@ -4,12 +4,7 @@ import DiscountBadge from './DiscountBadge'
 import { PartnerReminder } from './PartnerPricing'
 import { getServiceName } from '../../data/services'
 import { paymentNotes } from '../../data/policies'
-import {
-  TOTAL_FREE_TEST_CREDITS,
-  GROUP_A_CREDIT_COST,
-  GROUP_B_CREDIT_COST,
-  creditCostFor,
-} from '../../data/freeTestConfig'
+import { creditCostFor } from '../../data/freeTestConfig'
 
 function Row({ k, v }) {
   return (
@@ -21,7 +16,7 @@ function Row({ k, v }) {
 }
 
 export default function StepReview() {
-  const { order, estimate, rushFee, totals, total, payment, freeTest, freeTestCredits, update } = useBooking()
+  const { order, estimate, rushFee, totals, total, payment, freeTest, update } = useBooking()
 
   const name = [order.details.firstName, order.details.lastName].filter(Boolean).join(' ') || '—'
   const contactLine = `${name}${order.details.email ? ' · ' + order.details.email : ''}`
@@ -214,27 +209,9 @@ export default function StepReview() {
       </div>
 
       {freeTest && (
-        <div className="review__section">
-          <span className="field__label">Free Test capacity</span>
-          <Row
-            k="Group A — standard edits"
-            v={`${freeTestCredits.groupA} ${freeTestCredits.groupA === 1 ? 'image' : 'images'} = ${freeTestCredits.groupA * GROUP_A_CREDIT_COST} credits`}
-          />
-          <Row
-            k="Group B — advanced edits"
-            v={`${freeTestCredits.groupB} ${freeTestCredits.groupB === 1 ? 'image' : 'images'} = ${freeTestCredits.groupB * GROUP_B_CREDIT_COST} credits`}
-          />
-          <div className="review__total">
-            <span className="label">Total capacity used</span>
-            <span className="review__total-amount">
-              {freeTestCredits.used} / {TOTAL_FREE_TEST_CREDITS}
-            </span>
-          </div>
-          <p className="field__hint">
-            Free Test — nothing to pay. Standard image edits use 1 credit each, advanced edits
-            use 5 credits each.
-          </p>
-        </div>
+        <p className="field__hint">
+          Free Test — nothing to pay. Your remaining test capacity is shown in the bar below.
+        </p>
       )}
     </div>
   )

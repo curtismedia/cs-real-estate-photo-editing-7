@@ -601,11 +601,9 @@
 @media (max-width: 720px) {
   .payment-options { grid-template-columns: 1fr; }
 }
-@media (max-width: 560px) {
-  .select-card__qty { flex-direction: column; align-items: flex-start; }
-  .billing__line { flex-direction: column; gap: 0.4rem; }
-  .billing__amount { text-align: left; }
-}
+/* Deliberately no mobile stacking here — the service row keeps its right-hand
+   price column all the way down (see .billing__line below), and the quantity
+   grid handles its own breakpoint. */
 
 /* ---------------------------------------------------------------------------
    SALE PRICING — compare-at, sale price, discount badge and savings.
@@ -640,18 +638,6 @@
   text-decoration-thickness: 1px;
 }
 .select-card__sale { font-weight: 500; }
-.select-card__badge {
-  flex-shrink: 0;
-  padding: 0.16rem 0.4rem;
-  font-family: var(--font-sans);
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ivory);
-  background: var(--charcoal);
-  white-space: nowrap;
-}
 .select-card__saving {
   color: var(--charcoal-55);
   font-size: 0.85em;
@@ -687,7 +673,6 @@
 
 @media (max-width: 480px) {
   .select-card__price { gap: 0.3rem 0.4rem; }
-  .select-card__badge { font-size: 0.54rem; letter-spacing: 0.08em; }
   .summary-bar__saving { font-size: 0.62rem; }
 }
 
@@ -715,59 +700,10 @@
 /* ---------------------------------------------------------------------------
    STEP 2 — service card heading + quantity row
 --------------------------------------------------------------------------- */
-.select-card__heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-  width: 100%;
-}
-.select-card__heading .select-card__name { margin: 0; }
-
-/* Properties (left) and quantity (right) share one row so a selected card
-   does not double in height. */
-.select-card__qty-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.9rem;
-  align-items: end;
-}
-/* A card with a single control keeps its natural width — no empty column. */
-.select-card__qty-fields > *:only-child { grid-column: 1 / -1; max-width: 50%; }
-
-@media (max-width: 420px) {
-  .select-card__qty-fields { grid-template-columns: 1fr; }
-  .select-card__qty-fields > *:only-child { max-width: none; }
-}
 
 /* ---------------------------------------------------------------------------
    PREFERRED PARTNER PRICING — informational, deliberately not a sale banner.
 --------------------------------------------------------------------------- */
-.partner {
-  margin: 0.75rem 0 1.75rem;
-  padding: 1.1rem 1.25rem;
-  background: var(--ivory-deep);
-  border: 1px solid var(--charcoal-30);
-}
-.partner__label {
-  display: block;
-  font-family: var(--font-sans);
-  font-size: var(--fs-label);
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-.partner__text {
-  font-size: 0.9rem;
-  line-height: 1.55;
-  color: var(--charcoal-80);
-  margin-bottom: 0.85rem;
-  max-width: 42rem;
-}
-.partner__actions { display: flex; flex-wrap: wrap; gap: 1.25rem; }
-.partner--compact { margin-top: 1.5rem; padding: 0.9rem 1rem; }
-.partner--compact .partner__text { font-size: 0.82rem; margin-bottom: 0.7rem; }
 
 /* ---------------------------------------------------------------------------
    STEP 6 — two-column review, and the Total / Savings / Subtotal block
@@ -821,4 +757,193 @@
   font-size: clamp(1.5rem, 3vw, 2rem);
   color: var(--charcoal);
   line-height: 1.1;
+}
+
+/* ===========================================================================
+   STEP 2 — SERVICE CARD HEADER
+   Three things compete for the top of the card: the name, the sale badge and
+   the selection check. The check is absolutely positioned, so instead of
+   layering the other two under it we reserve a gutter the exact width of the
+   check plus its offset, and lay name + badge out inside that safe area.
+=========================================================================== */
+:root {
+  --check-size: 20px;
+  --check-inset: 1.15rem;
+  /* Right-hand space the badge must never enter. */
+  --check-gutter: calc(var(--check-inset) + var(--check-size) + 0.6rem);
+}
+
+.select-card__toggle { padding-right: var(--check-gutter); }
+
+.select-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+/* Long names ("Drone / Aerial Editing") shrink and wrap rather than shoving
+   the badge into the check circle. */
+.select-card__heading .select-card__name {
+  margin: 0;
+  padding-right: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.select-card__heading .sale-badge {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+}
+
+/* One badge geometry everywhere. */
+.sale-badge {
+  display: inline-block;
+  padding: 0.18rem 0.45rem;
+  border-radius: 2px;
+  font-size: 0.56rem;
+  line-height: 1.5;
+}
+
+/* ===========================================================================
+   STEP 2 — QUANTITY CONTROLS
+   The stepper is inline-flex with fixed rem widths, which overflowed its grid
+   column. Inside a card it becomes a full-width flex row with a shrinkable
+   input, so it can never exceed the column.
+=========================================================================== */
+.select-card__qty-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+/* Single control → keep it narrow rather than leaving an empty column. */
+.select-card__qty-fields > *:only-child {
+  grid-column: 1 / -1;
+  max-width: 12rem;
+}
+/* Only genuinely narrow screens stack — 375/390/430 stay side by side. */
+@media (max-width: 339px) {
+  .select-card__qty-fields { grid-template-columns: minmax(0, 1fr); }
+  .select-card__qty-fields > *:only-child { max-width: none; }
+}
+
+.select-card__qty .stepper {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+}
+.select-card__qty .stepper button {
+  flex: 0 0 2.1rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 1.05rem;
+}
+.select-card__qty .stepper input {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 2.1rem;
+  font-size: var(--fs-small);
+  padding-inline: 0.2rem;
+}
+.select-card__qty .field__label {
+  margin-bottom: 0.35rem;
+  overflow-wrap: anywhere;
+}
+
+/* Line total sits on its own row, small, and wraps rather than overflowing. */
+.select-card__subtotal { overflow-wrap: anywhere; }
+.select-card__saving { display: block; margin-top: 0.1rem; }
+
+/* ===========================================================================
+   PREFERRED PARTNER PRICING
+   Copy on the left, actions on the right, one row on desktop.
+=========================================================================== */
+.partner {
+  margin: 0.9rem 0 2rem;
+  padding: 1.4rem 1.5rem;
+  background: var(--ivory-deep);
+  border: 1px solid var(--charcoal-30);
+  display: grid;
+  gap: 1.1rem;
+}
+.partner__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.55rem;
+}
+.partner__text {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--charcoal-80);
+  max-width: 40rem;
+  margin: 0;
+}
+.partner__text strong { font-weight: 600; color: var(--charcoal); }
+
+.partner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.5rem;
+  align-items: center;
+}
+.partner__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+.partner__action svg { flex: 0 0 auto; }
+
+@media (min-width: 720px) {
+  .partner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+  }
+  /* Stacked one above the other on the right, vertically centred. */
+  .partner__actions { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+}
+
+.partner--compact { padding: 1.1rem 1.15rem; margin: 1.5rem 0 0; }
+.partner--compact .partner__label { font-size: 0.68rem; }
+.partner--compact .partner__text { font-size: 0.88rem; line-height: 1.55; }
+/* The Step 6 column is narrow — never split it into two. */
+@media (min-width: 720px) {
+  .partner--compact { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .partner--compact .partner__actions { flex-direction: row; gap: 1.25rem; }
+}
+
+/* ===========================================================================
+   STEP 6 — SERVICE ROW KEEPS ITS PRICE COLUMN ON MOBILE
+=========================================================================== */
+.billing__line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.75rem 1.25rem;
+}
+.billing__amount {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.billing__compare { font-size: 0.8em; }
+
+@media (max-width: 560px) {
+  .billing__line { gap: 0.5rem 0.75rem; padding: 0.85rem 0; }
+  .billing__qty { font-size: 0.72rem; line-height: 1.45; }
+  .billing__amount { font-size: 0.85rem; }
+  .billing__name { font-size: 0.95rem; }
+}
+/* Below this the two columns genuinely cannot coexist. */
+@media (max-width: 319px) {
+  .billing__line { grid-template-columns: minmax(0, 1fr); }
+  .billing__amount { text-align: left; }
 }
