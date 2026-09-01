@@ -9,8 +9,8 @@
 // The only line shown under a title is `date` (completion date, D/M/YYYY).
 // No property names, no locations, no service labels.
 //
-// MEDIA: Projects 01, 03 and 04 use real uploaded .jpg files. Projects 02, 05
-// and 06 still use picsum placeholders until their real images are uploaded.
+// MEDIA: Projects 01 and 03–06 use real uploaded .jpg files. Project 02 still
+// uses picsum placeholders until its real images are uploaded.
 
 const img = (seed, w = 1600, h = 1067) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`
@@ -28,7 +28,7 @@ const realImg = (slug, n, ext = 'webp') =>
 /**
  * Ordered list of real image paths, 01 … count.
  * `count` must match the number of files actually present in the folder.
- *   realGallery('project-05', 12)          → .webp (default)
+ *   realGallery('project-02', 12)          → .webp (default)
  *   realGallery('project-01', 63, 'jpg')   → .jpg
  */
 const realGallery = (slug, count, ext = 'webp') =>
@@ -98,16 +98,13 @@ export const projects = [
     slug: 'project-05',
     title: 'Project 05',
     date: '20/6/2026',
-    cover: img('cs-project-05-cover'),
-    gallery: [
-      img('cs-project-05-1'),
-      img('cs-project-05-2'),
-      img('cs-project-05-3'),
-      img('cs-project-05-4'),
-    ],
-    beforeAfter: [
-      { before: img('cs-project-05-b1'), after: img('cs-project-05-a1'), label: 'Interior' },
-    ],
+    // Real media — 36 .jpg files, numbered 01–36 with no gaps.
+    // Cover is file 04; the gallery still starts at 01 and stays in order.
+    cover: realImg('project-05', 4, 'jpg'),
+    gallery: realGallery('project-05', 36, 'jpg'),
+    // No real before/after pairs supplied yet, so the modal's Before/After
+    // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
+    beforeAfter: [],
     videos: [],
   },
   {
@@ -115,15 +112,13 @@ export const projects = [
     slug: 'project-06',
     title: 'Project 06',
     date: '20/6/2026',
-    cover: img('cs-project-06-cover'),
-    gallery: [
-      img('cs-project-06-1'),
-      img('cs-project-06-2'),
-      img('cs-project-06-3'),
-    ],
-    beforeAfter: [
-      { before: img('cs-project-06-b1'), after: img('cs-project-06-a1'), label: 'Living Room' },
-    ],
+    // Real media — 70 .jpg files, numbered 01–70 with no gaps.
+    // Cover is file 68; the gallery still starts at 01 and stays in order.
+    cover: realImg('project-06', 68, 'jpg'),
+    gallery: realGallery('project-06', 70, 'jpg'),
+    // No real before/after pairs supplied yet, so the modal's Before/After
+    // block is skipped entirely (it is guarded by `beforeAfter?.length > 0`).
+    beforeAfter: [],
     videos: [],
   },
 ]
