@@ -21,6 +21,20 @@ const ba = (slug, n, seed) => ({
   after: resolveMedia(slug, `/images/services/${slug}/after-0${n}.webp`, `${seed}-a${n}`),
 })
 
+// --- REAL uploaded before/after pairs -------------------------------------
+// Bypasses resolveMedia() on purpose: these files are already in /public, so
+// they need no readiness flag. Use this per-service as real pairs land, which
+// lets one service switch to real media while the rest keep their fallbacks.
+// `count` must match the number of COMPLETE pairs present in the folder.
+const realBaSet = (slug, count, ext = 'jpg') =>
+  Array.from({ length: count }, (_, i) => {
+    const n = String(i + 1).padStart(2, '0')
+    return {
+      before: `/images/services/${slug}/before-${n}.${ext}`,
+      after: `/images/services/${slug}/after-${n}.${ext}`,
+    }
+  })
+
 export const services = [
   {
     id: 's01',
@@ -78,11 +92,9 @@ export const services = [
     cover: cover('hdr', 'cs-svc-hdr'),
     description:
       'Bracketed exposures merged into one clean, natural frame — controlled highlights, open shadows, true window detail and accurate white balance. The dependable everyday workhorse of listing photography, delivered consistently across a full set.',
-    beforeAfterExamples: [
-      { ...ba('hdr', 1, 'cs-hdr'), label: 'Kitchen' },
-      { ...ba('hdr', 2, 'cs-hdr'), label: 'Living Room' },
-      { ...ba('hdr', 3, 'cs-hdr'), label: 'Bedroom' },
-    ],
+    // Real media — 33 complete .jpg before/after pairs, numbered 01 … 33.
+    // No labels: the uploaded set is a full shoot, not three named rooms.
+    beforeAfterExamples: realBaSet('hdr', 33),
     videos: [],
   },
   {
