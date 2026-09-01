@@ -1,0 +1,311 @@
+.site-header {
+  position: fixed;
+  top: var(--banner-h);
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+.site-header__inner {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* --- States --- */
+.site-header--over {
+  background: transparent;
+  color: var(--light);
+}
+.site-header--solid {
+  background: rgba(245, 242, 236, 0.88);
+  backdrop-filter: blur(10px);
+  color: var(--charcoal);
+  border-bottom-color: var(--line);
+}
+
+/* --- Logo --- */
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.logo__mark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+/* --- Image brand mark ---------------------------------------------------
+   Both logo files are in the DOM; CSS shows the one that matches the header
+   state, so the right version is painted on the first frame with no flash
+   and no scroll listener of its own.
+
+   Sized in em against .logo__mark's 1.5rem so it occupies the same space the
+   old "CS" text did, and the fixed height keeps the header from shifting
+   while the image loads. */
+.logo__mark--img {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5em;
+  /* Nudges the image onto the same optical baseline as REAL ESTATE EDITING,
+     since .logo aligns on `baseline` and an <img> has none of its own. */
+  align-self: center;
+}
+.logo__img {
+  height: 100%;
+  width: auto;
+  max-width: 5rem;
+  object-fit: contain;
+  display: block;
+  background: none;
+}
+
+/* Solid header (every inner page, and home once scrolled) → black mark. */
+.logo__img--light { display: none; }
+.logo__img--dark { display: block; }
+
+/* Transparent header over the hero → white mark. */
+.site-header--over .logo__img--dark { display: none; }
+.site-header--over .logo__img--light { display: block; }
+.logo__word {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  opacity: 0.75;
+}
+
+/* --- Nav --- */
+.site-nav {
+  display: flex;
+  gap: 2.25rem;
+  margin-left: auto;
+  margin-right: 2rem;
+}
+.site-nav__link {
+  position: relative;
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 0.25rem 0;
+  opacity: 0.85;
+  transition: opacity var(--dur) var(--ease);
+}
+.site-nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+.site-nav__link:hover { opacity: 1; }
+.site-nav__link:hover::after,
+.site-nav__link.is-active::after { transform: scaleX(1); }
+
+/* --- Actions --- */
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.site-header__cta {
+  padding: 0.7rem 1.2rem;
+  font-size: var(--fs-label);
+  white-space: nowrap;
+}
+.site-header__cta-short { display: none; }
+.site-header--over .site-header__cta {
+  border-color: var(--light);
+  color: var(--light);
+}
+.site-header--over .site-header__cta:hover {
+  background: var(--light);
+  color: var(--charcoal);
+}
+
+/* --- Menu toggle (mobile) --- */
+.menu-toggle {
+  display: none;
+  width: 30px;
+  height: 20px;
+  position: relative;
+}
+.menu-toggle span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+.menu-toggle span:nth-child(1) { top: 0; }
+.menu-toggle span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.menu-toggle span:nth-child(3) { bottom: 0; }
+
+/* --- Mobile navigation drawer -------------------------------------------
+   A top drawer covering roughly 2/3 of the viewport, with the rest of the
+   page dimmed behind a backdrop. Rendered as a SIBLING of .site-header (see
+   Header.jsx) because .site-header--solid applies backdrop-filter, which
+   would otherwise become the containing block for this fixed layer.
+
+   Stacking: drawer (2) > backdrop (1) > wrapper z-index 130 > header 100.
+   ------------------------------------------------------------------------ */
+.mobile-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  visibility: hidden;
+  pointer-events: none;
+}
+.mobile-nav.is-open {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Dimmed website beneath the drawer — also the outside-click close target. */
+.mobile-nav__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  display: block;
+  background: rgba(16, 15, 14, 0.42);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity var(--dur) var(--ease);
+}
+.mobile-nav.is-open .mobile-nav__backdrop { opacity: 1; }
+
+/* The drawer itself — ~2/3 of the viewport, never full screen. */
+.mobile-nav__drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 66vh;
+  height: 66dvh;
+  max-height: 34rem;
+  min-height: 22rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--ivory);
+  color: var(--charcoal);
+  border-bottom: 1px solid var(--line-strong);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateY(-100%);
+  transition: transform var(--dur-slow) var(--ease);
+}
+.mobile-nav.is-open .mobile-nav__drawer { transform: translateY(0); }
+
+/* Top bar inside the drawer — mark on the left, EXIT on the right. */
+.mobile-nav__bar {
+  flex: 0 0 auto;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+.mobile-nav__logo { color: var(--charcoal); }
+/* The drawer is light regardless of the header state behind it. */
+.mobile-nav__logo .logo__img--light { display: none; }
+.mobile-nav__logo .logo__img--dark { display: block; }
+
+.mobile-nav__close {
+  min-height: 44px;
+  padding: 0 0 0 1rem;
+  margin-right: -0.25rem;
+  background: none;
+  border: 0;
+  color: var(--charcoal);
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  cursor: pointer;
+  transition: opacity var(--dur) var(--ease);
+}
+.mobile-nav__close:hover { opacity: 0.6; }
+
+/* Links start immediately under the bar — no large empty block above them —
+   and the four rows share the remaining height evenly so the drawer reads as
+   a deliberate editorial list rather than a panel with dead space. */
+.mobile-nav__links {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+  padding-bottom: 1.25rem;
+}
+.mobile-nav__link {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 8.5vw, 2.9rem);
+  line-height: 1.1;
+  border-bottom: 1px solid var(--line);
+  transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+}
+.mobile-nav__link:hover {
+  color: var(--stone);
+  padding-left: 0.75rem;
+}
+
+/* Short viewports (landscape phones) — keep the drawer proportional. */
+@media (max-height: 520px) {
+  .mobile-nav__drawer { height: 88vh; height: 88dvh; min-height: 0; }
+  .mobile-nav__link { font-size: 1.5rem; min-height: 2.5rem; }
+}
+
+/* Desktop never shows the drawer, whatever the state. */
+@media (min-width: 901px) {
+  .mobile-nav { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav__drawer,
+  .mobile-nav__backdrop { transition: none; }
+}
+
+/* --- Breakpoints --- */
+@media (max-width: 900px) {
+  .site-nav { display: none; }
+  .menu-toggle { display: block; }
+  .site-header__inner { gap: 0.75rem; }
+  .site-header__actions { gap: 0.75rem; }
+  .site-header__cta {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+  }
+  .site-header__cta-full { display: none; }
+  .site-header__cta-short { display: inline; }
+  .logo__word { display: none; }
+  .logo__mark--img { height: 1.35em; }
+}
+
+@media (max-width: 360px) {
+  .site-header__cta { padding: 0.55rem 0.7rem; }
+  .site-header__cta .arrow { display: none; }
+}

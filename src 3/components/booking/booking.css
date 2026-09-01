@@ -1,0 +1,974 @@
+/* ---------- Wizard shell ---------- */
+.wizard {
+  min-height: 100vh;
+  padding-top: calc(var(--header-offset) + clamp(2rem, 5vw, 4rem));
+  padding-bottom: 8rem; /* room for sticky summary bar */
+}
+.wizard__inner { max-width: 60rem; margin-inline: auto; }
+
+.wizard__progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.wizard__progress-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.wizard__progress-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--charcoal);
+  transform-origin: left;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.wizard__step-label { display: block; margin-bottom: 0.75rem; }
+.wizard__step-title { margin-bottom: 2.5rem; }
+
+/* ---------- Fields ---------- */
+.field { margin-bottom: 1.75rem; }
+.field__label {
+  display: block;
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--charcoal-55);
+  margin-bottom: 0.75rem;
+}
+.field__input,
+.field__textarea,
+.field__select {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 0.9rem 1rem;
+  font-size: var(--fs-body);
+  color: var(--charcoal);
+  transition: border-color var(--dur) var(--ease);
+}
+.field__input:focus,
+.field__textarea:focus,
+.field__select:focus {
+  outline: none;
+  border-color: var(--charcoal);
+}
+.field__textarea { resize: vertical; min-height: 7rem; }
+.field__hint { font-size: var(--fs-small); color: var(--charcoal-55); margin-top: 0.5rem; text-align: justify; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+
+/* Number stepper */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.stepper button {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.25rem;
+  color: var(--charcoal);
+  transition: background var(--dur) var(--ease);
+}
+.stepper button:hover { background: var(--ivory-deep); }
+.stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+.stepper button:disabled:hover { background: none; }
+.stepper input {
+  width: 5rem;
+  height: 3rem;
+  text-align: center;
+  border: none;
+  border-inline: 1px solid var(--line);
+  background: transparent;
+  font-size: var(--fs-body);
+  -moz-appearance: textfield;
+}
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.stepper-group { display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+
+/* ---------- Free Test live counter ---------- */
+.free-test-capacity {
+  border: 1px solid var(--line);
+  background: var(--ivory-deep);
+  padding: 1.15rem 1.35rem 1.25rem;
+  margin-bottom: 1.75rem;
+}
+.free-test-capacity__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.free-test-capacity__label {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--charcoal-55);
+}
+.free-test-capacity__value {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.free-test-capacity__track {
+  height: 2px;
+  background: var(--line);
+  margin: 0.85rem 0 0.7rem;
+  overflow: hidden;
+}
+.free-test-capacity__fill {
+  height: 100%;
+  background: var(--charcoal);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease);
+}
+.free-test-capacity__remaining {
+  font-size: var(--fs-small);
+  color: var(--charcoal-80);
+}
+.free-test-capacity__note {
+  margin-top: 0.35rem;
+  font-size: var(--fs-small);
+  color: var(--charcoal-55);
+}
+
+/* Cards that can't be afforded with the credits left */
+.select-card.is-unavailable { opacity: 0.45; }
+.select-card.is-unavailable:hover { border-color: var(--line); }
+.select-card__toggle:disabled { cursor: not-allowed; }
+.select-card__price.is-advanced { color: var(--stone-deep); }
+.select-card__note {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: var(--fs-small);
+  color: var(--charcoal-55);
+}
+
+/* ---------- Selectable cards ---------- */
+.select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+.select-card {
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+/* The card body is the toggle; the quantity controls sit below it. */
+.select-card__toggle {
+  text-align: left;
+  width: 100%;
+  padding: 1.25rem 1.35rem;
+  background: none;
+  border: 0;
+  display: block;
+}
+.select-card:hover { border-color: var(--line-strong); }
+.select-card.is-selected {
+  border-color: var(--charcoal);
+  background: var(--ivory-deep);
+}
+.select-card__check {
+  position: absolute;
+  top: 1.15rem; right: 1.15rem;
+  width: 20px; height: 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  color: var(--ivory);
+}
+.select-card.is-selected .select-card__check {
+  background: var(--charcoal);
+  border-color: var(--charcoal);
+}
+.select-card__name { font-weight: 500; margin-bottom: 0.35rem; display: block; padding-right: 1.5rem; }
+.select-card__desc { font-size: var(--fs-small); color: var(--charcoal-55); }
+/* Free Test only — the credit cost per image. Paid prices are not shown on
+   cards; the sticky Project Total is the single source of pricing in Step 2. */
+.select-card__price { font-size: var(--fs-small); color: var(--stone); margin-top: 0.6rem; display: block; }
+
+/* ---------- Review ---------- */
+.review__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.review__row:first-child { border-top: 1px solid var(--line); }
+.review__key { color: var(--charcoal-55); font-size: var(--fs-small); text-transform: uppercase; letter-spacing: 0.14em; }
+.review__val { text-align: right; }
+.review__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+}
+.review__total-amount { font-family: var(--font-display); font-size: 2rem; }
+
+/* ---------- Consent ---------- */
+.consent { display: flex; gap: 0.85rem; margin-bottom: 1.25rem; align-items: flex-start; }
+.consent input { margin-top: 0.3rem; width: 1.05rem; height: 1.05rem; flex-shrink: 0; accent-color: var(--charcoal); }
+.consent label { font-size: var(--fs-small); color: var(--charcoal-80); }
+
+/* ---------- Upsell (free test over limit) ---------- */
+.upsell {
+  border: 1px solid var(--line);
+  background: var(--ivory-deep);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.upsell p { font-size: var(--fs-small); color: var(--charcoal-80); text-align: justify; }
+
+/* ---------- Sticky summary bar ----------
+   Three-column grid. The TOTAL column is the flexible one (minmax(0, 1fr)),
+   so it absorbs the squeeze; Back and Continue are intrinsically sized and
+   never get shrunk past their text. Every child carries min-width: 0 and
+   border-box sizing, which is what actually stops Continue being pushed past
+   the viewport edge — no overflow-x: hidden anywhere.
+   ---------------------------------------- */
+.summary-bar {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%;
+  max-width: 100vw;
+  background: rgba(245, 242, 236, 0.94);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  z-index: 80;
+}
+.summary-bar__inner {
+  display: grid;
+  /* Total flexes (with a floor so it can't collapse); Back and Continue are
+     sized to their content and therefore never clipped. */
+  grid-template-columns: minmax(4.5rem, 1fr) auto max-content;
+  align-items: center;
+  gap: 1.5rem;
+  padding-block: 1rem;
+  box-sizing: border-box;
+}
+.summary-bar__total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  /* Hard stop: nothing in this column may paint over the Back button. */
+  overflow: hidden;
+}
+.summary-bar__label {
+  font-size: clamp(0.55rem, 2.2vw, var(--fs-label));
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+}
+.summary-bar__amount {
+  font-size: clamp(1.05rem, 5vw, 1.75rem);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+/* Back + Continue live directly in the grid so all three columns align. */
+.summary-bar__actions { display: contents; }
+.summary-bar__back {
+  justify-self: end;
+  white-space: nowrap;
+  min-width: 0;
+}
+.summary-bar__next {
+  justify-self: end;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  justify-content: center;
+  text-align: center;
+}
+.summary-bar__next-label {
+  min-width: 0;
+  white-space: nowrap;
+}
+.summary-bar__next-label--short { display: none; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 560px) {
+  .summary-bar__inner { gap: 0.7rem; padding-block: 0.8rem; }
+  /* Long estimate ranges wrap instead of running under the buttons. */
+  .summary-bar__amount {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: clamp(0.95rem, 4.4vw, 1.4rem);
+  }
+  .summary-bar__back.link { font-size: 0.7rem; letter-spacing: 0.1em; gap: 0.35em; }
+  .summary-bar__next.btn {
+    padding: 0.85rem 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    gap: 0.4em;
+  }
+  /* Swap the long submit wording for the short one. */
+  .summary-bar__next-label--full { display: none; }
+  .summary-bar__next-label--short { display: inline; }
+}
+
+/* Very narrow phones (320px) — trim tracking and drop the decorative arrow
+   before any label is allowed to clip. */
+@media (max-width: 380px) {
+  .summary-bar__inner { gap: 0.5rem; grid-template-columns: minmax(4rem, 1fr) auto max-content; }
+  .summary-bar__label { letter-spacing: 0.1em; }
+  .summary-bar__next.btn {
+    padding: 0.8rem 0.7rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+  }
+  .summary-bar__next .arrow { display: none; }
+  .summary-bar__back.link { font-size: 0.66rem; letter-spacing: 0.05em; }
+}
+
+/* ---------- Confirmation ---------- */
+.confirm {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+}
+.confirm__title { margin: 1.25rem 0; }
+.confirm__text { color: var(--charcoal-80); margin-bottom: 2rem; }
+
+/* ---------- Service quantity (inside a selected card) ---------- */
+.select-card__qty {
+  border-top: 1px solid var(--line);
+  padding: 1.1rem 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.select-card__qty-fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.select-card__qty .field__label { margin-bottom: 0.5rem; }
+.select-card__qty .stepper button { width: 2.4rem; height: 2.4rem; }
+.select-card__qty .stepper input { width: 3.4rem; height: 2.4rem; }
+
+/* ---------- Billing breakdown ---------- */
+.billing { border-top: 1px solid var(--line); margin-bottom: 2rem; }
+.billing__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.billing__line-main { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.billing__name { font-weight: 500; }
+.billing__qty { font-size: var(--fs-small); color: var(--charcoal-55); }
+.billing__amount { white-space: nowrap; text-align: right; }
+.billing__amount.is-estimate { color: var(--charcoal-80); }
+
+.review__section { margin-top: 2.5rem; }
+.review__section > .field__label { margin-bottom: 1rem; }
+
+/* ---------- Payment options ---------- */
+.payment-options {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.payment-option {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 1.25rem 1.35rem;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.payment-option:hover { border-color: var(--line-strong); }
+.payment-option.is-selected { border-color: var(--charcoal); background: var(--ivory-deep); }
+.payment-option input {
+  margin-top: 0.25rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  accent-color: var(--charcoal);
+}
+.payment-option:focus-within { border-color: var(--charcoal); }
+.payment-option__body { display: flex; flex-direction: column; gap: 0.35rem; }
+.payment-option__name { font-weight: 500; }
+.payment-option__desc { font-size: var(--fs-small); color: var(--charcoal-55); }
+
+.payment-summary {
+  border: 1px solid var(--line);
+  background: var(--ivory-deep);
+  padding: 1.35rem 1.5rem;
+}
+.payment-summary--lead { margin-bottom: 2.5rem; }
+.payment-summary__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  font-size: var(--fs-small);
+  color: var(--charcoal-80);
+}
+.payment-summary__row--strong {
+  font-size: 1.05rem;
+  color: var(--charcoal);
+  font-weight: 500;
+}
+.payment-summary .field__hint { margin-top: 0.75rem; }
+
+.payment-note { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.payment-note p { font-size: var(--fs-small); color: var(--charcoal-55); line-height: 1.6; text-align: justify; }
+
+/* ---------- Project type (Step 1) ---------- */
+.project-type-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+.project-type-card {
+  position: relative;
+  text-align: left;
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+.project-type-card__name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  padding-right: 1.5rem;
+}
+.project-type-card__desc { font-size: var(--fs-small); line-height: 1.55; }
+
+@media (max-width: 720px) {
+  .project-type-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Turnaround selector ---------- */
+.turnaround-options {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.turnaround-card {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.turnaround-card.is-selected { border-color: var(--charcoal); background: var(--ivory-deep); }
+/* Focus uses the SAME single border treatment as selection — never an
+   additional outline/box-shadow layered on top, which is what produced the
+   double-border look. */
+.turnaround-card:focus-within { border-color: var(--charcoal); }
+.turnaround-card__toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.25rem 1.35rem;
+  cursor: pointer;
+}
+.turnaround-card__toggle input {
+  margin-top: 0.3rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex-shrink: 0;
+  accent-color: var(--charcoal);
+}
+.turnaround-card__body { display: flex; flex-direction: column; gap: 0.3rem; }
+.turnaround-card__name {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+}
+.turnaround-card__range { font-size: var(--fs-small); color: var(--charcoal-80); }
+.turnaround-card__fee { font-size: var(--fs-small); color: var(--stone); }
+.turnaround-card__fee.is-free { color: var(--charcoal-55); }
+.turnaround-card__hours {
+  border-top: 1px solid var(--line);
+  padding: 1.1rem 1.35rem 1.25rem;
+}
+.field-inline { display: flex; align-items: center; gap: 0.6rem; max-width: 12rem; }
+.field-inline .field__input { width: 6rem; }
+.field__suffix { font-size: var(--fs-small); color: var(--charcoal-55); }
+.field__error { font-size: var(--fs-small); color: var(--charcoal); margin-top: 0.5rem; }
+
+@media (max-width: 720px) {
+  .turnaround-options { grid-template-columns: 1fr; }
+}
+
+/* ---------- Terms & policies ---------- */
+.policies { margin-bottom: 2rem; }
+.policies__list {
+  border-top: 1px solid var(--line);
+  padding-top: 1.75rem;
+  padding-right: 1rem;
+  max-height: 480px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.policies__list::-webkit-scrollbar { width: 6px; }
+.policies__list::-webkit-scrollbar-track { background: transparent; }
+.policies__list::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+.policy { padding-bottom: 1.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
+.policy:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+.policy__title {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--charcoal);
+  margin-bottom: 0.6rem;
+}
+.policy__text {
+  font-size: var(--fs-small);
+  color: var(--charcoal-80);
+  line-height: 1.65;
+  margin-bottom: 0.5rem;
+  text-align: justify;
+}
+.policy__text:last-child { margin-bottom: 0; }
+.policies__intro { margin-bottom: 1.5rem; font-size: var(--fs-small); text-align: justify; }
+
+@media (max-width: 560px) {
+  .policies__list { max-height: 400px; }
+}
+
+/* ---------- Submission error ---------- */
+.form-error {
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--charcoal);
+  background: var(--paper);
+  padding: 1.15rem 1.35rem;
+  margin-top: 1.5rem;
+}
+.form-error strong { display: block; margin-bottom: 0.4rem; }
+.form-error p { font-size: var(--fs-small); color: var(--charcoal-80); }
+
+/* Visually hidden but available to screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.confirm__text p { margin-bottom: 0.85rem; }
+
+@media (max-width: 720px) {
+  .payment-options { grid-template-columns: 1fr; }
+}
+/* Deliberately no mobile stacking here — the service row keeps its right-hand
+   price column all the way down (see .billing__line below), and the quantity
+   grid handles its own breakpoint. */
+
+/* ---------------------------------------------------------------------------
+   SALE PRICING — compare-at, sale price, discount badge and savings.
+   Scoped to the wizard; nothing here affects the marketing pages.
+--------------------------------------------------------------------------- */
+
+/* Step 1 — promo line on the Paid Project card. */
+.project-type-card__promo {
+  display: inline-block;
+  align-self: flex-start;
+  margin-bottom: 0.5rem;
+  padding: 0.28rem 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  background: var(--ivory-deep);
+  border: 1px solid var(--charcoal-30);
+}
+
+/* Step 2 — price block on each service card. */
+
+/* Live savings under the sticky total. */
+.summary-bar__saving {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--charcoal-55);
+  margin-top: 0.15rem;
+}
+
+/* Review step. */
+.billing__compare {
+  display: block;
+  color: var(--charcoal-55);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+.review__saving { color: var(--charcoal); }
+.review__total-saving {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--charcoal-55);
+}
+
+@media (max-width: 480px) {
+  .summary-bar__saving { font-size: 0.62rem; }
+}
+
+/* ---------------------------------------------------------------------------
+   DISCOUNT BADGES — colour driven by percentage, defined once.
+--------------------------------------------------------------------------- */
+.sale-badge {
+  flex-shrink: 0;
+  padding: 0.16rem 0.42rem;
+  font-family: var(--font-sans);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: #fff;
+  white-space: nowrap;
+}
+/* Deep, desaturated tones — premium rather than sale-sticker. Both clear
+   WCAG AA against white text. */
+.sale-badge.sale--15 { background: #6e1f1f; }  /* deep red   — HDR, Drone */
+.sale-badge.sale--10 { background: #1f4d33; }  /* deep green — everything else */
+.sale-badge.sale--neutral { background: var(--charcoal); }
+
+/* ---------------------------------------------------------------------------
+   STEP 2 — service card heading + quantity row
+--------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   PREFERRED PARTNER PRICING — informational, deliberately not a sale banner.
+--------------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------------
+   STEP 6 — two-column review, and the Total / Savings / Subtotal block
+--------------------------------------------------------------------------- */
+.review-grid { display: grid; gap: 2.5rem; }
+
+@media (min-width: 900px) {
+  .review-grid {
+    grid-template-columns: 55fr 45fr;
+    gap: 3rem;
+    align-items: start;
+  }
+}
+
+.billing__line--turnaround { border-top: 1px solid var(--charcoal-30); }
+.billing__name { display: inline-flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+.totals { margin-top: 1.5rem; }
+.totals__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+/* Labels stay quiet; the money column carries the weight. */
+.totals__label {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--charcoal-55);
+}
+.totals__value {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  color: var(--charcoal-80);
+  text-align: right;
+}
+.totals__value--save { color: var(--charcoal-80); }
+
+.totals__row--final {
+  border-top: 1px solid var(--charcoal);
+  margin-top: 0.35rem;
+  padding-top: 0.9rem;
+}
+.totals__row--final .totals__label { color: var(--charcoal); font-weight: 500; }
+.totals__row--final .totals__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--charcoal);
+  line-height: 1.1;
+}
+
+/* ===========================================================================
+   STEP 2 — SERVICE CARD HEADER
+   Three things compete for the top of the card: the name, the sale badge and
+   the selection check. The check is absolutely positioned, so instead of
+   layering the other two under it we reserve a gutter the exact width of the
+   check plus its offset, and lay name + badge out inside that safe area.
+=========================================================================== */
+:root {
+  --check-size: 20px;
+  --check-inset: 1.15rem;
+  /* Right-hand space the badge must never enter. */
+  --check-gutter: calc(var(--check-inset) + var(--check-size) + 0.6rem);
+}
+
+.select-card__toggle { padding-right: var(--check-gutter); }
+
+.select-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+/* Long names ("Drone / Aerial Editing") shrink and wrap rather than shoving
+   the badge into the check circle. */
+.select-card__heading .select-card__name {
+  margin: 0;
+  padding-right: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.select-card__heading .sale-badge {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+}
+
+/* One badge geometry everywhere. */
+.sale-badge {
+  display: inline-block;
+  padding: 0.18rem 0.45rem;
+  border-radius: 2px;
+  font-size: 0.56rem;
+  line-height: 1.5;
+}
+
+/* ===========================================================================
+   STEP 2 — QUANTITY CONTROLS
+   The stepper is inline-flex with fixed rem widths, which overflowed its grid
+   column. Inside a card it becomes a full-width flex row with a shrinkable
+   input, so it can never exceed the column.
+=========================================================================== */
+.select-card__qty-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+/* Single control → keep it narrow rather than leaving an empty column. */
+.select-card__qty-fields > *:only-child {
+  grid-column: 1 / -1;
+  max-width: 12rem;
+}
+/* Only genuinely narrow screens stack — 375/390/430 stay side by side. */
+@media (max-width: 339px) {
+  .select-card__qty-fields { grid-template-columns: minmax(0, 1fr); }
+  .select-card__qty-fields > *:only-child { max-width: none; }
+}
+
+.select-card__qty .stepper {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+}
+.select-card__qty .stepper button {
+  flex: 0 0 2.1rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 1.05rem;
+}
+.select-card__qty .stepper input {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 2.1rem;
+  font-size: var(--fs-small);
+  padding-inline: 0.2rem;
+}
+.select-card__qty .field__label {
+  margin-bottom: 0.35rem;
+  overflow-wrap: anywhere;
+}
+
+
+/* ===========================================================================
+   PREFERRED PARTNER PRICING
+   Copy on the left, actions on the right, one row on desktop.
+=========================================================================== */
+.partner {
+  margin: 0.9rem 0 2rem;
+  padding: 1.4rem 1.5rem;
+  background: var(--ivory-deep);
+  border: 1px solid var(--charcoal-30);
+  display: grid;
+  gap: 1.1rem;
+}
+.partner__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.55rem;
+}
+.partner__text {
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--charcoal-80);
+  max-width: 40rem;
+  margin: 0;
+}
+.partner__text strong { font-weight: 600; color: var(--charcoal); }
+
+.partner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.5rem;
+  align-items: center;
+}
+.partner__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
+}
+.partner__action svg { flex: 0 0 auto; }
+
+@media (min-width: 720px) {
+  .partner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+  }
+  /* Stacked one above the other on the right, vertically centred. */
+  .partner__actions { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+}
+
+.partner--compact { padding: 1.1rem 1.15rem; margin: 1.5rem 0 0; }
+.partner--compact .partner__label { font-size: 0.68rem; }
+.partner--compact .partner__text { font-size: 0.88rem; line-height: 1.55; }
+/* The Step 6 column is narrow — never split it into two. */
+@media (min-width: 720px) {
+  .partner--compact { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .partner--compact .partner__actions { flex-direction: row; gap: 1.25rem; }
+}
+
+/* ===========================================================================
+   STEP 6 — SERVICE ROW KEEPS ITS PRICE COLUMN ON MOBILE
+=========================================================================== */
+.billing__line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.75rem 1.25rem;
+}
+.billing__amount {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.billing__compare { font-size: 0.8em; }
+
+@media (max-width: 560px) {
+  .billing__line { gap: 0.5rem 0.75rem; padding: 0.85rem 0; }
+  .billing__qty { font-size: 0.72rem; line-height: 1.45; }
+  .billing__amount { font-size: 0.85rem; }
+  .billing__name { font-size: 0.95rem; }
+}
+/* Below this the two columns genuinely cannot coexist. */
+@media (max-width: 319px) {
+  .billing__line { grid-template-columns: minmax(0, 1fr); }
+  .billing__amount { text-align: left; }
+}
+
+/* ===========================================================================
+   STEP 1 — PAID PROJECT SALE BLOCK
+   Bigger than the old inline badge, and carrying the live countdown rather
+   than the words "today only".
+=========================================================================== */
+.promo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.7rem;
+  margin: 0.15rem 0 0.6rem;
+}
+.promo__offer {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: var(--charcoal-80);
+}
+.promo__amount {
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: 0.01em;
+  color: var(--charcoal);
+}
+.promo__timer {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--charcoal-55);
+}
+.promo__clock {
+  /* Tabular figures stop the row twitching sideways each second. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+
+@media (max-width: 400px) {
+  .promo { gap: 0.15rem 0.5rem; }
+  .promo__offer { font-size: 0.88rem; }
+  .promo__amount { font-size: 1.02rem; }
+  .promo__timer { font-size: 0.74rem; }
+}
+
+/* Step 2 cards no longer carry prices; the old price/subtotal rules are
+   retired rather than left to style elements that no longer render. */
