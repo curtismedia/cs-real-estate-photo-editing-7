@@ -71,7 +71,7 @@ export default function StepTurnaround() {
       {estimate.hasLines && rushFee.hasFee && (
         <div className="payment-summary" style={{ marginTop: '2rem' }}>
           <div className="payment-summary__row">
-            <span>Service subtotal</span>
+            <span>Service subtotal (after sale)</span>
             <span>{estimate.variable ? 'Estimated ' : ''}{formatAmount(estimate.min, estimate.max)}</span>
           </div>
           <div className="payment-summary__row payment-summary__row--strong">

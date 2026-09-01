@@ -1,17 +1,34 @@
+import { useState } from 'react'
 import { useBooking } from '../../context/BookingContext'
+import { detailsErrors } from '../../lib/validation'
 
 export default function StepDetails() {
   const { order, updateNested } = useBooking()
   const { details } = order
   const set = (patch) => updateNested('details', patch)
 
+  // Errors are computed from state, but only *shown* once a field has been
+  // visited — so the form does not shout at someone who has just arrived.
+  const [touched, setTouched] = useState({})
+  const errors = detailsErrors(details)
+  const touch = (k) => setTouched((t) => ({ ...t, [k]: true }))
+  const showError = (k) => (touched[k] ? errors[k] : null)
+
   return (
     <div>
       <div className="field-row">
         <div className="field">
           <label className="field__label" htmlFor="first">First name *</label>
-          <input id="first" className="field__input" required value={details.firstName}
-            onChange={(e) => set({ firstName: e.target.value })} />
+          <input
+            id="first" className="field__input" required value={details.firstName}
+            aria-invalid={showError('firstName') ? 'true' : undefined}
+            aria-describedby={showError('firstName') ? 'first-error' : undefined}
+            onBlur={() => touch('firstName')}
+            onChange={(e) => set({ firstName: e.target.value })}
+          />
+          {showError('firstName') && (
+            <p className="field__error" id="first-error" role="alert">{errors.firstName}</p>
+          )}
         </div>
         <div className="field">
           <label className="field__label" htmlFor="last">Last name</label>
@@ -20,16 +37,48 @@ export default function StepDetails() {
         </div>
       </div>
 
+      <div className="field">
+        <label className="field__label" htmlFor="email">Email *</label>
+        <input
+          id="email" type="email" className="field__input" required value={details.email}
+          aria-invalid={showError('email') ? 'true' : undefined}
+          aria-describedby={showError('email') ? 'email-error' : undefined}
+          onBlur={() => touch('email')}
+          onChange={(e) => set({ email: e.target.value })}
+        />
+        {showError('email') && (
+          <p className="field__error" id="email-error" role="alert">{errors.email}</p>
+        )}
+      </div>
+
       <div className="field-row">
         <div className="field">
-          <label className="field__label" htmlFor="email">Email *</label>
-          <input id="email" type="email" className="field__input" required value={details.email}
-            onChange={(e) => set({ email: e.target.value })} />
+          <label className="field__label" htmlFor="phone">Phone number *</label>
+          <input
+            id="phone" type="tel" inputMode="tel" className="field__input" required
+            value={details.phone}
+            aria-invalid={showError('phone') ? 'true' : undefined}
+            aria-describedby={showError('phone') ? 'phone-error' : undefined}
+            onBlur={() => touch('phone')}
+            onChange={(e) => set({ phone: e.target.value })}
+          />
+          {showError('phone') && (
+            <p className="field__error" id="phone-error" role="alert">{errors.phone}</p>
+          )}
         </div>
         <div className="field">
-          <label className="field__label" htmlFor="phone">Phone / WhatsApp</label>
-          <input id="phone" type="tel" className="field__input" value={details.phone}
-            onChange={(e) => set({ phone: e.target.value })} />
+          <label className="field__label" htmlFor="whatsapp">WhatsApp *</label>
+          <input
+            id="whatsapp" type="tel" inputMode="tel" className="field__input" required
+            value={details.whatsapp}
+            aria-invalid={showError('whatsapp') ? 'true' : undefined}
+            aria-describedby={showError('whatsapp') ? 'whatsapp-error' : undefined}
+            onBlur={() => touch('whatsapp')}
+            onChange={(e) => set({ whatsapp: e.target.value })}
+          />
+          {showError('whatsapp') && (
+            <p className="field__error" id="whatsapp-error" role="alert">{errors.whatsapp}</p>
+          )}
         </div>
       </div>
 
@@ -41,7 +90,8 @@ export default function StepDetails() {
 
       <p className="field__hint">
         Project confirmation and payment instructions are sent to the email address above,
-        so please make sure it is correct.
+        so please make sure it is correct. We use phone and WhatsApp to reach you quickly if
+        anything about the project needs clarifying.
       </p>
     </div>
   )

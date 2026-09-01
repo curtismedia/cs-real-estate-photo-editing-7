@@ -1,5 +1,8 @@
 import { useBooking } from '../../context/BookingContext'
-import { pricedServices, formatRate, unitLabel, formatAmount } from '../../data/pricing'
+import {
+  pricedServices, formatRate, formatCompareRate, isDiscounted,
+  unitLabel, formatAmount,
+} from '../../data/pricing'
 import {
   TOTAL_FREE_TEST_CREDITS,
   isFreeTestEligible,
@@ -121,7 +124,13 @@ export default function StepServices() {
                 <span className="select-card__name">{s.name}</span>
                 {!freeTest && (
                   <span className="select-card__price">
-                    {formatRate(s)}
+                    {isDiscounted(s) && (
+                      <s className="select-card__compare">{formatCompareRate(s)}</s>
+                    )}
+                    <span className="select-card__sale">{formatRate(s)}</span>
+                    {isDiscounted(s) && (
+                      <span className="select-card__badge">{s.discountPercent}% OFF</span>
+                    )}
                     {s.type === 'range' && <span className="select-card__est"> · estimated</span>}
                   </span>
                 )}
@@ -160,6 +169,11 @@ export default function StepServices() {
                     <p className="select-card__subtotal">
                       {line.variable ? 'Estimated ' : ''}
                       <strong>{formatAmount(line.min, line.max)}</strong>
+                      {line.savingsMax > 0 && (
+                        <span className="select-card__saving">
+                          {' '}Save {formatAmount(line.savingsMin, line.savingsMax)}
+                        </span>
+                      )}
                     </p>
                   )}
                 </div>

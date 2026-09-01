@@ -1,5 +1,5 @@
 import { useBooking } from '../../context/BookingContext'
-import { formatAmount, DEPOSIT_PERCENT, TURNAROUND_TYPES } from '../../data/pricing'
+import { formatAmount, DEPOSIT_PERCENT, TURNAROUND_TYPES, PROMO } from '../../data/pricing'
 import { getServiceName } from '../../data/services'
 import { paymentNotes } from '../../data/policies'
 import {
@@ -61,6 +61,9 @@ export default function StepReview() {
                 </span>
               </div>
               <span className={`billing__amount ${l.variable ? 'is-estimate' : ''}`}>
+                {l.savingsMax > 0 && (
+                  <s className="billing__compare">{l.compareAmountText}</s>
+                )}
                 {l.amountText}
               </span>
             </div>
@@ -74,7 +77,19 @@ export default function StepReview() {
       {!freeTest && estimate.hasLines && (
         <div className="review__section">
           <span className="field__label">Pricing</span>
-          <Row k="Services" v={`${estimate.variable ? 'Estimated ' : ''}${formatAmount(estimate.min, estimate.max)}`} />
+          {estimate.hasSavings && (
+            <Row
+              k="Services (before sale)"
+              v={<s>{formatAmount(estimate.compareMin, estimate.compareMax)}</s>}
+            />
+          )}
+          <Row k="Subtotal" v={`${estimate.variable ? 'Estimated ' : ''}${formatAmount(estimate.min, estimate.max)}`} />
+          {estimate.hasSavings && (
+            <Row
+              k={`Sale savings — ${PROMO.submissionLabel}`}
+              v={<span className="review__saving">−{formatAmount(estimate.savingsMin, estimate.savingsMax)}</span>}
+            />
+          )}
           {rushFee.hasFee ? (
             <Row
               k={`${turnaroundType.label.replace(' Turnaround', '')} Turnaround ( +${rushFee.percent}% )`}
@@ -94,6 +109,11 @@ export default function StepReview() {
           <span className="review__total-amount">
             {formatAmount(total.min, total.max)}
           </span>
+          {estimate.hasSavings && (
+            <span className="review__total-saving">
+              You save {formatAmount(estimate.savingsMin, estimate.savingsMax)}
+            </span>
+          )}
         </div>
       )}
       {!freeTest && estimate.hasLines && (

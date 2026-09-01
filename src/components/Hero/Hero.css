@@ -50,7 +50,7 @@
   position: relative;
   z-index: 1;
   padding-bottom: clamp(4rem, 10vh, 8rem);
-  padding-top: calc(var(--header-h) + 2rem);
+  padding-top: calc(var(--header-offset) + 2rem);
   max-width: 60rem;
 }
 .hero__eyebrow {

@@ -1,5 +1,5 @@
 .page-intro {
-  padding-top: calc(var(--header-h) + clamp(3rem, 8vw, 7rem));
+  padding-top: calc(var(--header-offset) + clamp(3rem, 8vw, 7rem));
   padding-bottom: clamp(2rem, 5vw, 4rem);
 }
 .page-intro__title { margin: 1.25rem 0; }

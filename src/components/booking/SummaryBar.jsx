@@ -4,7 +4,7 @@ import { TOTAL_FREE_TEST_CREDITS } from '../../data/freeTestConfig'
 import './booking.css'
 
 export default function SummaryBar({ onBack, onNext, nextLabel = 'Continue', nextLabelShort, canBack, canNext = true }) {
-  const { total, freeTest, freeTestCredits } = useBooking()
+  const { total, estimate, freeTest, freeTestCredits } = useBooking()
 
   const label = freeTest
     ? 'Test capacity'
@@ -23,6 +23,11 @@ export default function SummaryBar({ onBack, onNext, nextLabel = 'Continue', nex
         <div className="summary-bar__total">
           <span className="label summary-bar__label">{label}</span>
           <span className="summary-bar__amount serif">{amount}</span>
+          {!freeTest && estimate.hasSavings && (
+            <span className="summary-bar__saving">
+              You save {formatAmount(estimate.savingsMin, estimate.savingsMax)}
+            </span>
+          )}
         </div>
         <div className="summary-bar__actions">
           {canBack && (

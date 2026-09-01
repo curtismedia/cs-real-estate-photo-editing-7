@@ -1,7 +1,7 @@
 /* ---------- Wizard shell ---------- */
 .wizard {
   min-height: 100vh;
-  padding-top: calc(var(--header-h) + clamp(2rem, 5vw, 4rem));
+  padding-top: calc(var(--header-offset) + clamp(2rem, 5vw, 4rem));
   padding-bottom: 8rem; /* room for sticky summary bar */
 }
 .wizard__inner { max-width: 60rem; margin-inline: auto; }
@@ -605,4 +605,88 @@
   .select-card__qty { flex-direction: column; align-items: flex-start; }
   .billing__line { flex-direction: column; gap: 0.4rem; }
   .billing__amount { text-align: left; }
+}
+
+/* ---------------------------------------------------------------------------
+   SALE PRICING — compare-at, sale price, discount badge and savings.
+   Scoped to the wizard; nothing here affects the marketing pages.
+--------------------------------------------------------------------------- */
+
+/* Step 1 — promo line on the Paid Project card. */
+.project-type-card__promo {
+  display: inline-block;
+  align-self: flex-start;
+  margin-bottom: 0.5rem;
+  padding: 0.28rem 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--charcoal);
+  background: var(--ivory-deep);
+  border: 1px solid var(--charcoal-30);
+}
+
+/* Step 2 — price block on each service card. */
+.select-card__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.5rem;
+}
+.select-card__compare {
+  color: var(--charcoal-55);
+  text-decoration-thickness: 1px;
+}
+.select-card__sale { font-weight: 500; }
+.select-card__badge {
+  flex-shrink: 0;
+  padding: 0.16rem 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  background: var(--charcoal);
+  white-space: nowrap;
+}
+.select-card__saving {
+  color: var(--charcoal-55);
+  font-size: 0.85em;
+}
+
+/* Live savings under the sticky total. */
+.summary-bar__saving {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--charcoal-55);
+  margin-top: 0.15rem;
+}
+
+/* Review step. */
+.billing__compare {
+  display: block;
+  color: var(--charcoal-55);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+.review__saving { color: var(--charcoal); }
+.review__total-saving {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--charcoal-55);
+}
+
+@media (max-width: 480px) {
+  .select-card__price { gap: 0.3rem 0.4rem; }
+  .select-card__badge { font-size: 0.54rem; letter-spacing: 0.08em; }
+  .summary-bar__saving { font-size: 0.62rem; }
 }

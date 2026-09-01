@@ -1,5 +1,6 @@
 import { useBooking } from '../../context/BookingContext'
 import { TOTAL_FREE_TEST_CREDITS } from '../../data/freeTestConfig'
+import { PROMO } from '../../data/pricing'
 
 const OPTIONS = [
   {
@@ -10,6 +11,9 @@ const OPTIONS = [
   {
     key: 'book',
     name: 'Paid Project',
+    // Free Test is credit-based and never discounted, so the promo line only
+    // ever appears on the paid option.
+    promo: PROMO.active ? PROMO.stepOneBadge : null,
     desc: 'Submit a full paid editing project.',
   },
 ]
@@ -36,6 +40,7 @@ export default function StepProjectType() {
                 )}
               </span>
               <span className="project-type-card__name">{opt.name}</span>
+              {opt.promo && <span className="project-type-card__promo">{opt.promo}</span>}
               <span className="project-type-card__desc muted">{opt.desc}</span>
             </button>
           )

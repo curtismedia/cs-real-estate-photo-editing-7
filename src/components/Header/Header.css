@@ -1,6 +1,6 @@
 .site-header {
   position: fixed;
-  top: 0;
+  top: var(--banner-h);
   left: 0;
   width: 100%;
   z-index: 100;

@@ -1,0 +1,59 @@
+.sale-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 120; /* above the header (100), below modals (200) */
+  height: var(--banner-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--charcoal);
+  color: var(--light);
+  border-bottom: 1px solid rgba(245, 242, 236, 0.14);
+}
+
+.sale-banner__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding-inline: var(--gutter);
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sale-banner__headline { color: var(--light); }
+.sale-banner__sep { opacity: 0.45; }
+.sale-banner__timer { color: var(--light-70); }
+
+.sale-banner__clock {
+  /* Tabular figures stop the row shuffling sideways every second. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  color: var(--light);
+}
+
+/* Narrow phones: drop the separator and shrink, rather than wrapping or
+   scrolling. The banner must stay exactly --banner-h tall or every page
+   offset below it goes wrong. */
+@media (max-width: 560px) {
+  .sale-banner__inner {
+    gap: 0.45rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+  .sale-banner__sep { display: none; }
+}
+
+@media (max-width: 360px) {
+  .sale-banner__inner {
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+  }
+}

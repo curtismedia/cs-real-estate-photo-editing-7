@@ -11,6 +11,7 @@ import StepPolicy from './StepPolicy'
 import { submitToNetlify, FORM_NAMES } from '../../lib/netlifyForms'
 import { buildBookingPayload, buildFreeTestPayload } from '../../lib/bookingSubmission'
 import { isValidTurnaroundHours } from '../../data/pricing'
+import { detailsValid } from '../../lib/validation'
 import {
   TOTAL_FREE_TEST_CREDITS,
   isFreeTestEligible,
@@ -102,13 +103,24 @@ export default function BookingWizard() {
       return isValidTurnaroundHours(order.turnaround.type, order.turnaround.hours)
     }
     if (current.key === 'details') {
-      return Boolean(order.details.firstName.trim()) && /\S+@\S+\.\S+/.test(order.details.email)
+      // Name, email, phone AND WhatsApp — same rules the inline errors use.
+      return detailsValid(order.details)
     }
-    if (isLast) return order.consent.policy
+    // Final submit re-checks the details too: a customer can walk back to
+    // Step 5, clear a field and jump forward again via Back/Continue.
+    if (isLast) return order.consent.policy && detailsValid(order.details)
     return true
   })()
 
   const submit = async () => {
+    // Last line of defence — never POST an order missing required contact info.
+    if (!detailsValid(order.details)) {
+      setErrorMessage('Please complete your name, email, phone and WhatsApp before submitting.')
+      setStatus('error')
+      setStep(steps.findIndex((s) => s.key === 'details'))
+      window.scrollTo({ top: 0 })
+      return
+    }
     setStatus('submitting')
     setErrorMessage('')
     try {

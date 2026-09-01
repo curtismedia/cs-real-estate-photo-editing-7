@@ -6,6 +6,7 @@ import {
   calculatePayment,
   getServiceRate,
   getTurnaround,
+  TURNAROUND_TYPES,
 } from '../data/pricing'
 import {
   TOTAL_FREE_TEST_CREDITS,
@@ -24,7 +25,9 @@ import {
 const BookingContext = createContext(null)
 
 const DEFAULT_PROPERTIES = 1
-const DEFAULT_TURNAROUND = { type: 'standard', hours: 12 }
+// Hours default to the MAXIMUM of the tier, not the midpoint — pulled from
+// TURNAROUND_TYPES so there is one source of truth.
+const DEFAULT_TURNAROUND = { type: 'standard', hours: TURNAROUND_TYPES.standard.defaultHours }
 
 const initialOrder = {
   /** 'free-test' | 'book' — chosen in Step 1, switchable at any time from there. */
@@ -36,7 +39,7 @@ const initialOrder = {
   files: { link: '', instructions: '', reference: '' },
   /** Requested turnaround — Paid Project only; unused (but harmless) in Free Test. */
   turnaround: DEFAULT_TURNAROUND,
-  details: { firstName: '', lastName: '', phone: '', email: '', company: '' },
+  details: { firstName: '', lastName: '', phone: '', whatsapp: '', email: '', company: '' },
   /** 'full' = pay in full, 'deposit' = 50% deposit. */
   paymentOption: 'full',
   consent: { policy: false },

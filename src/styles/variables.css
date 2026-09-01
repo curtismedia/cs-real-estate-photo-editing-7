@@ -44,5 +44,10 @@
 
   /* ---- UI ---- */
   --header-h: 84px;
+  /* Promotion bar above the header. Every page offset uses --header-offset
+     rather than --header-h so the banner can change height (or be removed)
+     in one place. Set --banner-h to 0px to drop it. */
+  --banner-h: 40px;
+  --header-offset: calc(var(--banner-h) + var(--header-h));
   --radius:   2px;
 }

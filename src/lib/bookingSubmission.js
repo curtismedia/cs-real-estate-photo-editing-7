@@ -10,6 +10,7 @@ import {
   formatAmount,
   DEPOSIT_PERCENT,
   TURNAROUND_TYPES,
+  PROMO,
 } from '../data/pricing'
 import { getServiceName } from '../data/services'
 import { POLICY_ACCEPT_LABEL } from '../data/policies'
@@ -57,8 +58,10 @@ export function buildBookingPayload({ order, estimate, rushFee, total, payment }
     'customer-name': fullName(details) || 'Not provided',
     'customer-email': details.email,
     company: details.company || 'Not provided',
-    phone: details.phone || 'Not provided',
+    phone: details.phone,
+    whatsapp: details.whatsapp,
     'project-type': 'Paid Project',
+    promotion: PROMO.active ? PROMO.submissionLabel : 'None',
     services: formatServicesForSubmission(estimate),
     'file-link': files.link || 'Not provided',
     'reference-link': files.reference || 'Not provided',
@@ -67,7 +70,13 @@ export function buildBookingPayload({ order, estimate, rushFee, total, payment }
     'requested-turnaround-hours': `${turnaround.hours} hours`,
     'rush-fee-percent': rushFee.hasFee ? `+${rushFee.percent}%` : '0%',
     'rush-fee-amount': rushFeeAmountText,
+    // Pre-sale figure, kept only so support can see what was discounted.
+    'compare-subtotal': formatAmount(estimate.compareMin, estimate.compareMax),
+    // The real, discounted service subtotal — everything below builds on this.
     'service-subtotal': rangeAwareAmount(estimate, false),
+    'discount-savings': estimate.hasSavings
+      ? `-${formatAmount(estimate.savingsMin, estimate.savingsMax)}`
+      : '$0.00',
     'estimated-total': rangeAwareAmount(total),
     'payment-option': paymentLabel,
     'amount-due': dueText,
@@ -109,7 +118,8 @@ export function buildFreeTestPayload({ order }) {
     'customer-name': fullName(details) || 'Not provided',
     'customer-email': details.email,
     company: details.company || 'Not provided',
-    phone: details.phone || 'Not provided',
+    phone: details.phone,
+    whatsapp: details.whatsapp,
     'project-type': 'Free Test',
     services: serviceList,
     'group-a-quantity': `${groupA} ${groupA === 1 ? 'image' : 'images'} × ${GROUP_A_CREDIT_COST} credit = ${groupA * GROUP_A_CREDIT_COST} credits`,

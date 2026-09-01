@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation, Link } from 'react-router-dom'
+import SaleBanner from './components/SaleBanner/SaleBanner'
 import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer'
 import Home from './pages/Home/Home'
@@ -40,6 +41,9 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      {/* Above the header on every route, wizard routes included, so the
+          countdown is one shared component with one shared clock. */}
+      <SaleBanner />
       {!bare && <Header />}
       <main className="app-main">
         <Routes>
