@@ -1,8 +1,5 @@
 import { useBooking } from '../../context/BookingContext'
-import {
-  pricedServices, formatRate, formatCompareRate, isDiscounted,
-  unitLabel, formatAmount,
-} from '../../data/pricing'
+import { pricedServices, isDiscounted, unitLabel } from '../../data/pricing'
 import DiscountBadge from './DiscountBadge'
 import PartnerPricing from './PartnerPricing'
 import {
@@ -55,7 +52,6 @@ export default function StepServices() {
     freeTestCredits, canAddImage, maxQtyFor,
   } = useBooking()
 
-  const lineFor = (slug) => estimate.lines.find((l) => l.slug === slug)
 
   // Free Test only ever offers the eligible services — excluded ones (video,
   // floor plan, virtual staging) are hidden entirely rather than shown disabled.
@@ -95,7 +91,6 @@ export default function StepServices() {
       <div className="select-grid">
         {visibleServices.map((s) => {
           const selected = order.services.includes(s.slug)
-          const line = selected ? lineFor(s.slug) : null
           const qtyValue = order.quantities[s.slug]?.qty ?? 0
           const propertiesValue = order.quantities[s.slug]?.properties ?? 1
 
@@ -130,15 +125,8 @@ export default function StepServices() {
                     <DiscountBadge percent={s.discountPercent} />
                   )}
                 </span>
-                {!freeTest && (
-                  <span className="select-card__price">
-                    {isDiscounted(s) && (
-                      <s className="select-card__compare">{formatCompareRate(s)}</s>
-                    )}
-                    <span className="select-card__sale">{formatRate(s)}</span>
-                    {s.type === 'range' && <span className="select-card__est"> · estimated</span>}
-                  </span>
-                )}
+                {/* No prices on the card by design — the sticky Project Total
+                    is the single place pricing is shown in Step 2. */}
                 {freeTest && (
                   <span
                     className={`select-card__price ${isFreeTestGroupB(s.slug) ? 'is-advanced' : ''}`}
@@ -172,17 +160,7 @@ export default function StepServices() {
                       onChange={(n) => setQuantity(s.slug, 'qty', n)}
                     />
                   </div>
-                  {line && (
-                    <p className="select-card__subtotal">
-                      {line.variable ? 'Estimated ' : ''}
-                      <strong>{formatAmount(line.min, line.max)}</strong>
-                      {line.savingsMax > 0 && (
-                        <span className="select-card__saving">
-                          {' '}Save {formatAmount(line.savingsMin, line.savingsMax)}
-                        </span>
-                      )}
-                    </p>
-                  )}
+
                 </div>
               )}
 
@@ -211,8 +189,8 @@ export default function StepServices() {
 
       {!freeTest && estimate.variable && (
         <p className="field__hint" style={{ marginTop: '1.5rem' }}>
-          Services shown with a price range are estimates. We confirm the final amount after
-          reviewing your files and project scope.
+          Some services are priced as a range, so the Project Total below is an estimate.
+          We confirm the final amount after reviewing your files and project scope.
         </p>
       )}
     </div>

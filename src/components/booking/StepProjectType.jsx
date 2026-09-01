@@ -1,6 +1,7 @@
 import { useBooking } from '../../context/BookingContext'
 import { TOTAL_FREE_TEST_CREDITS } from '../../data/freeTestConfig'
 import { PROMO } from '../../data/pricing'
+import { useSaleCountdown } from '../../hooks/useSaleCountdown'
 
 const OPTIONS = [
   {
@@ -11,12 +12,37 @@ const OPTIONS = [
   {
     key: 'book',
     name: 'Paid Project',
-    // Free Test is credit-based and never discounted, so the promo line only
+    // Free Test is credit-based and never discounted, so the promo block only
     // ever appears on the paid option.
-    promo: PROMO.active ? PROMO.stepOneBadge : null,
+    promo: PROMO.active,
     desc: 'Submit a full paid editing project.',
   },
 ]
+
+/**
+ * Sale line on the Paid Project card.
+ *
+ * Reads the same `useSaleCountdown(PROMO.timezone)` hook the global banner
+ * uses. There is no second deadline: both derive from the next midnight in
+ * America/Chicago, so the two readouts always show the same remaining time.
+ */
+function SalePromo() {
+  const { text, ready } = useSaleCountdown(PROMO.timezone)
+  // "UP TO 15% OFF ALL SERVICES" → "15%"; the copy lives in PROMO only.
+  const amount = PROMO.headline.replace('UP TO ', '').split(' OFF')[0]
+
+  return (
+    <span className="promo">
+      <span className="promo__offer">
+        Up to <strong className="promo__amount">{amount} OFF</strong>
+      </span>
+      <span className="promo__timer">
+        {/* Placeholder keeps the row height stable before the first tick. */}
+        <span className="promo__clock">{ready ? text : '--:--:--'}</span> left
+      </span>
+    </span>
+  )
+}
 
 export default function StepProjectType() {
   const { order, setProjectType } = useBooking()
@@ -40,7 +66,7 @@ export default function StepProjectType() {
                 )}
               </span>
               <span className="project-type-card__name">{opt.name}</span>
-              {opt.promo && <span className="project-type-card__promo">{opt.promo}</span>}
+              {opt.promo && <SalePromo />}
               <span className="project-type-card__desc muted">{opt.desc}</span>
             </button>
           )

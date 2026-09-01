@@ -40,6 +40,39 @@
   font-size: 1.5rem;
   letter-spacing: 0.02em;
 }
+
+/* --- Image brand mark ---------------------------------------------------
+   Both logo files are in the DOM; CSS shows the one that matches the header
+   state, so the right version is painted on the first frame with no flash
+   and no scroll listener of its own.
+
+   Sized in em against .logo__mark's 1.5rem so it occupies the same space the
+   old "CS" text did, and the fixed height keeps the header from shifting
+   while the image loads. */
+.logo__mark--img {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5em;
+  /* Nudges the image onto the same optical baseline as REAL ESTATE EDITING,
+     since .logo aligns on `baseline` and an <img> has none of its own. */
+  align-self: center;
+}
+.logo__img {
+  height: 100%;
+  width: auto;
+  max-width: 5rem;
+  object-fit: contain;
+  display: block;
+  background: none;
+}
+
+/* Solid header (every inner page, and home once scrolled) → black mark. */
+.logo__img--light { display: none; }
+.logo__img--dark { display: block; }
+
+/* Transparent header over the hero → white mark. */
+.site-header--over .logo__img--dark { display: none; }
+.site-header--over .logo__img--light { display: block; }
 .logo__word {
   font-family: var(--font-sans);
   font-size: var(--fs-label);
@@ -192,6 +225,9 @@
   border-bottom: 1px solid var(--line);
 }
 .mobile-nav__logo { color: var(--charcoal); }
+/* The drawer is light regardless of the header state behind it. */
+.mobile-nav__logo .logo__img--light { display: none; }
+.mobile-nav__logo .logo__img--dark { display: block; }
 
 .mobile-nav__close {
   min-height: 44px;
@@ -266,6 +302,7 @@
   .site-header__cta-full { display: none; }
   .site-header__cta-short { display: inline; }
   .logo__word { display: none; }
+  .logo__mark--img { height: 1.35em; }
 }
 
 @media (max-width: 360px) {

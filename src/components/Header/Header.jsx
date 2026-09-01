@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { brand, nav, cta } from '../../data/siteData'
 import { useScrolled } from '../../hooks/useScrolled'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
+import BrandMark from './BrandMark'
 import './Header.css'
 
 export default function Header() {
@@ -37,7 +38,7 @@ export default function Header() {
       <header className={`site-header ${overHero ? 'site-header--over' : 'site-header--solid'}`}>
         <div className="site-header__inner container">
           <Link to="/" className="logo" aria-label={`${brand.name} — home`}>
-            <span className="logo__mark">CS</span>
+            <BrandMark />
             <span className="logo__word">Real Estate Editing</span>
           </Link>
 
@@ -108,7 +109,7 @@ export default function Header() {
         >
           <div className="mobile-nav__bar container">
             <Link to="/" className="logo mobile-nav__logo" onClick={closeMenu}>
-              <span className="logo__mark">CS</span>
+              <BrandMark />
             </Link>
             <button
               type="button"

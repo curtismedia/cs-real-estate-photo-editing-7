@@ -201,6 +201,8 @@
 }
 .select-card__name { font-weight: 500; margin-bottom: 0.35rem; display: block; padding-right: 1.5rem; }
 .select-card__desc { font-size: var(--fs-small); color: var(--charcoal-55); }
+/* Free Test only — the credit cost per image. Paid prices are not shown on
+   cards; the sticky Project Total is the single source of pricing in Step 2. */
 .select-card__price { font-size: var(--fs-small); color: var(--stone); margin-top: 0.6rem; display: block; }
 
 /* ---------- Review ---------- */
@@ -357,7 +359,6 @@
 .confirm__text { color: var(--charcoal-80); margin-bottom: 2rem; }
 
 /* ---------- Service quantity (inside a selected card) ---------- */
-.select-card__est { color: var(--charcoal-55); }
 .select-card__qty {
   border-top: 1px solid var(--line);
   padding: 1.1rem 1.35rem 1.25rem;
@@ -374,11 +375,6 @@
 .select-card__qty .field__label { margin-bottom: 0.5rem; }
 .select-card__qty .stepper button { width: 2.4rem; height: 2.4rem; }
 .select-card__qty .stepper input { width: 3.4rem; height: 2.4rem; }
-.select-card__subtotal {
-  font-size: var(--fs-small);
-  color: var(--charcoal-80);
-}
-.select-card__subtotal strong { font-weight: 500; }
 
 /* ---------- Billing breakdown ---------- */
 .billing { border-top: 1px solid var(--line); margin-bottom: 2rem; }
@@ -627,21 +623,6 @@
 }
 
 /* Step 2 — price block on each service card. */
-.select-card__price {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.4rem 0.5rem;
-}
-.select-card__compare {
-  color: var(--charcoal-55);
-  text-decoration-thickness: 1px;
-}
-.select-card__sale { font-weight: 500; }
-.select-card__saving {
-  color: var(--charcoal-55);
-  font-size: 0.85em;
-}
 
 /* Live savings under the sticky total. */
 .summary-bar__saving {
@@ -672,7 +653,6 @@
 }
 
 @media (max-width: 480px) {
-  .select-card__price { gap: 0.3rem 0.4rem; }
   .summary-bar__saving { font-size: 0.62rem; }
 }
 
@@ -853,9 +833,6 @@
   overflow-wrap: anywhere;
 }
 
-/* Line total sits on its own row, small, and wraps rather than overflowing. */
-.select-card__subtotal { overflow-wrap: anywhere; }
-.select-card__saving { display: block; margin-top: 0.1rem; }
 
 /* ===========================================================================
    PREFERRED PARTNER PRICING
@@ -947,3 +924,51 @@
   .billing__line { grid-template-columns: minmax(0, 1fr); }
   .billing__amount { text-align: left; }
 }
+
+/* ===========================================================================
+   STEP 1 — PAID PROJECT SALE BLOCK
+   Bigger than the old inline badge, and carrying the live countdown rather
+   than the words "today only".
+=========================================================================== */
+.promo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.7rem;
+  margin: 0.15rem 0 0.6rem;
+}
+.promo__offer {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: var(--charcoal-80);
+}
+.promo__amount {
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: 0.01em;
+  color: var(--charcoal);
+}
+.promo__timer {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--charcoal-55);
+}
+.promo__clock {
+  /* Tabular figures stop the row twitching sideways each second. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-weight: 500;
+  color: var(--charcoal);
+}
+
+@media (max-width: 400px) {
+  .promo { gap: 0.15rem 0.5rem; }
+  .promo__offer { font-size: 0.88rem; }
+  .promo__amount { font-size: 1.02rem; }
+  .promo__timer { font-size: 0.74rem; }
+}
+
+/* Step 2 cards no longer carry prices; the old price/subtotal rules are
+   retired rather than left to style elements that no longer render. */
