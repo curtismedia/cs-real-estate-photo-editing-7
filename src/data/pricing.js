@@ -27,15 +27,6 @@ export const PROMO = {
   active: true,
   /** Banner copy. */
   headline: 'UP TO 15% OFF ALL SERVICES',
-  export const PROMO = {
-  active: true,
-  /** Banner copy. */
-  headline: 'UP TO 15% OFF ALL SERVICES',
-  /** Countdown runs on this clock for every visitor, worldwide. */
-  timezone: 'America/Chicago',
-  /** Recorded on the order so support can see which promo was applied. */
-  submissionLabel: 'Up to 15% OFF — Today Only',
-}
   /** Countdown runs on this clock for every visitor, worldwide. */
   timezone: 'America/Chicago',
   /** Recorded on the order so support can see which promo was applied. */
@@ -277,9 +268,9 @@ export function calculateEstimate(order = {}) {
       compareMax: lineCompareMax,
       savingsMin: round2(lineCompareMin - lineMin),
       savingsMax: round2(lineCompareMax - lineMax),
-      /** e.g. "20 images × $0.72 / image" */
+      /** e.g. "20 images × $0.85 / image" */
       qtyText: `${qty} ${unitLabel(rate.unit, qty)} × ${formatRate(rate)}`,
-      /** e.g. "$14.40" or "Estimated $36.00–$90.00" */
+      /** e.g. "$17.00" or "Estimated $36.00–$90.00" */
       amountText:
         rate.type === 'range'
           ? `Estimated ${formatAmount(lineMin, lineMax)}`
