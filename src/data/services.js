@@ -71,14 +71,15 @@ export const services = [
     type: 'photo',
     tagline: 'Realistic furniture, lighting-matched',
     mediaDir: '/images/services/virtual-staging/',
-    cover: cover('virtual-staging', 'cs-svc-staging'),
+    // Homepage service card only. The Services page ignores `cover` for photo
+    // services and renders the first before/after pair instead, so this reuses
+    // a real result rather than needing a separate cover.webp upload.
+    cover: '/images/services/virtual-staging/after-01.jpg',
     description:
       'Empty rooms furnished with photorealistic staging — correct perspective, shadows and lighting so the result reads as real, not pasted in. Multiple style directions available.',
-    beforeAfterExamples: [
-      { ...ba('virtual-staging', 1, 'cs-stg'), label: 'Living Room' },
-      { ...ba('virtual-staging', 2, 'cs-stg'), label: 'Bedroom' },
-      { ...ba('virtual-staging', 3, 'cs-stg'), label: 'Dining' },
-    ],
+    // Real media — 9 complete .jpg before/after pairs, numbered 01 … 09.
+    // No labels: the uploaded set is a full shoot, not a few named rooms.
+    beforeAfterExamples: realBaSet('virtual-staging', 9),
     videos: [],
   },
   {
@@ -160,13 +161,15 @@ export const services = [
     type: 'photo',
     tagline: 'Soft evening mood, fully controlled',
     mediaDir: '/images/services/day-to-dusk/',
-    cover: cover('day-to-dusk', 'cs-svc-dusk'),
+    // Homepage service card only. The Services page ignores `cover` for photo
+    // services and renders the first before/after pair instead, so this reuses
+    // a real result rather than needing a separate cover.webp upload.
+    cover: '/images/services/day-to-dusk/after-01.jpg',
     description:
       'A refined evening treatment for exteriors and views — warm, natural and consistent across a full property set, without the heavy-handed look of a filter.',
-    beforeAfterExamples: [
-      { ...ba('day-to-dusk', 1, 'cs-dsk'), label: 'Exterior' },
-      { ...ba('day-to-dusk', 2, 'cs-dsk'), label: 'Pool View' },
-    ],
+    // Real media — 33 complete .jpg before/after pairs, numbered 01 … 33.
+    // No labels: the uploaded set is a full shoot, not a few named rooms.
+    beforeAfterExamples: realBaSet('day-to-dusk', 33),
     videos: [],
   },
   {
@@ -194,36 +197,10 @@ export const services = [
     type: 'photo',
     tagline: 'Single-exposure correction, per image',
     mediaDir: '/images/services/single/',
-    cover: cover('single', 'cs-svc-single'),
+    // Homepage service card only. The Services page ignores `cover` for photo
+    // services and renders the first before/after pair instead, so this reuses
+    // a real result rather than needing a separate cover.webp upload.
+    cover: '/images/services/single/after-01.jpg',
     description:
       'Single-exposure editing for straightforward frames — exposure and white balance correction, vertical and lens correction, noise control and a light clean-up. The efficient option for high-volume sets.',
-    beforeAfterExamples: [
-      { ...ba('single', 1, 'cs-sgl'), label: 'Interior' },
-      { ...ba('single', 2, 'cs-sgl'), label: 'Exterior' },
-    ],
-    videos: [],
-  },
-  {
-    id: 's10',
-    slug: 'floor-plan',
-    order: 10,
-    name: 'Floor Plan',
-    type: 'photo',
-    tagline: 'Clean 2D plans for every listing',
-    mediaDir: '/images/services/floor-plan/',
-    cover: cover('floor-plan', 'cs-svc-floorplan'),
-    description:
-      'Clear, branded 2D floor plans produced from sketches or measurements — room labels, dimensions and a consistent style buyers consistently look for.',
-    beforeAfterExamples: [
-      { ...ba('floor-plan', 1, 'cs-fp'), label: 'Floor Plan' },
-    ],
-    videos: [],
-  },
-]
-
-/** Services in display order. Numbering is derived from this array's index. */
-export const orderedServices = [...services].sort((a, b) => a.order - b.order)
-
-export const getServiceBySlug = (slug) => services.find((s) => s.slug === slug)
-
-export const getServiceName = (slug) => getServiceBySlug(slug)?.name || slug
+    // Real media — 11 complete .jpg before/after pairs, numbered 01 … 11.
