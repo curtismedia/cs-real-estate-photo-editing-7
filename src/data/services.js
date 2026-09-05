@@ -204,3 +204,31 @@ export const services = [
     description:
       'Single-exposure editing for straightforward frames — exposure and white balance correction, vertical and lens correction, noise control and a light clean-up. The efficient option for high-volume sets.',
     // Real media — 11 complete .jpg before/after pairs, numbered 01 … 11.
+    // No labels: the uploaded set is a full shoot, not a few named rooms.
+    beforeAfterExamples: realBaSet('single', 11),
+    videos: [],
+  },
+  {
+    id: 's10',
+    slug: 'floor-plan',
+    order: 10,
+    name: 'Floor Plan',
+    type: 'photo',
+    tagline: 'Clean 2D plans for every listing',
+    mediaDir: '/images/services/floor-plan/',
+    cover: cover('floor-plan', 'cs-svc-floorplan'),
+    description:
+      'Clear, branded 2D floor plans produced from sketches or measurements — room labels, dimensions and a consistent style buyers consistently look for.',
+    beforeAfterExamples: [
+      { ...ba('floor-plan', 1, 'cs-fp'), label: 'Floor Plan' },
+    ],
+    videos: [],
+  },
+]
+
+/** Services in display order. Numbering is derived from this array's index. */
+export const orderedServices = [...services].sort((a, b) => a.order - b.order)
+
+export const getServiceBySlug = (slug) => services.find((s) => s.slug === slug)
+
+export const getServiceName = (slug) => getServiceBySlug(slug)?.name || slug
