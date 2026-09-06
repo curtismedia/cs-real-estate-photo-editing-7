@@ -26,14 +26,29 @@ const ba = (slug, n, seed) => ({
 // they need no readiness flag. Use this per-service as real pairs land, which
 // lets one service switch to real media while the rest keep their fallbacks.
 // `count` must match the number of COMPLETE pairs present in the folder.
+const pairPath = (slug, n, ext) => {
+  const num = String(n).padStart(2, '0')
+  return {
+    before: `/images/services/${slug}/before-${num}.${ext}`,
+    after: `/images/services/${slug}/after-${num}.${ext}`,
+  }
+}
+
 const realBaSet = (slug, count, ext = 'jpg') =>
-  Array.from({ length: count }, (_, i) => {
-    const n = String(i + 1).padStart(2, '0')
-    return {
-      before: `/images/services/${slug}/before-${n}.${ext}`,
-      after: `/images/services/${slug}/after-${n}.${ext}`,
-    }
-  })
+  Array.from({ length: count }, (_, i) => pairPath(slug, i + 1, ext))
+
+/**
+ * Same thing for folders whose numbering has GAPS — pass the ranges that
+ * actually exist, inclusive, in order. `realBaSet` would emit a pair for every
+ * missing number and each one would render as two broken images.
+ *   realBaSetFrom('flambient', [[1, 22], [24, 30]])
+ */
+const realBaSetFrom = (slug, ranges, ext = 'jpg') =>
+  ranges
+    .flatMap(([from, to]) =>
+      Array.from({ length: to - from + 1 }, (_, i) => from + i)
+    )
+    .map((n) => pairPath(slug, n, ext))
 
 export const services = [
   {
@@ -77,9 +92,9 @@ export const services = [
     cover: '/images/services/virtual-staging/after-01.jpg',
     description:
       'Empty rooms furnished with photorealistic staging — correct perspective, shadows and lighting so the result reads as real, not pasted in. Multiple style directions available.',
-    // Real media — 9 complete .jpg before/after pairs, numbered 01 … 09.
+    // Real media — 25 complete .jpg before/after pairs, numbered 01 … 25.
     // No labels: the uploaded set is a full shoot, not a few named rooms.
-    beforeAfterExamples: realBaSet('virtual-staging', 9),
+    beforeAfterExamples: realBaSet('virtual-staging', 25),
     videos: [],
   },
   {
@@ -126,14 +141,16 @@ export const services = [
     type: 'photo',
     tagline: 'Flash-ambient blending, true-to-life color',
     mediaDir: '/images/services/flambient/',
-    cover: cover('flambient', 'cs-svc-flambient'),
+    // Homepage service card only. The Services page ignores `cover` for photo
+    // services and renders the first before/after pair instead, so this reuses
+    // a real result rather than needing a separate cover.webp upload.
+    cover: '/images/services/flambient/after-01.jpg',
     description:
       'Hand-blended flash and ambient frames for interiors that need more than a merge — neutral color cast removal, crisp window pulls, natural shadow retention and a clean, magazine-grade finish on complex mixed lighting.',
-    beforeAfterExamples: [
-      { ...ba('flambient', 1, 'cs-fla'), label: 'Kitchen' },
-      { ...ba('flambient', 2, 'cs-fla'), label: 'Bathroom' },
-      { ...ba('flambient', 3, 'cs-fla'), label: 'Great Room' },
-    ],
+    // Real media — 29 complete .jpg pairs. Numbering runs to 30 but SKIPS 23,
+    // so explicit ranges are used; a plain count would emit two broken images.
+    // No labels: the uploaded set is a full shoot, not a few named rooms.
+    beforeAfterExamples: realBaSetFrom('flambient', [[1, 22], [24, 30]]),
     videos: [],
   },
   {
@@ -144,13 +161,15 @@ export const services = [
     type: 'photo',
     tagline: 'Golden-hour exteriors from daytime frames',
     mediaDir: '/images/services/twilight/',
-    cover: cover('twilight', 'cs-svc-twilight'),
+    // Homepage service card only. The Services page ignores `cover` for photo
+    // services and renders the first before/after pair instead, so this reuses
+    // a real result rather than needing a separate cover.webp upload.
+    cover: '/images/services/twilight/after-01.jpg',
     description:
       'Convert daytime exteriors into rich twilight scenes — warm interior glow, deep blue sky and balanced landscape lighting that makes a listing stand out in the feed.',
-    beforeAfterExamples: [
-      { ...ba('twilight', 1, 'cs-tw'), label: 'Front Exterior' },
-      { ...ba('twilight', 2, 'cs-tw'), label: 'Backyard' },
-    ],
+    // Real media — 39 complete .jpg before/after pairs, numbered 01 … 39.
+    // No labels: the uploaded set is a full shoot, not a few named rooms.
+    beforeAfterExamples: realBaSet('twilight', 39),
     videos: [],
   },
   {
@@ -180,20 +199,22 @@ export const services = [
     type: 'photo',
     tagline: 'Sky replacement & aerial color match',
     mediaDir: '/images/services/drone-aerial/',
-    cover: cover('drone-aerial', 'cs-svc-drone'),
+    // Homepage service card only. The Services page ignores `cover` for photo
+    // services and renders the first before/after pair instead, so this reuses
+    // a real result rather than needing a separate cover.webp upload.
+    cover: '/images/services/drone-aerial/after-01.jpg',
     description:
       'Aerial stills cleaned, color-matched to the ground set, with natural sky replacement and lens correction for a cohesive gallery from the first frame to the last.',
-    beforeAfterExamples: [
-      { ...ba('drone-aerial', 1, 'cs-dr'), label: 'Aerial' },
-      { ...ba('drone-aerial', 2, 'cs-dr'), label: 'Lot Overview' },
-    ],
+    // Real media — 18 complete .jpg before/after pairs, numbered 01 … 18.
+    // No labels: the uploaded set is a full shoot, not a few named rooms.
+    beforeAfterExamples: realBaSet('drone-aerial', 18),
     videos: [],
   },
   {
     id: 's09',
     slug: 'single',
     order: 9,
-    name: 'Single',
+    name: 'Single Exposure Editing',
     type: 'photo',
     tagline: 'Single-exposure correction, per image',
     mediaDir: '/images/services/single/',
