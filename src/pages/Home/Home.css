@@ -29,7 +29,15 @@
 .home-services__track {
   display: flex;
   gap: clamp(1rem, 2vw, 1.75rem);
-  padding-inline: var(--gutter);
+  /* Align the first card with the heading above it.
+     `.container` is capped at --max-w and centred, so above that width its
+     left edge is the centring offset PLUS the gutter. A bare `var(--gutter)`
+     here left the carousel stuck at the viewport edge on wide screens —
+     240px adrift at 1920px, 1000px at 3440px.
+     `100%` resolves against the scroller, which excludes the vertical
+     scrollbar; `100vw` would not, and would over-inset by ~15px on Windows.
+     max() keeps it at a plain gutter below --max-w, where nothing is centred. */
+  padding-inline: var(--container-inset);
   width: max-content;
 }
 .home-services__item {
@@ -93,7 +101,8 @@
     display: flex;
     grid-template-columns: none;
     gap: 1rem;
-    padding-inline: var(--gutter);
+    /* Same inset as the services carousel and the page container. */
+    padding-inline: var(--container-inset);
     width: max-content;
     max-width: none;
   }

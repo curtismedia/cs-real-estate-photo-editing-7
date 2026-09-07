@@ -53,6 +53,23 @@ body {
   padding-inline: var(--gutter);
 }
 
+/*
+ * Left/right inset that matches `.container`'s content edge, for full-bleed
+ * strips that must start in line with the page but still scroll to the
+ * viewport edge — the homepage carousels.
+ *
+ * Below --max-w the container isn't centred, so the inset is just the gutter.
+ * Above it, add half the leftover width. `100%` is deliberate: it resolves
+ * against the element's containing block, which excludes the vertical
+ * scrollbar, whereas 100vw includes it and would push content ~15px too far.
+ */
+:root {
+  --container-inset: max(
+    var(--gutter),
+    calc((100% - var(--max-w)) / 2 + var(--gutter))
+  );
+}
+
 .section {
   padding-block: var(--space-section);
 }
