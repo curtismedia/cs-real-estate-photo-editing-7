@@ -1,73 +1,24 @@
 import { useState } from 'react'
 import { useSEO } from '../../hooks/useSEO'
-import { useYouTubePlaylist } from '../../hooks/useYouTubePlaylist'
 import CTA from '../../components/CTA/CTA'
 import './VideoEditing.css'
 
-/**
- * One tile. Shows the thumbnail until the visitor clicks, then swaps in the
- * YouTube iframe with autoplay. Loading 30 iframes up front would pull in
- * megabytes of YouTube's player for videos nobody watches, so the embed is
- * created on demand — one per tile, only once.
- */
-function VideoTile({ video }) {
-  const [playing, setPlaying] = useState(false)
+// ---------------------------------------------------------------------------
+// INTERIM IMPLEMENTATION — direct playlist embed.
+//
+// YouTube's own playlist player does the work here: it reads the playlist
+// live, so adding a video on YouTube makes it appear on the site with no code
+// change, no API key, no serverless function, no environment variables.
+//
+// Trade-off: a plain embed cannot tell us each video's aspect ratio, so the
+// page cannot be split into "Property Videos" (16:9) and "Social Media Reels"
+// (9:16) — that needs the YouTube Data API. To upgrade later, restore
+// src/hooks/useYouTubePlaylist.js and netlify/functions/youtube-playlist.js;
+// this file is the only one that then has to change.
+// ---------------------------------------------------------------------------
 
-  return (
-    <figure className="video-tile">
-      <div className="video-tile__frame">
-        {playing ? (
-          <iframe
-            className="video-tile__player"
-            src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
-            title={video.title}
-            /* `fullscreen` is what actually enables the fullscreen button. */
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-            allowFullScreen
-            loading="lazy"
-          />
-        ) : (
-          <button
-            type="button"
-            className="video-tile__poster"
-            onClick={() => setPlaying(true)}
-            aria-label={`Play ${video.title}`}
-          >
-            {video.thumbnail && (
-              <img src={video.thumbnail} alt="" loading="lazy" decoding="async" />
-            )}
-            <span className="video-tile__play" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 20 20">
-                <path d="M6 4l10 6-10 6z" fill="currentColor" />
-              </svg>
-            </span>
-          </button>
-        )}
-      </div>
-      <figcaption className="video-tile__title muted">{video.title}</figcaption>
-    </figure>
-  )
-}
-
-function VideoGroup({ label, title, blurb, videos, variant }) {
-  if (!videos.length) return null
-  return (
-    <section className="video-group">
-      <div className="container">
-        <span className="label">{label}</span>
-        <h2 className="h2 video-group__title">{title}</h2>
-        <p className="muted video-group__blurb">{blurb}</p>
-        <div className={`video-grid video-grid--${variant}`}>
-          {videos.map((v) => (
-            <VideoTile key={v.id} video={v} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-const PLAYLIST_URL = 'https://www.youtube.com/playlist?list=PLNeKjdQzHAcs'
+const PLAYLIST_ID = 'PLNeKjdQzHAcs'
+const PLAYLIST_URL = `https://www.youtube.com/playlist?list=${PLAYLIST_ID}`
 
 export default function VideoEditing() {
   useSEO({
@@ -76,12 +27,10 @@ export default function VideoEditing() {
       'Property films, listing videos and social reels edited for real estate photographers and media teams — colour grading, pacing, music and titles.',
   })
 
-  const { status, videos, message } = useYouTubePlaylist()
-
-  // Aspect ratio comes from the API, so a vertical reel is never cropped into
-  // a landscape box or stretched to fill one.
-  const horizontal = videos.filter((v) => v.orientation === 'horizontal')
-  const vertical = videos.filter((v) => v.orientation === 'vertical')
+  // The iframe is only created once the visitor asks for it. Embedding the
+  // player on page load pulls in several hundred KB of YouTube script for a
+  // video that may never be watched.
+  const [playing, setPlaying] = useState(false)
 
   return (
     <>
@@ -98,62 +47,49 @@ export default function VideoEditing() {
         </div>
       </section>
 
-      {status === 'loading' && (
-        <section className="video-group">
-          <div className="container">
-            <p className="muted">Loading portfolio…</p>
-          </div>
-        </section>
-      )}
+      <section className="video-group">
+        <div className="container">
+          <span className="label">Portfolio</span>
+          <h2 className="h2 video-group__title">Selected video work</h2>
+          <p className="muted video-group__blurb">
+            Browse the full reel below. Use the playlist button in the player to jump
+            between videos, or open the playlist on YouTube for a larger window.
+          </p>
 
-      {status === 'ready' && (
-        <>
-          <VideoGroup
-            label="16:9"
-            title="Property videos"
-            blurb="Full listing films and walkthroughs, cut for websites, MLS and YouTube."
-            videos={horizontal}
-            variant="wide"
-          />
-          <VideoGroup
-            label="9:16"
-            title="Social media reels"
-            blurb="Vertical edits built for Instagram, TikTok and YouTube Shorts."
-            videos={vertical}
-            variant="tall"
-          />
-          {!videos.length && (
-            <section className="video-group">
-              <div className="container">
-                <p className="muted">
-                  No videos in the portfolio yet.{' '}
-                  <a className="link" href={PLAYLIST_URL} target="_blank" rel="noopener noreferrer">
-                    View the playlist <span className="arrow" aria-hidden="true">→</span>
-                  </a>
-                </p>
-              </div>
-            </section>
-          )}
-        </>
-      )}
-
-      {(status === 'unconfigured' || status === 'error') && (
-        <section className="video-group">
-          <div className="container">
-            <div className="video-notice">
-              <p className="muted">
-                The video portfolio is temporarily unavailable.{' '}
-                <a className="link" href={PLAYLIST_URL} target="_blank" rel="noopener noreferrer">
-                  Watch it on YouTube <span className="arrow" aria-hidden="true">→</span>
-                </a>
-              </p>
-              {/* Diagnostic for whoever is maintaining the site, hidden from
-                  the page but visible in the DOM and the console. */}
-              {message && <p hidden>{message}</p>}
-            </div>
+          <div className="video-embed">
+            {playing ? (
+              <iframe
+                className="video-embed__player"
+                src={`https://www.youtube-nocookie.com/embed/videoseries?list=${PLAYLIST_ID}&autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+                title="CS Real Estate video portfolio"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                loading="lazy"
+              />
+            ) : (
+              <button
+                type="button"
+                className="video-embed__poster"
+                onClick={() => setPlaying(true)}
+                aria-label="Play the video portfolio"
+              >
+                <span className="video-embed__play" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 20 20">
+                    <path d="M6 4l10 6-10 6z" fill="currentColor" />
+                  </svg>
+                </span>
+                <span className="video-embed__cue">Play portfolio</span>
+              </button>
+            )}
           </div>
-        </section>
-      )}
+
+          <p className="video-embed__note muted">
+            <a className="link" href={PLAYLIST_URL} target="_blank" rel="noopener noreferrer">
+              Open the full playlist on YouTube <span className="arrow" aria-hidden="true">→</span>
+            </a>
+          </p>
+        </div>
+      </section>
 
       <CTA />
     </>

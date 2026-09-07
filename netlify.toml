@@ -4,14 +4,6 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  functions = "netlify/functions"
-
-# API routes must be matched BEFORE the SPA catch-all below, otherwise every
-# /api/* request would be answered with index.html.
-[[redirects]]
-  from = "/api/youtube-playlist"
-  to = "/.netlify/functions/youtube-playlist"
-  status = 200
 
 # SPA fallback: any direct URL (e.g. /work, /services) that isn't a real
 # file is served index.html so React Router can handle the route.
