@@ -1,0 +1,42 @@
+/* Shared video portfolio grid — used by the /services/video-editing page and
+   by the Video Editing popup. One set of rules, so the two stay identical. */
+
+.vport__group + .vport__group {
+  margin-top: clamp(3rem, 6vw, 5rem);
+}
+
+.vport__title { margin: 1rem 0 0.75rem; }
+.vport__blurb {
+  max-width: 38rem;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.vport__grid {
+  display: grid;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+/* 16:9 — two across on desktop, one on mobile. */
+.vport__grid--wide { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 800px) {
+  .vport__grid--wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* 9:16 — three across on desktop, two on tablet and phone. A full-width 9:16
+   tile on a phone would be taller than the viewport, so two narrow columns
+   read far better than one enormous one. */
+.vport__grid--tall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 700px) {
+  .vport__grid--tall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  /* Cap the width so reels don't balloon on a wide screen. */
+  .vport--page .vport__grid--tall { max-width: 60rem; }
+}
+
+/* Inside the dark popup the utility classes need the light treatment the rest
+   of .service-modal already gets; scoped here so the page version is
+   unaffected. */
+.vport--modal .label,
+.vport--modal .vport__blurb { color: var(--light-70); }
+.vport--modal .vport__title { color: var(--light); }

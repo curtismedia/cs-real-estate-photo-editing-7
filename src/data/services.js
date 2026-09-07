@@ -12,7 +12,7 @@
 // See src/data/media.js to switch a folder over to real media.
 
 import { resolveMedia } from './media'
-import { videoCover, popupVideos } from './videos'
+import { videoCover, videoEditingVideos } from './videos'
 
 const cover = (slug, seed) =>
   resolveMedia(slug, `/images/services/${slug}/cover.webp`, seed)
@@ -60,13 +60,13 @@ export const services = [
     type: 'video',
     tagline: 'Cinematic property films & listing reels',
     mediaDir: '/images/services/video-editing/',
-    // Cover and popup previews both come from src/data/videos.js, so changing
-    // the first video there updates the Homepage card, this row and the popup
-    // together. No placeholder or sample footage anywhere.
+    // Cover and the popup's video list both come from src/data/videos.js, so
+    // changing the first video there updates the Homepage card, this row and
+    // the popup together. No placeholder or sample footage anywhere.
     cover: videoCover,
     description:
       'Full-length property films, agent-branded listing videos and short social edits. Color grading, pacing, licensed music and clean titles — cut to tell the story of the home.',
-    videos: popupVideos,
+    videos: videoEditingVideos,
     beforeAfterExamples: [],
   },
   {

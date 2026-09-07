@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import Modal from '../Modal/Modal'
 import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
-import VideoTile from '../VideoTile/VideoTile'
+import VideoPortfolio from '../VideoPortfolio/VideoPortfolio'
 import { cta } from '../../data/siteData'
 import './ServiceModal.css'
 
@@ -26,16 +26,14 @@ export default function ServiceModal({ service, onClose }) {
             </div>
           )}
 
+          {/* Video services show the whole portfolio, using the same component
+              as /services/video-editing so the two can never diverge. */}
           {service.type === 'video' && service.videos?.length > 0 && (
             <>
-              <div className="service-modal__videos">
-                {service.videos.map((v) => (
-                  <VideoTile key={v.youtubeId} video={v} />
-                ))}
-              </div>
+              <VideoPortfolio context="modal" />
               <p className="service-modal__all">
                 <Link className="link" to="/services/video-editing" onClick={onClose}>
-                  View all video work <span className="arrow" aria-hidden="true">→</span>
+                  Open the video portfolio page <span className="arrow" aria-hidden="true">→</span>
                 </Link>
               </p>
             </>

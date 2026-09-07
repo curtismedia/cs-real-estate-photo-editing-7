@@ -79,18 +79,7 @@
   .service-modal__videos { grid-template-columns: 1fr; }
 }
 
-/* Video service popup: real YouTube tiles rather than sample footage. The
-   grid mirrors the before/after grid so the two service types feel alike. */
-.service-modal__videos {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  align-items: start;
-}
-.service-modal__all { margin-bottom: 2rem; }
+/* Video service popup: the shared VideoPortfolio component supplies the grids,
+   so only the trailing link needs styling here. */
+.service-modal__all { margin: 2.5rem 0 2rem; }
 .service-modal__all .link { color: var(--light); }
-
-@media (max-width: 860px) {
-  .service-modal__videos { grid-template-columns: minmax(0, 1fr); }
-}

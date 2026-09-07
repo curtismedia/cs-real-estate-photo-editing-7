@@ -61,13 +61,3 @@ export const verticalVideos = videoEditingVideos.filter((v) => v.orientation ===
 
 /** Cover used by the Homepage card, the Services row and anywhere else. */
 export const videoCover = thumbnailFor(videoEditingVideos[0].youtubeId)
-
-/**
- * The two videos previewed in the service popup: one landscape and one
- * vertical when both exist, so the popup shows the range of work rather than
- * two of the same shape.
- */
-export const popupVideos = [
-  landscapeVideos[0],
-  verticalVideos[0] || landscapeVideos[1],
-].filter(Boolean)

@@ -1,26 +1,8 @@
 import { useSEO } from '../../hooks/useSEO'
-import VideoTile from '../../components/VideoTile/VideoTile'
+import VideoPortfolio from '../../components/VideoPortfolio/VideoPortfolio'
 import CTA from '../../components/CTA/CTA'
-import { landscapeVideos, verticalVideos, PLAYLIST_URL } from '../../data/videos'
+import { PLAYLIST_URL } from '../../data/videos'
 import './VideoEditing.css'
-
-function VideoGroup({ label, title, blurb, videos, variant }) {
-  if (!videos.length) return null
-  return (
-    <section className="video-group">
-      <div className="container">
-        <span className="label">{label}</span>
-        <h2 className="h2 video-group__title">{title}</h2>
-        <p className="muted video-group__blurb">{blurb}</p>
-        <div className={`video-grid video-grid--${variant}`}>
-          {videos.map((v) => (
-            <VideoTile key={v.youtubeId} video={v} />
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 export default function VideoEditing() {
   useSEO({
@@ -44,21 +26,12 @@ export default function VideoEditing() {
         </div>
       </section>
 
-      <VideoGroup
-        label="16:9"
-        title="Property videos"
-        blurb="Full listing films and walkthroughs, cut for websites, MLS and YouTube."
-        videos={landscapeVideos}
-        variant="wide"
-      />
-
-      <VideoGroup
-        label="9:16"
-        title="Social media reels"
-        blurb="Vertical edits built for Instagram, TikTok and YouTube Shorts."
-        videos={verticalVideos}
-        variant="tall"
-      />
+      <section className="video-page">
+        <div className="container">
+          {/* Same component the Homepage popup renders. */}
+          <VideoPortfolio context="page" />
+        </div>
+      </section>
 
       <section className="video-outro">
         <div className="container">

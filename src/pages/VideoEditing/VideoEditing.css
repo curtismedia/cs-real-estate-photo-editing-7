@@ -1,39 +1,10 @@
-/* Video editing portfolio.
-   Uses the site's existing .container, .label, .h2, .muted and spacing scale —
-   nothing here overrides global typography or layout tokens. */
+/* Page-level spacing only. The grids themselves live in
+   components/VideoPortfolio/VideoPortfolio.css and are shared with the popup. */
 
-.video-group {
+.video-page {
   padding-block: clamp(3rem, 7vw, 6rem);
 }
-.video-group + .video-group { padding-top: 0; }
 
-.video-group__title { margin: 1rem 0 0.75rem; }
-.video-group__blurb {
-  max-width: 38rem;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
+.video-outro {
+  padding-bottom: clamp(3rem, 7vw, 6rem);
 }
-
-.video-grid {
-  display: grid;
-  gap: clamp(1.25rem, 2.5vw, 2rem);
-}
-
-/* 16:9 — two across on desktop, one on mobile. */
-.video-grid--wide { grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 800px) {
-  .video-grid--wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-/* 9:16 — three across on desktop, two on tablet. A full-width 9:16 tile on a
-   phone would be taller than the viewport, so two narrow columns read far
-   better than one enormous one. */
-.video-grid--tall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (min-width: 700px) {
-  .video-grid--tall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@media (min-width: 1100px) {
-  /* Cap the width so reels don't balloon on a wide screen. */
-  .video-grid--tall { max-width: 60rem; }
-}
-
-.video-outro { padding-bottom: clamp(3rem, 7vw, 6rem); }
