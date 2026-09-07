@@ -5,83 +5,35 @@
 .video-group {
   padding-block: clamp(3rem, 7vw, 6rem);
 }
+.video-group + .video-group { padding-top: 0; }
 
-.video-group__title {
-  margin: 1rem 0 0.75rem;
-}
+.video-group__title { margin: 1rem 0 0.75rem; }
 .video-group__blurb {
   max-width: 38rem;
-  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
-/* The wrapper owns the 16:9 box, so the poster and the iframe occupy exactly
-   the same space and nothing shifts when the player swaps in. The YouTube
-   player letterboxes vertical videos itself, which is why nothing here crops
-   or stretches: the frame is fixed and the video is fitted inside it. */
-.video-embed {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--charcoal);
-}
-
-.video-embed__player {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-}
-
-.video-embed__poster {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  background: var(--charcoal);
-  color: var(--light);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.video-embed__play {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  border: 1px solid rgba(245, 242, 236, 0.7);
-  background: rgba(18, 17, 16, 0.45);
+.video-grid {
   display: grid;
-  place-items: center;
-  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
-}
-.video-embed__poster:hover .video-embed__play {
-  background: rgba(18, 17, 16, 0.75);
-  transform: scale(1.05);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
 }
 
-.video-embed__cue {
-  font-family: var(--font-sans);
-  font-size: var(--fs-label);
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--light-70);
+/* 16:9 — two across on desktop, one on mobile. */
+.video-grid--wide { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 800px) {
+  .video-grid--wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.video-embed__note {
-  margin-top: 1.25rem;
-  font-size: var(--fs-small);
+/* 9:16 — three across on desktop, two on tablet. A full-width 9:16 tile on a
+   phone would be taller than the viewport, so two narrow columns read far
+   better than one enormous one. */
+.video-grid--tall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 700px) {
+  .video-grid--tall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  /* Cap the width so reels don't balloon on a wide screen. */
+  .video-grid--tall { max-width: 60rem; }
 }
 
-@media (max-width: 560px) {
-  .video-embed__play { width: 54px; height: 54px; }
-  .video-embed__cue { font-size: 0.6rem; letter-spacing: 0.12em; }
-}
+.video-outro { padding-bottom: clamp(3rem, 7vw, 6rem); }

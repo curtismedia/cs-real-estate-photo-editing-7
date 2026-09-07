@@ -1,0 +1,77 @@
+/* Shared video card — used by the portfolio page and the service popup. */
+
+.vtile { margin: 0; }
+
+/* The frame owns the aspect ratio, so poster and iframe occupy the same box
+   and nothing shifts when the player swaps in. */
+.vtile__frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--charcoal);
+}
+.vtile__frame--landscape { aspect-ratio: 16 / 9; }
+.vtile__frame--vertical { aspect-ratio: 9 / 16; }
+
+.vtile__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--charcoal);
+  cursor: pointer;
+  display: block;
+}
+.vtile__poster img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 0.6s var(--ease);
+}
+/* Landscape thumbnails match the frame, so they can fill it. */
+.vtile__frame--landscape .vtile__poster img { object-fit: cover; }
+/* YouTube stills are always 16:9. In a 9:16 frame `contain` letterboxes the
+   still rather than cropping the middle out of the shot. The video itself
+   plays at its true ratio once the iframe loads. */
+.vtile__frame--vertical .vtile__poster img { object-fit: contain; }
+
+.vtile__poster:hover img { transform: scale(1.03); }
+
+.vtile__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 1px solid rgba(245, 242, 236, 0.7);
+  background: rgba(18, 17, 16, 0.45);
+  color: var(--light);
+  display: grid;
+  place-items: center;
+  transition: background 0.3s var(--ease);
+}
+.vtile__poster:hover .vtile__play { background: rgba(18, 17, 16, 0.72); }
+
+.vtile__player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.vtile__title {
+  margin-top: 0.7rem;
+  font-size: var(--fs-small);
+  line-height: 1.45;
+}
+
+@media (max-width: 560px) {
+  .vtile__play { width: 46px; height: 46px; }
+  .vtile__frame--vertical .vtile__play { width: 38px; height: 38px; }
+}

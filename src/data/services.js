@@ -12,6 +12,7 @@
 // See src/data/media.js to switch a folder over to real media.
 
 import { resolveMedia } from './media'
+import { videoCover, popupVideos } from './videos'
 
 const cover = (slug, seed) =>
   resolveMedia(slug, `/images/services/${slug}/cover.webp`, seed)
@@ -59,23 +60,13 @@ export const services = [
     type: 'video',
     tagline: 'Cinematic property films & listing reels',
     mediaDir: '/images/services/video-editing/',
-    cover: cover('video-editing', 'cs-svc-video'),
+    // Cover and popup previews both come from src/data/videos.js, so changing
+    // the first video there updates the Homepage card, this row and the popup
+    // together. No placeholder or sample footage anywhere.
+    cover: videoCover,
     description:
       'Full-length property films, agent-branded listing videos and short social edits. Color grading, pacing, licensed music and clean titles — cut to tell the story of the home.',
-    videos: [
-      {
-        id: 'v1',
-        title: 'Listing Film — Coastal',
-        poster: resolveMedia('video-editing', '/images/services/video-editing/poster-01.webp', 'cs-video-1'),
-        src: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-      },
-      {
-        id: 'v2',
-        title: 'Social Reel — Loft',
-        poster: resolveMedia('video-editing', '/images/services/video-editing/poster-02.webp', 'cs-video-2'),
-        src: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-      },
-    ],
+    videos: popupVideos,
     beforeAfterExamples: [],
   },
   {

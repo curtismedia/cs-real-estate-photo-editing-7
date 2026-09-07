@@ -1,13 +1,11 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from '../Modal/Modal'
 import BeforeAfterSlider from '../BeforeAfterSlider/BeforeAfterSlider'
-import VideoModal from '../VideoModal/VideoModal'
+import VideoTile from '../VideoTile/VideoTile'
 import { cta } from '../../data/siteData'
 import './ServiceModal.css'
 
 export default function ServiceModal({ service, onClose }) {
-  const [activeVideo, setActiveVideo] = useState(null)
   if (!service) return null
 
   return (
@@ -29,17 +27,18 @@ export default function ServiceModal({ service, onClose }) {
           )}
 
           {service.type === 'video' && service.videos?.length > 0 && (
-            <div className="service-modal__videos">
-              {service.videos.map((v) => (
-                <button key={v.id} className="service-modal__video" onClick={() => setActiveVideo(v)}>
-                  <img src={v.poster} alt={v.title} loading="lazy" />
-                  <span className="service-modal__play" aria-hidden="true">
-                    <svg width="22" height="22" viewBox="0 0 20 20"><path d="M6 4l10 6-10 6z" fill="currentColor" /></svg>
-                  </span>
-                  <span className="service-modal__video-title label">{v.title}</span>
-                </button>
-              ))}
-            </div>
+            <>
+              <div className="service-modal__videos">
+                {service.videos.map((v) => (
+                  <VideoTile key={v.youtubeId} video={v} />
+                ))}
+              </div>
+              <p className="service-modal__all">
+                <Link className="link" to="/services/video-editing" onClick={onClose}>
+                  View all video work <span className="arrow" aria-hidden="true">→</span>
+                </Link>
+              </p>
+            </>
           )}
 
           <div className="service-modal__cta">
@@ -50,7 +49,6 @@ export default function ServiceModal({ service, onClose }) {
         </div>
       </Modal>
 
-      <VideoModal video={activeVideo} onClose={() => setActiveVideo(null)} />
     </>
   )
 }
