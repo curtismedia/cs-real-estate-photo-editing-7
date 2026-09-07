@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useSEO } from '../../hooks/useSEO'
 import BeforeAfterSlider from '../../components/BeforeAfterSlider/BeforeAfterSlider'
 import ServiceModal from '../../components/ServiceModal/ServiceModal'
@@ -39,14 +40,18 @@ export default function Services() {
                 <div className="service-row__media">
                   {s.type === 'photo' && firstBA ? (
                     <BeforeAfterSlider before={firstBA.before} after={firstBA.after} alt={s.name} />
+                  ) : s.type === 'video' ? (
+                    /* Video editing has a full portfolio page rather than a
+                       modal, so the cover links there. */
+                    <Link to="/services/video-editing" className="service-row__cover" aria-label={`View ${s.name} portfolio`}>
+                      <img src={s.cover} alt={s.name} loading="lazy" />
+                      <span className="service-row__play" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 20 20"><path d="M6 4l10 6-10 6z" fill="currentColor" /></svg>
+                      </span>
+                    </Link>
                   ) : (
                     <button className="service-row__cover" onClick={() => setActive(s)} aria-label={`View ${s.name} examples`}>
                       <img src={s.cover} alt={s.name} loading="lazy" />
-                      {s.type === 'video' && (
-                        <span className="service-row__play" aria-hidden="true">
-                          <svg width="22" height="22" viewBox="0 0 20 20"><path d="M6 4l10 6-10 6z" fill="currentColor" /></svg>
-                        </span>
-                      )}
                     </button>
                   )}
                 </div>
@@ -54,9 +59,15 @@ export default function Services() {
                   <span className="label service-row__num">{String(i + 1).padStart(2, '0')}</span>
                   <h2 className="h2 service-row__name">{s.name}</h2>
                   <p className="muted service-row__desc">{s.description}</p>
-                  <button className="link" onClick={() => setActive(s)}>
-                    View examples <span className="arrow" aria-hidden="true">→</span>
-                  </button>
+                  {s.type === 'video' ? (
+                    <Link className="link" to="/services/video-editing">
+                      View portfolio <span className="arrow" aria-hidden="true">→</span>
+                    </Link>
+                  ) : (
+                    <button className="link" onClick={() => setActive(s)}>
+                      View examples <span className="arrow" aria-hidden="true">→</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </section>

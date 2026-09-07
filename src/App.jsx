@@ -6,6 +6,7 @@ import Footer from './components/Footer/Footer'
 import Home from './pages/Home/Home'
 import Work from './pages/Work/Work'
 import Services from './pages/Services/Services'
+import VideoEditing from './pages/VideoEditing/VideoEditing'
 import About from './pages/About/About'
 import Contact from './pages/Contact/Contact'
 import FreeTest from './pages/FreeTest/FreeTest'
@@ -50,6 +51,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/work" element={<Work />} />
           <Route path="/services" element={<Services />} />
+          {/* Video editing has its own portfolio page — it is the one service
+              with no before/after pairs. */}
+          <Route path="/services/video-editing" element={<VideoEditing />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/free-test" element={<FreeTest />} />
