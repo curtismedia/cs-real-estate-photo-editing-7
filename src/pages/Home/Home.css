@@ -6,6 +6,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 2.5vw, 2rem);
+  /* Desktop is a plain centred grid, so max-width + auto margins already
+     reproduce `.container` exactly. */
   padding-inline: var(--gutter);
   max-width: var(--max-w);
   margin-inline: auto;
@@ -29,17 +31,17 @@
 .home-services__track {
   display: flex;
   gap: clamp(1rem, 2vw, 1.75rem);
-  /* Align the first card with the heading above it.
-     `.container` is capped at --max-w and centred, so above that width its
-     left edge is the centring offset PLUS the gutter. A bare `var(--gutter)`
-     here left the carousel stuck at the viewport edge on wide screens —
-     240px adrift at 1920px, 1000px at 3440px.
-     `100%` resolves against the scroller, which excludes the vertical
-     scrollbar; `100vw` would not, and would over-inset by ~15px on Windows.
-     max() keeps it at a plain gutter below --max-w, where nothing is centred. */
-  padding-inline: var(--container-inset);
+  /* Padding on the track itself, not the scroller: a flex overflow container
+     drops its trailing padding in several engines, whereas padding on a
+     `width: max-content` child is included in the scrollable width, so the
+     last card keeps its end gutter too. */
+  padding-inline: var(--carousel-inset);
+  box-sizing: border-box;
   width: max-content;
 }
+/* Snap to the inset edge rather than the raw viewport edge, so a snapped card
+   lands where the heading starts. */
+.home-services__scroller { scroll-padding-inline: var(--carousel-inset); }
 .home-services__item {
   width: clamp(16rem, 24vw, 21rem);
   flex: 0 0 auto;
@@ -102,10 +104,12 @@
     grid-template-columns: none;
     gap: 1rem;
     /* Same inset as the services carousel and the page container. */
-    padding-inline: var(--container-inset);
+    padding-inline: var(--carousel-inset);
+    box-sizing: border-box;
     width: max-content;
     max-width: none;
   }
+  .home-work__scroller { scroll-padding-inline: var(--carousel-inset); }
   .home-work__item {
     width: 82vw;
     flex: 0 0 auto;

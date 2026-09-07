@@ -54,19 +54,27 @@ body {
 }
 
 /*
- * Left/right inset that matches `.container`'s content edge, for full-bleed
- * strips that must start in line with the page but still scroll to the
- * viewport edge — the homepage carousels.
+ * Left/right inset that lines a full-bleed strip up with `.container`'s
+ * content edge, while still letting it scroll to the viewport edge — the two
+ * homepage carousels.
  *
- * Below --max-w the container isn't centred, so the inset is just the gutter.
- * Above it, add half the leftover width. `100%` is deliberate: it resolves
- * against the element's containing block, which excludes the vertical
- * scrollbar, whereas 100vw includes it and would push content ~15px too far.
+ * Below --max-w the container is not centred, so the inset is just the gutter.
+ * Above it, add half the leftover width, which is exactly what
+ * `margin-inline: auto` produces on `.container`.
+ *
+ * 100vw, NOT 100%. The tracks are `width: max-content`, and during intrinsic
+ * sizing a percentage resolves against zero rather than the containing block,
+ * so a `100%` version collapsed to the bare gutter (or dropped entirely) and
+ * the first card sat flush against the viewport edge. Viewport units have no
+ * such dependency. The trade-off is that 100vw includes the vertical
+ * scrollbar, so on a desktop browser with a classic scrollbar the inset can
+ * run ~8px wide of the heading; max() keeps it exact everywhere below --max-w,
+ * which covers every phone and tablet.
  */
 :root {
-  --container-inset: max(
+  --carousel-inset: max(
     var(--gutter),
-    calc((100% - var(--max-w)) / 2 + var(--gutter))
+    calc((100vw - var(--max-w)) / 2 + var(--gutter))
   );
 }
 
