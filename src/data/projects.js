@@ -12,6 +12,8 @@
 // MEDIA: every project uses real uploaded .jpg files. The picsum helper below
 // is kept only as a safe fallback for any project added before its images are.
 
+import { withBase } from '../lib/assetPath'
+
 const img = (seed, w = 1600, h = 1067) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`
 
@@ -23,7 +25,7 @@ const img = (seed, w = 1600, h = 1067) =>
 // file, while the gallery always runs 01 … NN in numerical order. Choosing a
 // different cover therefore never reorders the gallery.
 const realImg = (slug, n, ext = 'webp') =>
-  `/images/work/${slug}/${slug}-${String(n).padStart(2, '0')}.${ext}`
+  withBase(`/images/work/${slug}/${slug}-${String(n).padStart(2, '0')}.${ext}`)
 
 /**
  * Ordered list of real image paths, 01 … count.

@@ -9,7 +9,12 @@ import './styles/global.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    {/* basename keeps every route ('/', '/work', '/services', …) correctly
+        anchored under the GitHub Pages sub-path (e.g.
+        /cs-real-estate-photo-editing-7/work). BASE_URL comes from vite.config.js
+        `base`, so switching to a custom domain (`base: '/'`) needs no change
+        here — basename becomes '/' automatically. */}
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>
   </StrictMode>

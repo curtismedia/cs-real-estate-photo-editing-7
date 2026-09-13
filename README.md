@@ -11,18 +11,38 @@ npm run build      # production build → dist/
 npm run preview    # preview the production build locally
 ```
 
-## Deploy (Netlify)
+## Deploy (GitHub Pages)
 
-- **Build command:** `npm run build`
-- **Publish directory:** `dist`
-- SPA routing is handled by `netlify.toml` and `public/_redirects` (both send
-  unknown paths to `index.html` so `/work`, `/services`, `/book` etc. survive a
-  browser refresh).
+Deployment is automated by `.github/workflows/deploy.yml`: every push to
+`main` runs `npm ci && npm run build` and publishes `dist/` to GitHub Pages.
+No manual build/publish step is needed — just push.
+
+- **Live (GitHub Pages test URL):** https://curtismedia.github.io/cs-real-estate-photo-editing-7/
+- **Base path:** set in `vite.config.js` (`base: '/cs-real-estate-photo-editing-7/'`).
+  Every image/video path in `src/data/` and `src/components/Header/BrandMark.jsx`
+  goes through `src/lib/assetPath.js`'s `withBase()`, which prefixes it with
+  `import.meta.env.BASE_URL` at runtime — so nothing else needs to change when
+  the base path changes.
+- **SPA routing:** GitHub Pages has no server-side rewrite rule (unlike
+  Netlify's `_redirects`), so `public/404.html` + a small inline script in
+  `index.html` implement the standard "spa-github-pages" redirect trick, and
+  `main.jsx` sets `<BrowserRouter basename={import.meta.env.BASE_URL}>` so
+  routes resolve under the sub-path. See the comments in those three files.
+
+### Moving to a custom domain later
+
+1. In `vite.config.js`, change `base: '/cs-real-estate-photo-editing-7/'` to `base: '/'`.
+2. In `public/404.html`, change `pathSegmentsToKeep` from `1` to `0`.
+3. Add a `CNAME` file under `public/` with your domain, and configure the
+   domain in the repo's Pages settings.
+
+No image, video, or route path needs to be rewritten for either step.
 
 ## What to push to GitHub
 
 Push **everything except** `node_modules` and `dist` (already listed in
-`.gitignore`). Netlify installs dependencies and builds from source itself.
+`.gitignore`). GitHub Actions installs dependencies and builds from source
+itself on every push to `main`.
 
 ## Where to edit content (no layout changes needed)
 

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { withBase } from '../../lib/assetPath'
 
 /**
  * The "CS" half of the brand lockup.
@@ -12,8 +13,8 @@ import { useState } from 'react'
  * text, so the header degrades to exactly what it looked like before rather
  * than showing two broken-image icons.
  */
-export const LOGO_LIGHT = '/images/brand/cs-logo-white.png'
-export const LOGO_DARK = '/images/brand/cs-logo-black.png'
+export const LOGO_LIGHT = withBase('/images/brand/cs-logo-white.png')
+export const LOGO_DARK = withBase('/images/brand/cs-logo-black.png')
 
 export default function BrandMark({ alt = 'CS' }) {
   const [failed, setFailed] = useState(false)

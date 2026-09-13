@@ -15,6 +15,8 @@
 // Nothing else needs to change anywhere in the codebase.
 // ---------------------------------------------------------------------------
 
+import { withBase } from '../lib/assetPath'
+
 /** Flip a key to `true` once the real files exist in /public for that folder. */
 export const LOCAL_MEDIA_READY = {
   hero: true,
@@ -43,7 +45,7 @@ export const fallbackImage = (seed, w = 1400, h = 933) =>
  * @param {[number, number]} [size] fallback dimensions
  */
 export const resolveMedia = (key, path, seed, size) =>
-  LOCAL_MEDIA_READY[key] ? path : fallbackImage(seed, size?.[0], size?.[1])
+  LOCAL_MEDIA_READY[key] ? withBase(path) : fallbackImage(seed, size?.[0], size?.[1])
 
 // ---------------------------------------------------------------------------
 // HOMEPAGE HERO — cinematic crossfade slideshow.

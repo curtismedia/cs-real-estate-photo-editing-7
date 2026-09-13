@@ -17,6 +17,23 @@
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&display=swap"
       rel="stylesheet"
     />
+    <!--
+      GITHUB PAGES SPA FALLBACK — decoder half of the 404.html redirect (see
+      public/404.html for the full explanation). Must run before React Router
+      mounts, so it stays a plain inline script here rather than living in a
+      React module. It only does anything when 404.html's redirect produced
+      the '?/...' marker; a normal load leaves the URL untouched.
+    -->
+    <script type="text/javascript">
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function (s) {
+            return s.replace(/~and~/g, '&')
+          }).join('?')
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash)
+        }
+      })(window.location)
+    </script>
   </head>
   <body>
     <!--

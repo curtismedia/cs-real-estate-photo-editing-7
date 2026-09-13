@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CS Real Estate Photo Editing</title>
+    <!--
+      GITHUB PAGES SPA FALLBACK
+      GitHub Pages has no server-side rewrite rule (Netlify's `_redirects` /
+      netlify.toml [[redirects]] did this there), so a direct load or refresh
+      of a deep link like /work or /services/hdr returns this 404 page from
+      GitHub's static file server. This script re-encodes the requested path
+      into a query string and redirects to index.html, which decodes it back
+      (see the inline script in index.html) and hands it to React Router.
+      This is the standard, widely-used "spa-github-pages" technique.
+
+      pathSegmentsToKeep = number of path segments that belong to the GitHub
+      Pages project sub-path, not to the app's own routes.
+        - '/cs-real-estate-photo-editing-7/work' → keep 1 ('cs-real-estate-photo-editing-7')
+        - once on a custom domain (base: '/'), the app is served at the
+          domain root, so this must become 0 — the ONLY edit this file needs
+          when you switch off the GitHub Pages sub-path.
+    -->
+    <script type="text/javascript">
+      var pathSegmentsToKeep = 1
+
+      var l = window.location
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      )
+    </script>
+  </head>
+  <body></body>
+</html>

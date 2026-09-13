@@ -13,6 +13,7 @@
 
 import { resolveMedia } from './media'
 import { videoCover, videoEditingVideos } from './videos'
+import { withBase } from '../lib/assetPath'
 
 const cover = (slug, seed) =>
   resolveMedia(slug, `/images/services/${slug}/cover.webp`, seed)
@@ -30,8 +31,8 @@ const ba = (slug, n, seed) => ({
 const pairPath = (slug, n, ext) => {
   const num = String(n).padStart(2, '0')
   return {
-    before: `/images/services/${slug}/before-${num}.${ext}`,
-    after: `/images/services/${slug}/after-${num}.${ext}`,
+    before: withBase(`/images/services/${slug}/before-${num}.${ext}`),
+    after: withBase(`/images/services/${slug}/after-${num}.${ext}`),
   }
 }
 
@@ -59,7 +60,7 @@ export const services = [
     name: 'Video Editing',
     type: 'video',
     tagline: 'Cinematic property films & listing reels',
-    mediaDir: '/images/services/video-editing/',
+    mediaDir: withBase('/images/services/video-editing/'),
     // Cover and the popup's video list both come from src/data/videos.js, so
     // changing the first video there updates the Homepage card, this row and
     // the popup together. No placeholder or sample footage anywhere.
@@ -76,11 +77,11 @@ export const services = [
     name: 'Virtual Staging',
     type: 'photo',
     tagline: 'Realistic furniture, lighting-matched',
-    mediaDir: '/images/services/virtual-staging/',
+    mediaDir: withBase('/images/services/virtual-staging/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real result rather than needing a separate cover.webp upload.
-    cover: '/images/services/virtual-staging/after-01.jpg',
+    cover: withBase('/images/services/virtual-staging/after-01.jpg'),
     description:
       'Empty rooms furnished with photorealistic staging — correct perspective, shadows and lighting so the result reads as real, not pasted in. Multiple style directions available.',
     // Real media — 25 complete .jpg before/after pairs, numbered 01 … 25.
@@ -95,11 +96,11 @@ export const services = [
     name: 'HDR Editing',
     type: 'photo',
     tagline: 'Bracketed exposures, merged and balanced',
-    mediaDir: '/images/services/hdr/',
+    mediaDir: withBase('/images/services/hdr/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real HDR result rather than needing a separate cover.webp upload.
-    cover: '/images/services/hdr/after-12.jpg',
+    cover: withBase('/images/services/hdr/after-12.jpg'),
     description:
       'Bracketed exposures merged into one clean, natural frame — controlled highlights, open shadows, true window detail and accurate white balance. The dependable everyday workhorse of listing photography, delivered consistently across a full set.',
     // Real media — 33 complete .jpg before/after pairs, numbered 01 … 33.
@@ -114,11 +115,11 @@ export const services = [
     name: 'Object Removal',
     type: 'photo',
     tagline: 'Clutter, cars, cables — cleanly gone',
-    mediaDir: '/images/services/object-removal/',
+    mediaDir: withBase('/images/services/object-removal/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real result rather than needing a separate cover.webp upload.
-    cover: '/images/services/object-removal/after-01.jpg',
+    cover: withBase('/images/services/object-removal/after-01.jpg'),
     description:
       'Distractions removed and the scene rebuilt convincingly — parked cars, bins, cables, pool equipment, personal items and reflections. Clean plates with no smearing or repeated texture.',
     // Real media — 26 complete .jpg before/after pairs, numbered 01 … 26.
@@ -133,11 +134,11 @@ export const services = [
     name: 'Flambient Editing',
     type: 'photo',
     tagline: 'Flash-ambient blending, true-to-life color',
-    mediaDir: '/images/services/flambient/',
+    mediaDir: withBase('/images/services/flambient/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real result rather than needing a separate cover.webp upload.
-    cover: '/images/services/flambient/after-01.jpg',
+    cover: withBase('/images/services/flambient/after-01.jpg'),
     description:
       'Hand-blended flash and ambient frames for interiors that need more than a merge — neutral color cast removal, crisp window pulls, natural shadow retention and a clean, magazine-grade finish on complex mixed lighting.',
     // Real media — 29 complete .jpg pairs. Numbering runs to 30 but SKIPS 23,
@@ -153,11 +154,11 @@ export const services = [
     name: 'Twilight Editing',
     type: 'photo',
     tagline: 'Golden-hour exteriors from daytime frames',
-    mediaDir: '/images/services/twilight/',
+    mediaDir: withBase('/images/services/twilight/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real result rather than needing a separate cover.webp upload.
-    cover: '/images/services/twilight/after-01.jpg',
+    cover: withBase('/images/services/twilight/after-01.jpg'),
     description:
       'Convert daytime exteriors into rich twilight scenes — warm interior glow, deep blue sky and balanced landscape lighting that makes a listing stand out in the feed.',
     // Real media — 39 complete .jpg before/after pairs, numbered 01 … 39.
@@ -172,11 +173,11 @@ export const services = [
     name: 'Day to Dusk',
     type: 'photo',
     tagline: 'Soft evening mood, fully controlled',
-    mediaDir: '/images/services/day-to-dusk/',
+    mediaDir: withBase('/images/services/day-to-dusk/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real result rather than needing a separate cover.webp upload.
-    cover: '/images/services/day-to-dusk/after-01.jpg',
+    cover: withBase('/images/services/day-to-dusk/after-01.jpg'),
     description:
       'A refined evening treatment for exteriors and views — warm, natural and consistent across a full property set, without the heavy-handed look of a filter.',
     // Real media — 33 complete .jpg before/after pairs, numbered 01 … 33.
@@ -191,11 +192,11 @@ export const services = [
     name: 'Drone / Aerial Editing',
     type: 'photo',
     tagline: 'Sky replacement & aerial color match',
-    mediaDir: '/images/services/drone-aerial/',
+    mediaDir: withBase('/images/services/drone-aerial/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real result rather than needing a separate cover.webp upload.
-    cover: '/images/services/drone-aerial/after-01.jpg',
+    cover: withBase('/images/services/drone-aerial/after-01.jpg'),
     description:
       'Aerial stills cleaned, color-matched to the ground set, with natural sky replacement and lens correction for a cohesive gallery from the first frame to the last.',
     // Real media — 18 complete .jpg before/after pairs, numbered 01 … 18.
@@ -210,11 +211,11 @@ export const services = [
     name: 'Single Exposure Editing',
     type: 'photo',
     tagline: 'Single-exposure correction, per image',
-    mediaDir: '/images/services/single/',
+    mediaDir: withBase('/images/services/single/'),
     // Homepage service card only. The Services page ignores `cover` for photo
     // services and renders the first before/after pair instead, so this reuses
     // a real result rather than needing a separate cover.webp upload.
-    cover: '/images/services/single/after-01.jpg',
+    cover: withBase('/images/services/single/after-01.jpg'),
     description:
       'Single-exposure editing for straightforward frames — exposure and white balance correction, vertical and lens correction, noise control and a light clean-up. The efficient option for high-volume sets.',
     // Real media — 11 complete .jpg before/after pairs, numbered 01 … 11.
@@ -229,7 +230,7 @@ export const services = [
     name: 'Floor Plan',
     type: 'photo',
     tagline: 'Clean 2D plans for every listing',
-    mediaDir: '/images/services/floor-plan/',
+    mediaDir: withBase('/images/services/floor-plan/'),
     cover: cover('floor-plan', 'cs-svc-floorplan'),
     description:
       'Clear, branded 2D floor plans produced from sketches or measurements — room labels, dimensions and a consistent style buyers consistently look for.',
