@@ -8,7 +8,7 @@ import StepTurnaround from './StepTurnaround'
 import StepDetails from './StepDetails'
 import StepReview from './StepReview'
 import StepPolicy from './StepPolicy'
-import { submitToNetlify, FORM_NAMES } from '../../lib/netlifyForms'
+import { submitForm, FORM_NAMES } from '../../lib/formSubmission'
 import { buildBookingPayload, buildFreeTestPayload } from '../../lib/bookingSubmission'
 import { isValidTurnaroundHours } from '../../data/pricing'
 import { detailsValid } from '../../lib/validation'
@@ -129,7 +129,7 @@ export default function BookingWizard() {
         ? buildFreeTestPayload({ order })
         : buildBookingPayload({ order, estimate, rushFee, totals, total: orderTotal, payment })
 
-      await submitToNetlify(formName, payload)
+      await submitForm(formName, payload)
 
       // Only now is it true — the customer's data is safely stored.
       setStatus('success')

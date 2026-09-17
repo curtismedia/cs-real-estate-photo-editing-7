@@ -62,12 +62,16 @@ Images currently use `picsum.photos` placeholders and sample videos. Replace the
 URLs in the data files (and `src/components/Hero/Hero.jsx`) with your own hosted
 media — external CDN / image host / video host URLs are fully supported.
 
-## Connect the contact form / booking submissions (later)
+## Contact form / booking submissions
 
-The Contact form and Booking wizard currently show a success state without a
-backend. To receive submissions, connect Netlify Forms, Formspree, or your own
-endpoint. For real payments, integrate Stripe Checkout — never handle card data
-in the frontend.
+The Contact form and Booking wizard submit to a Google Apps Script web app
+(`src/lib/formSubmission.js`), which appends each submission as a row in a
+Google Sheet — see `google-apps-script/Code.gs` for the script and one-time
+setup steps. After deploying it, paste the Web app URL into
+`GOOGLE_SCRIPT_URL` in `src/lib/formSubmission.js`.
+
+For real payments, integrate Stripe Checkout — never handle card data in the
+frontend.
 
 ---
 

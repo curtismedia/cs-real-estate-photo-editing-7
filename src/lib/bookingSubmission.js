@@ -1,8 +1,9 @@
 // ---------------------------------------------------------------------------
-// Builds the payloads sent to Netlify Forms.
+// Builds the payloads sent to the form backend (see src/lib/formSubmission.js
+// — currently a Google Apps Script that appends rows to a Google Sheet).
 //
-// Every value is a plain readable string — never a raw object — so the Netlify
-// dashboard and the email notification are legible at a glance.
+// Every value is a plain readable string — never a raw object — so the
+// resulting spreadsheet row is legible at a glance.
 // ---------------------------------------------------------------------------
 
 import {

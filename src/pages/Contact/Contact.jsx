@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSEO } from '../../hooks/useSEO'
 import { contact, cta } from '../../data/siteData'
-import { submitToNetlify, FORM_NAMES } from '../../lib/netlifyForms'
+import { submitForm, FORM_NAMES } from '../../lib/formSubmission'
 import '../../components/booking/booking.css'
 import './Contact.css'
 
@@ -24,7 +24,7 @@ export default function Contact() {
     setStatus('submitting')
     setError('')
     try {
-      await submitToNetlify(FORM_NAMES.contact, {
+      await submitForm(FORM_NAMES.contact, {
         name: form.name,
         email: form.email,
         company: form.company || 'Not provided',
