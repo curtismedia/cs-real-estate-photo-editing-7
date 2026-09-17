@@ -12,7 +12,7 @@
  * Deployed Google Apps Script "Web app" URL (ends in /exec).
  * See google-apps-script/Code.gs for the script and deployment steps.
  */
-export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQGw2_WREmzTxpLO_PEtL_0X5w1rmz8IkdQ5poy1HwLFIQww2QbOgY4Du49CTPL68k/exec'
+export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxCSqxvYnyn8Jvqbe4TywOzLjvTgNmTpnjahSBa0eC7TyK1ssASDtYKq7cDR7QReDdG/exec'
 
 /** Form names — kept identical to the old Netlify form names so payload
  * builders in src/lib/bookingSubmission.js needed no changes. */
