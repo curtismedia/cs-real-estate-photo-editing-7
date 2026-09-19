@@ -18,6 +18,10 @@
  * before being written — a value starting with '+' (e.g. '+84...') would
  * otherwise be misread by Sheets as the start of a formula and show #ERROR!.
  *
+ * Every newly appended row is bolded with red text so a new submission
+ * stands out in the list — clear that formatting yourself once you've
+ * handled it (select the row → bold off → text color black).
+ *
  * ---------------------------------------------------------------------------
  * SETUP (one-time)
  * ---------------------------------------------------------------------------
@@ -137,6 +141,12 @@ function appendRow_(sheet, data) {
 
   dataRange.setValues([row])
 
+  // New/unhandled submission → bold red row, so it stands out in the list.
+  // Once you've dealt with it, select the row and clear this formatting
+  // yourself (bold: off, text color: black) — the script never re-applies it
+  // to a row it didn't just create.
+  dataRange.setFontWeight('bold').setFontColor('#ff0000')
+
   autoResizeColumns_(sheet, headers.length)
 }
 
@@ -209,6 +219,56 @@ function cleanupExistingSheets() {
     }
 
     autoResizeColumns_(sheet, lastCol)
+  })
+}
+
+/**
+ * ONE-TIME COLUMN TRIM — run this manually once (same way as
+ * cleanupExistingSheets: pick "trimStaleColumns" in the function dropdown,
+ * then Run) to delete the columns that are no longer sent by the site for
+ * existing tabs, so old sheets match what new submissions now write.
+ *
+ * This DELETES those columns' historical data — only run it if you're sure
+ * you don't need the old detailed price / free-test-quantity breakdown.
+ */
+var STALE_COLUMNS_BY_FORM = {
+  'free-test-request': [
+    'group-a-quantity',
+    'group-b-quantity',
+    'total-test-images',
+    'free-test-credits-used',
+    'free-test-capacity-used',
+  ],
+  'project-booking': [
+    'rush-fee-percent',
+    'rush-fee-basis',
+    'rush-fee-amount',
+    'compare-subtotal',
+    'service-subtotal',
+    'discount-savings',
+    'order-total-before-savings',
+    'order-subtotal',
+  ],
+}
+
+function trimStaleColumns() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet()
+  Object.keys(STALE_COLUMNS_BY_FORM).forEach(function (formName) {
+    var sheet = ss.getSheetByName(formName)
+    if (!sheet) return
+
+    var lastCol = sheet.getLastColumn()
+    if (lastCol === 0) return
+
+    var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0]
+    var toRemove = STALE_COLUMNS_BY_FORM[formName]
+
+    // Delete from right to left so earlier column indexes stay valid.
+    for (var col = headers.length; col >= 1; col--) {
+      if (toRemove.indexOf(headers[col - 1]) !== -1) {
+        sheet.deleteColumn(col)
+      }
+    }
   })
 }
 
