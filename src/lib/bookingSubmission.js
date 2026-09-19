@@ -50,10 +50,7 @@ export function buildBookingPayload({ order, estimate, total, payment }) {
     'customer-name': fullName(details) || 'Not provided',
     'customer-email': details.email,
     company: details.company || 'Not provided',
-    // One field on the form now. The legacy `whatsapp` key is kept and mapped
-    // to the same value so existing Netlify notifications/exports still line up.
     phone: details.phone,
-    whatsapp: details.phone,
     'project-type': 'Paid Project',
     promotion: PROMO.active ? PROMO.submissionLabel : 'None',
     services: formatServicesForSubmission(estimate),
@@ -108,7 +105,6 @@ export function buildFreeTestPayload({ order }) {
     'customer-email': details.email,
     company: details.company || 'Not provided',
     phone: details.phone,
-    whatsapp: details.phone,
     'project-type': 'Free Test',
     services: serviceList,
     'file-link': files.link || 'Not provided',
