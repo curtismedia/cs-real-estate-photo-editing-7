@@ -15,18 +15,7 @@ import {
 } from '../data/pricing'
 import { getServiceName } from '../data/services'
 import { POLICY_ACCEPT_LABEL } from '../data/policies'
-import {
-  TOTAL_FREE_TEST_CREDITS,
-  GROUP_A_CREDIT_COST,
-  GROUP_B_CREDIT_COST,
-  creditCostFor,
-  freeTestGroupOf,
-  freeTestCreditsUsed,
-  freeTestCapacityPercent,
-  groupAQuantity,
-  groupBQuantity,
-  isFreeTestEligible,
-} from '../data/freeTestConfig'
+import { creditCostFor, freeTestGroupOf, isFreeTestEligible } from '../data/freeTestConfig'
 
 const fullName = (details) =>
   [details.firstName, details.lastName].filter(Boolean).join(' ').trim()
@@ -39,8 +28,16 @@ const rangeAwareAmount = (block, prefixEstimated = true) =>
     ? `${prefixEstimated ? 'Estimated ' : ''}${formatAmount(block.min, block.max)}${prefixEstimated ? ' (range — final price to be confirmed)' : ''}`
     : formatAmount(block.min, block.max)
 
-/** Paid project booking → `project-booking` form. */
-export function buildBookingPayload({ order, estimate, rushFee, totals, total, payment }) {
+/**
+ * Paid project booking → `project-booking` form.
+ *
+ * Trimmed to the columns actually used day-to-day: the detailed price
+ * breakdown (compare price, per-service subtotal, savings, rush-fee
+ * breakdown) is still computed elsewhere in the app (shown to the customer
+ * in the review step) but intentionally left out of the spreadsheet — only
+ * the final payable amount, turnaround and payment method are recorded here.
+ */
+export function buildBookingPayload({ order, estimate, total, payment }) {
   const { details, files, turnaround } = order
   const turnaroundType = TURNAROUND_TYPES[turnaround.type]
 
@@ -48,12 +45,6 @@ export function buildBookingPayload({ order, estimate, rushFee, totals, total, p
     payment.paymentOption === 'deposit' ? `${DEPOSIT_PERCENT}% Deposit` : 'Pay in Full — 100%'
 
   const dueText = total.variable ? `Estimated ${payment.dueText}` : payment.dueText
-
-  const rushFeeAmountText = rushFee.hasFee
-    ? rushFee.variable
-      ? `Estimated ${rushFee.amountText}`
-      : rushFee.amountText
-    : '$0.00'
 
   return {
     'customer-name': fullName(details) || 'Not provided',
@@ -71,19 +62,8 @@ export function buildBookingPayload({ order, estimate, rushFee, totals, total, p
     instructions: files.instructions || 'None provided',
     'turnaround-type': turnaroundType?.label || turnaround.type,
     'requested-turnaround-hours': `${turnaround.hours} hours`,
-    'rush-fee-percent': rushFee.hasFee ? `+${rushFee.percent}%` : '0%',
-    'rush-fee-basis': 'Original (pre-sale) service subtotal',
-    'rush-fee-amount': rushFeeAmountText,
-    // Full-price service subtotal — the basis for the turnaround fee.
-    'compare-subtotal': formatAmount(estimate.compareMin, estimate.compareMax),
-    // Service subtotal after the promotion.
-    'service-subtotal': rangeAwareAmount(estimate, false),
-    'discount-savings': totals.hasSavings ? `-${totals.savingsText}` : '$0.00',
-    // Total = compare subtotal + turnaround fee (before savings).
-    'order-total-before-savings': totals.totalText,
-    // Subtotal = Total − Savings = what the customer actually pays.
-    'order-subtotal': totals.subtotalText,
-    // Legacy key, kept in sync with the payable figure.
+    // The final amount the customer pays — the price breakdown behind it
+    // (compare price, subtotal, savings, rush fee) is intentionally omitted.
     'estimated-total': rangeAwareAmount(total),
     'payment-option': paymentLabel,
     'amount-due': dueText,
@@ -97,7 +77,13 @@ export function buildBookingPayload({ order, estimate, rushFee, totals, total, p
   }
 }
 
-/** Free test request → `free-test-request` form. */
+/**
+ * Free test request → `free-test-request` form.
+ *
+ * Trimmed to just the services line — the per-group image quantities and
+ * credit-usage math (still shown to the customer in the review step) are
+ * intentionally left out of the spreadsheet.
+ */
 export function buildFreeTestPayload({ order }) {
   const { details, files, quantities } = order
 
@@ -117,10 +103,6 @@ export function buildFreeTestPayload({ order }) {
     ? testedServices.map(line).join('\n')
     : 'None selected'
 
-  const groupA = groupAQuantity(quantities)
-  const groupB = groupBQuantity(quantities)
-  const used = freeTestCreditsUsed(quantities)
-
   return {
     'customer-name': fullName(details) || 'Not provided',
     'customer-email': details.email,
@@ -129,11 +111,6 @@ export function buildFreeTestPayload({ order }) {
     whatsapp: details.phone,
     'project-type': 'Free Test',
     services: serviceList,
-    'group-a-quantity': `${groupA} ${groupA === 1 ? 'image' : 'images'} × ${GROUP_A_CREDIT_COST} credit = ${groupA * GROUP_A_CREDIT_COST} credits`,
-    'group-b-quantity': `${groupB} ${groupB === 1 ? 'image' : 'images'} × ${GROUP_B_CREDIT_COST} credits = ${groupB * GROUP_B_CREDIT_COST} credits`,
-    'total-test-images': String(groupA + groupB),
-    'free-test-credits-used': `${used} / ${TOTAL_FREE_TEST_CREDITS}`,
-    'free-test-capacity-used': `${freeTestCapacityPercent(quantities)}%`,
     'file-link': files.link || 'Not provided',
     'reference-link': files.reference || 'Not provided',
     instructions: files.instructions || 'None provided',
