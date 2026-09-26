@@ -1,5 +1,5 @@
 import { useBooking } from '../../context/BookingContext'
-import { pricedServices, isDiscounted, unitLabel } from '../../data/pricing'
+import { pricedServices, isDiscounted, unitLabel, formatRate } from '../../data/pricing'
 import DiscountBadge from './DiscountBadge'
 import PartnerPricing from './PartnerPricing'
 import {
@@ -125,8 +125,12 @@ export default function StepServices() {
                     <DiscountBadge percent={s.discountPercent} />
                   )}
                 </span>
-                {/* No prices on the card by design — the sticky Project Total
-                    is the single place pricing is shown in Step 2. */}
+                {/* Paid Project only — a light, italic per-unit rate under
+                    the name. The sticky Project Total in Step 2 still owns
+                    the actual order math; this is just a quick reference. */}
+                {!freeTest && (
+                  <span className="select-card__rate">({formatRate(s)})</span>
+                )}
                 {freeTest && (
                   <span
                     className={`select-card__price ${isFreeTestGroupB(s.slug) ? 'is-advanced' : ''}`}

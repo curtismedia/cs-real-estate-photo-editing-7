@@ -201,9 +201,19 @@
 }
 .select-card__name { font-weight: 500; margin-bottom: 0.35rem; display: block; padding-right: 1.5rem; }
 .select-card__desc { font-size: var(--fs-small); color: var(--charcoal-55); }
-/* Free Test only — the credit cost per image. Paid prices are not shown on
-   cards; the sticky Project Total is the single source of pricing in Step 2. */
+/* Free Test only — the credit cost per image. */
 .select-card__price { font-size: var(--fs-small); color: var(--stone); margin-top: 0.6rem; display: block; }
+
+/* Paid Project only — a light, italic per-unit reference rate under the
+   service name. The sticky Project Total in Step 2 remains the single
+   source of truth for the actual order math. */
+.select-card__rate {
+  font-size: var(--fs-small);
+  font-style: italic;
+  color: var(--charcoal-55);
+  margin-top: 0.35rem;
+  display: block;
+}
 
 /* ---------- Review ---------- */
 .review__row {

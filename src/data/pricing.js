@@ -181,18 +181,18 @@ export const formatUSD = (n) =>
 export const formatAmount = (min, max) =>
   min === max ? formatUSD(min) : `${formatUSD(min)}–${formatUSD(max)}`
 
-/** "$0.85 / image" or "$1.80–$4.50 / image" — the per-unit SALE rate. */
+/** "$0.85/image" or "$1.80–$4.50/image" — the per-unit SALE rate. */
 export const formatRate = (rate) => {
   if (!rate) return ''
   const u = saleUnit(rate)
-  return `${formatAmount(u.min, u.max)} / ${unitLabel(rate.unit, 1)}`
+  return `${formatAmount(u.min, u.max)}/${unitLabel(rate.unit, 1)}`
 }
 
-/** "$1.00 / image" — the struck-through compare-at rate. */
+/** "$1.00/image" — the struck-through compare-at rate. */
 export const formatCompareRate = (rate) => {
   if (!rate) return ''
   const u = compareUnit(rate)
-  return `${formatAmount(u.min, u.max)} / ${unitLabel(rate.unit, 1)}`
+  return `${formatAmount(u.min, u.max)}/${unitLabel(rate.unit, 1)}`
 }
 
 /** True when this service's price is actually reduced right now. */
