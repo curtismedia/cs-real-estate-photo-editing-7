@@ -32,7 +32,11 @@
 /* --- Logo --- */
 .logo {
   display: flex;
-  align-items: baseline;
+  /* `center` so REAL ESTATE EDITING sits in the middle of the logo mark's
+     full height — including the script "s"'s tail — rather than aligning
+     to the mark's cap-height/baseline (which reads as too low once a tall
+     script mark is involved). */
+  align-items: center;
   gap: 0.6rem;
 }
 .logo__mark {

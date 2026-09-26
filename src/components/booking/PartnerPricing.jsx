@@ -12,7 +12,7 @@ import { contact } from '../../data/siteData'
  */
 const SUBJECT = 'Preferred Partner Pricing Inquiry'
 
-const EMAIL_BODY = `Hi CS Real Estate Editing,
+const EMAIL_BODY = `Hi CS Real Estate Photo Editing,
 
 I'm interested in Preferred Partner Pricing for ongoing/high-volume editing work. I'd like to discuss our expected project volume and workflow.`
 

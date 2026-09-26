@@ -39,7 +39,7 @@ export default function Header() {
         <div className="site-header__inner container">
           <Link to="/" className="logo" aria-label={`${brand.name} — home`}>
             <BrandMark />
-            <span className="logo__word">Real Estate Editing</span>
+            <span className="logo__word">Real Estate Photo Editing</span>
           </Link>
 
           <nav className="site-nav" aria-label="Primary">
