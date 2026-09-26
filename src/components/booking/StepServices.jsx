@@ -54,7 +54,7 @@ export default function StepServices() {
 
 
   // Free Test only ever offers the eligible services — excluded ones (video,
-  // floor plan, virtual staging) are hidden entirely rather than shown disabled.
+  // virtual staging) are hidden entirely rather than shown disabled.
   const visibleServices = freeTest
     ? pricedServices.filter((s) => isFreeTestEligible(s.slug))
     : pricedServices

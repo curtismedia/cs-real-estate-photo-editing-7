@@ -11,7 +11,7 @@ export default function Services() {
   useSEO({
     title: 'Real Estate Photo & Video Editing Services | CS',
     description:
-      'Video editing, virtual staging, HDR editing, object removal, flambient editing, twilight, day-to-dusk, drone editing, single-image editing and floor plans for real estate media professionals.',
+      'Video editing, virtual staging, HDR editing, object removal, flambient editing, twilight, day-to-dusk, drone editing and single-image editing for real estate media professionals.',
   })
 
   const [active, setActive] = useState(null)

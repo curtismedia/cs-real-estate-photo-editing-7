@@ -223,22 +223,6 @@ export const services = [
     beforeAfterExamples: realBaSet('single', 11),
     videos: [],
   },
-  {
-    id: 's10',
-    slug: 'floor-plan',
-    order: 10,
-    name: 'Floor Plan',
-    type: 'photo',
-    tagline: 'Clean 2D plans for every listing',
-    mediaDir: withBase('/images/services/floor-plan/'),
-    cover: cover('floor-plan', 'cs-svc-floorplan'),
-    description:
-      'Clear, branded 2D floor plans produced from sketches or measurements — room labels, dimensions and a consistent style buyers consistently look for.',
-    beforeAfterExamples: [
-      { ...ba('floor-plan', 1, 'cs-fp'), label: 'Floor Plan' },
-    ],
-    videos: [],
-  },
 ]
 
 /** Services in display order. Numbering is derived from this array's index. */

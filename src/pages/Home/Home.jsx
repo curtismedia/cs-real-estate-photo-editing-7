@@ -20,7 +20,7 @@ export default function Home() {
   useSEO({
     title: 'CS Real Estate Photo Editing',
     description:
-      'Premium real estate photo and video post-production — HDR, flambient, virtual staging, twilight, drone, floor plans and video, edited property by property.',
+      'Premium real estate photo and video post-production — HDR, flambient, virtual staging, twilight, drone and video, edited property by property.',
   })
 
   const [activeProject, setActiveProject] = useState(null)

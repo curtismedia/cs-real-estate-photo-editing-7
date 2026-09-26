@@ -7,7 +7,7 @@ export const faq = [
   },
   {
     q: 'What editing services do you offer?',
-    a: 'Ten services: video editing, virtual staging, HDR editing, object removal, flambient editing, twilight editing, day to dusk, drone/aerial editing, single-image editing and floor plans. HDR and flambient are separate services — HDR merges bracketed exposures, flambient is hand-blended flash and ambient work for trickier mixed lighting.',
+    a: 'Nine services: video editing, virtual staging, HDR editing, object removal, flambient editing, twilight editing, day to dusk, drone/aerial editing and single-image editing. HDR and flambient are separate services — HDR merges bracketed exposures, flambient is hand-blended flash and ambient work for trickier mixed lighting.',
   },
   {
     q: 'How do I send my files?',
@@ -35,7 +35,7 @@ export const faq = [
   },
   {
     q: 'How is pricing calculated?',
-    a: 'Photo services are priced per image, floor plans per plan and video per video. Some services have a price range because the work varies with complexity — in those cases the site shows an estimated range and our team confirms the final amount after reviewing your files. Your estimate updates live as you build an order, with no hidden fees.',
+    a: 'Photo services are priced per image and video per video. Some services have a price range because the work varies with complexity — in those cases the site shows an estimated range and our team confirms the final amount after reviewing your files. Your estimate updates live as you build an order, with no hidden fees.',
   },
   {
     q: 'Can I send reference images?',

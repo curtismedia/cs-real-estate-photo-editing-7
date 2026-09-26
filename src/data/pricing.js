@@ -57,7 +57,6 @@ const COMPARE_RATES = [
   { slug: 'day-to-dusk',     type: 'fixed', rate: 5.0,           unit: 'image', discountPercent: 10 },
   { slug: 'drone-aerial',    type: 'fixed', rate: 1.0,           unit: 'image', discountPercent: 15 },
   { slug: 'single',          type: 'fixed', rate: 0.7,           unit: 'image', discountPercent: 10 },
-  { slug: 'floor-plan',      type: 'range', min: 25,   max: 35,  unit: 'plan',  discountPercent: 10 },
 ]
 
 /** Compare-at rates with their derived sale rates attached. */

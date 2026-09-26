@@ -30,7 +30,6 @@ export const LOCAL_MEDIA_READY = {
   'day-to-dusk': false,
   'drone-aerial': false,
   single: false,
-  'floor-plan': false,
 }
 
 /** Temporary stand-in image. Only used while a folder's flag is false. */

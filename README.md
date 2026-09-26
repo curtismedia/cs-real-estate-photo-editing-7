@@ -127,7 +127,7 @@ fallback until you upload the real files.
    - `public/images/home/approach.webp`
    - `public/images/services/<slug>/cover.webp`, `before-01.webp`, `after-01.webp`, …
      (slugs: `video-editing`, `virtual-staging`, `hdr`, `object-removal`,
-     `flambient`, `twilight`, `day-to-dusk`, `drone-aerial`, `single`, `floor-plan`)
+     `flambient`, `twilight`, `day-to-dusk`, `drone-aerial`, `single`)
 2. Flip that folder's flag in `LOCAL_MEDIA_READY` (`src/data/media.js`) to `true`.
 
 Nothing else needs changing. Flags are per-folder, so you can switch services over

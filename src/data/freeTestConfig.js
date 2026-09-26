@@ -37,7 +37,7 @@ export const FREE_TEST_GROUP_B_SERVICES = [
 ]
 
 /** Not offered as a free test at all — paid projects only. */
-export const FREE_TEST_EXCLUDED_SERVICES = ['video-editing', 'floor-plan', 'virtual-staging']
+export const FREE_TEST_EXCLUDED_SERVICES = ['video-editing', 'virtual-staging']
 
 export const isFreeTestGroupA = (slug) => FREE_TEST_GROUP_A_SERVICES.includes(slug)
 export const isFreeTestGroupB = (slug) => FREE_TEST_GROUP_B_SERVICES.includes(slug)
