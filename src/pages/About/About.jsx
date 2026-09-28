@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom'
 import { useSEO } from '../../hooks/useSEO'
 import CTA from '../../components/CTA/CTA'
 import { cta } from '../../data/siteData'
+import { aboutImage } from '../../data/media'
 import './About.css'
-
-const aboutImg = 'https://picsum.photos/seed/cs-about/1200/1500'
 
 export default function About() {
   useSEO({
@@ -44,7 +43,7 @@ export default function About() {
             </p>
           </div>
           <div className="about__image">
-            <img src={aboutImg} alt="Interior photography" loading="lazy" />
+            <img src={aboutImage.src} alt={aboutImage.alt} loading="lazy" />
           </div>
         </div>
       </section>
