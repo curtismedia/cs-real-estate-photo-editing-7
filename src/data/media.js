@@ -20,7 +20,7 @@ import { withBase } from '../lib/assetPath'
 /** Flip a key to `true` once the real files exist in /public for that folder. */
 export const LOCAL_MEDIA_READY = {
   hero: true,
-  home: false,
+  home: true,
   'video-editing': false,
   'virtual-staging': false,
   hdr: false,
@@ -64,6 +64,6 @@ export const HERO_SLIDE_DURATION = 6500
 // HOMEPAGE — "The Approach" editorial image
 // ---------------------------------------------------------------------------
 export const approachImage = {
-  src: resolveMedia('home', '/images/home/approach.webp', 'cs-approach', [1200, 1500]),
+  src: resolveMedia('home', '/images/home/approach.jpg', 'cs-approach', [1200, 1500]),
   alt: 'Interior detail of a refined residential space',
 }
