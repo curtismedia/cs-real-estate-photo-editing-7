@@ -17,8 +17,11 @@ Deployment is automated by `.github/workflows/deploy.yml`: every push to
 `main` runs `npm ci && npm run build` and publishes `dist/` to GitHub Pages.
 No manual build/publish step is needed — just push.
 
-- **Live (GitHub Pages test URL):** https://curtismedia.github.io/cs-real-estate-photo-editing-7/
-- **Base path:** set in `vite.config.js` (`base: '/cs-real-estate-photo-editing-7/'`).
+- **Live (GitHub Pages test URL):** https://curtismedia.github.io/portfolio/
+- **Base path:** set in `vite.config.js` (`base: '/portfolio/'`) — this MUST match
+  the repository name exactly, since that's what GitHub Pages uses for the
+  project-site sub-path. If the repo is ever renamed again, update this to
+  match (and update the README link above), then push.
   Every image/video path in `src/data/` and `src/components/Header/BrandMark.jsx`
   goes through `src/lib/assetPath.js`'s `withBase()`, which prefixes it with
   `import.meta.env.BASE_URL` at runtime — so nothing else needs to change when
@@ -31,7 +34,7 @@ No manual build/publish step is needed — just push.
 
 ### Moving to a custom domain later
 
-1. In `vite.config.js`, change `base: '/cs-real-estate-photo-editing-7/'` to `base: '/'`.
+1. In `vite.config.js`, change `base: '/portfolio/'` to `base: '/'`.
 2. In `public/404.html`, change `pathSegmentsToKeep` from `1` to `0`.
 3. Add a `CNAME` file under `public/` with your domain, and configure the
    domain in the repo's Pages settings.
