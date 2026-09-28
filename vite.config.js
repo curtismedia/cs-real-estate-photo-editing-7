@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/cs-real-estate-photo-editing-7/',
+  base: '/portfolio/',
   build: {
     outDir: 'dist',
   },
