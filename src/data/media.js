@@ -21,7 +21,7 @@ import { withBase } from '../lib/assetPath'
 export const LOCAL_MEDIA_READY = {
   hero: true,
   home: true,
-  about: false,
+  about: true,
   'video-editing': false,
   'virtual-staging': false,
   hdr: false,
