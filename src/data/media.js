@@ -21,6 +21,7 @@ import { withBase } from '../lib/assetPath'
 export const LOCAL_MEDIA_READY = {
   hero: true,
   home: true,
+  about: false,
   'video-editing': false,
   'virtual-staging': false,
   hdr: false,
@@ -66,4 +67,12 @@ export const HERO_SLIDE_DURATION = 6500
 export const approachImage = {
   src: resolveMedia('home', '/images/home/approach.jpg', 'cs-approach', [1200, 1500]),
   alt: 'Interior detail of a refined residential space',
+}
+
+// ---------------------------------------------------------------------------
+// ABOUT PAGE — portrait/editorial image next to the intro text
+// ---------------------------------------------------------------------------
+export const aboutImage = {
+  src: resolveMedia('about', '/images/about/about.jpg', 'cs-about', [1200, 1500]),
+  alt: 'Interior photography',
 }
