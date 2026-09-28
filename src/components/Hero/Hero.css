@@ -53,7 +53,11 @@
   padding-top: calc(var(--header-offset) + 2rem);
   max-width: 60rem;
 }
-.hero__eyebrow {
+/* Scoped under `.hero` so this wins over the base `.label` rule in
+   global.css regardless of CSS bundling order (equal specificity would
+   otherwise let whichever rule lands later in the compiled stylesheet
+   win — see the `.section--dark .label` pattern used the same way). */
+.hero .hero__eyebrow {
   color: var(--light-70);
   display: block;
   margin-bottom: 1.5rem;
@@ -74,7 +78,7 @@
   gap: 2rem;
   flex-wrap: wrap;
 }
-.hero__work-link { color: var(--light); }
+.hero .hero__work-link { color: var(--light); }
 
 .hero__scroll {
   position: absolute;
