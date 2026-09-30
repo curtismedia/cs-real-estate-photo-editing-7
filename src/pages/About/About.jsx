@@ -120,7 +120,7 @@ function Icon({ name }) {
 
 export default function About() {
   useSEO({
-    title: `About ${brand.name}`,
+    title: 'About Curtis Visuals - Real Estate Post-Production Studio',
     description:
       'CS is a real estate post-production studio — natural editing, consistent results, and your own style, refined. Enhance, don’t over-edit.',
   })

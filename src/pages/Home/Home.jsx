@@ -18,7 +18,7 @@ import './Home.css'
 
 export default function Home() {
   useSEO({
-    title: 'CS Real Estate Photo Editing',
+    title: 'Curtis Visuals - Real Estate Post-Production Studio',
     description:
       'Premium real estate photo and video post-production — HDR, flambient, virtual staging, twilight, drone and video, edited property by property.',
   })

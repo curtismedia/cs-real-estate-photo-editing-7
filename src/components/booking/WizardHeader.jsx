@@ -8,7 +8,7 @@ export default function WizardHeader() {
       <div className="site-header__inner container">
         <Link to="/" className="logo" aria-label={`${brand.name} — home`}>
           <BrandMark />
-          <span className="logo__word">Real Estate Photo Editing</span>
+          <span className="logo__word">Real Estate Post-Production Studio</span>
         </Link>
         <Link to="/" className="link" style={{ marginLeft: 'auto' }}>
           Exit

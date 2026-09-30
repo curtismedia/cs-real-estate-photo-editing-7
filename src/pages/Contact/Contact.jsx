@@ -8,7 +8,7 @@ import './Contact.css'
 
 export default function Contact() {
   useSEO({
-    title: 'Contact CS Real Estate Photo Editing',
+    title: 'Contact Curtis Visuals - Real Estate Post-Production Studio',
     description: 'Get in touch with CS Real Estate Photo Editing, or request a free 10-image editing test.',
   })
 
