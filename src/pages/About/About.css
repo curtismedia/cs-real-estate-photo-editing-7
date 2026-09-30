@@ -1,12 +1,14 @@
 /* ==========================================================================
-   About page — premium, image-led editorial redesign.
+   About page — premium, image-led editorial redesign (v2).
 
-   Reuses the site's existing type/color/spacing tokens (variables.css) and
+   Reuses the site's existing type/color/spacing tokens (variables.css),
    utility classes (.label, .display, .h2, .h3, .lead, .muted, .btn, .link,
-   .section, .section--alt, .container) rather than inventing a parallel
-   system. Section-specific rules below only add layout, spacing and the
-   handful of new visual patterns (icon grid, process rail, edit grid,
-   swatches, cinematic close) that don't already exist elsewhere.
+   .section, .section--alt, .container, .section-head) and the existing
+   carousel/scroll-snap pattern from Home.css (.home-services__*) rather than
+   inventing a parallel system. Section-specific rules below only add layout,
+   spacing and the handful of new visual patterns (style grid, process rail,
+   drag-scroll carousels, workflow grid, cinematic close) that don't already
+   exist elsewhere.
 
    NOTE on specificity: anywhere a color is set on an element that also
    carries a shared utility class (.label / .link / .muted), the override
@@ -15,7 +17,7 @@
    bundle the CSS in. See Hero.css for the bug this pattern avoids.
    ========================================================================== */
 
-/* ---------- 01 — Hero ---------- */
+/* ---------- 01 — About Curtis Visuals (hero) ---------- */
 .about-hero.section {
   padding-top: calc(var(--header-offset) + clamp(2rem, 6vw, 4rem));
   padding-bottom: clamp(3rem, 6vw, 5rem);
@@ -27,67 +29,36 @@
   align-items: center;
 }
 .about-hero__title { margin: 1.25rem 0 1.5rem; }
-.about-hero__lead { max-width: 30rem; }
+.about-hero__lead { max-width: 32rem; margin-bottom: 1.1rem; }
+.about-hero__note { max-width: 30rem; }
 .about-hero__media img {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
 }
 
-/* ---------- 02 / 06 — split editorial rows (image + text) ---------- */
-.about-split {
+/* ---------- 02 — Your Style, Your Vision ---------- */
+.about-style__head { max-width: 46rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.about-style__title { margin: 1rem 0 1.25rem; }
+.about-style__copy { margin-bottom: 1rem; max-width: 42rem; }
+.about-style__highlight {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  color: var(--charcoal-80);
+}
+
+.about-style-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(2.5rem, 6vw, 5rem);
-  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.75rem, 3vw, 2.5rem);
 }
-.about-split__media img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-}
-.about-split__text .display,
-.about-split__text .h2 { margin: 1rem 0 1.25rem; }
-.about-split__text .lead,
-.about-split__text .muted { max-width: 30rem; }
+.about-style-example__name { margin-top: 1.1rem; margin-bottom: 0.35rem; }
 
-.about-swatches { display: flex; gap: 0.75rem; margin-top: 1.75rem; }
-.about-swatch {
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 1px solid var(--line-strong);
-}
-.about-swatch--ivory { background: var(--ivory); }
-.about-swatch--paper { background: var(--paper); }
-.about-swatch--stone { background: var(--stone); }
-.about-swatch--charcoal { background: var(--charcoal); }
-
-/* ---------- 03 — Our Philosophy ---------- */
-.about-philosophy__head {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: end;
-  padding-bottom: clamp(2.5rem, 5vw, 4rem);
-  border-bottom: 1px solid var(--line);
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-.about-philosophy__title { margin-top: 0.75rem; }
-.about-philosophy__copy { max-width: 28rem; }
-
-.about-principles {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: clamp(2rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem);
-}
-.about-principle__icon {
-  display: inline-flex;
-  color: var(--stone-deep);
-  margin-bottom: 0.9rem;
-}
-.about-principle__title { margin-bottom: 0.4rem; }
-
-/* ---------- 04 — How We Work ---------- */
+/* ---------- 03 — Our Process ---------- */
+.about-process__intro { max-width: 38rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
 .about-process {
   display: flex;
   list-style: none;
@@ -110,48 +81,92 @@
   color: var(--charcoal-30);
   font-size: 1.15rem;
 }
-
-/* ---------- 05 — What We Edit ---------- */
-.about-edit-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(1.75rem, 3vw, 2.5rem) clamp(1.25rem, 3vw, 2rem);
+.about-process__footer {
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--line);
 }
-.about-edit-card { display: flex; flex-direction: column; color: inherit; }
-.about-edit-card__media {
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
+
+/* ---------- Shared carousel pattern (Services + Work) ----------
+   Same full-bleed scroll-snap mechanics as Home.css .home-services__*, plus
+   pointer-drag scrolling for desktop mouse users (the homepage carousels
+   only need native touch/scroll-snap; these two also support click-drag). */
+.about-carousel__scroller {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-block: 0.5rem;
+  scroll-padding-inline: var(--carousel-inset);
+  cursor: grab;
+}
+.about-carousel__scroller::-webkit-scrollbar { display: none; }
+.about-carousel__scroller.is-dragging { cursor: grabbing; user-select: none; }
+.about-carousel__track {
+  display: flex;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  padding-inline: var(--carousel-inset);
+  box-sizing: border-box;
+  width: max-content;
+}
+.about-carousel__item {
+  width: clamp(16rem, 24vw, 21rem);
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+.about-carousel__item--work { width: clamp(18rem, 32vw, 25rem); }
+
+.about-carousel__cta-slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.85rem;
+  border: 1px solid var(--line-strong);
   background: var(--ivory-deep);
+  padding: 1.75rem;
+  aspect-ratio: 4 / 5;
 }
-.about-edit-card__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s var(--ease);
-}
-.about-edit-card:hover .about-edit-card__media img,
-.about-edit-card:focus-visible .about-edit-card__media img { transform: scale(1.05); }
-.about-edit-card__name { margin-top: 1rem; margin-bottom: 0.35rem; }
+.about-carousel__item--work .about-carousel__cta-slide { aspect-ratio: 4 / 3; }
+.about-carousel__cta-slide h3 { max-width: 20ch; }
 
-/* ---------- 07 — Portfolio / Proof ---------- */
-.about-proof-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(0.75rem, 2vw, 1.25rem);
-  margin-top: clamp(2rem, 4vw, 3rem);
+.about-carousel__controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
 }
-.about-proof-grid__item { display: block; aspect-ratio: 4 / 3; overflow: hidden; }
-.about-proof-grid__item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s var(--ease);
+.about-carousel__controls--work {
+  justify-content: flex-end;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
 }
-.about-proof-grid__item:hover img,
-.about-proof-grid__item:focus-visible img { transform: scale(1.05); }
-.about-proof-cta { margin-top: clamp(1.5rem, 3vw, 2.5rem); }
+.about-carousel__progress {
+  margin-right: 0.5rem;
+  color: var(--stone);
+  font-variant-numeric: tabular-nums;
+}
+.about-carousel__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--charcoal);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.about-carousel__arrow:hover { background: var(--charcoal); border-color: var(--charcoal); color: var(--light); }
 
-/* ---------- 08 — Why CS ---------- */
+/* ---------- 04 — Our Services ---------- */
+.about-services__intro { max-width: 38rem; margin-bottom: clamp(2rem, 4vw, 2.75rem); }
+
+/* ---------- 05 — The Work ---------- */
+.about-work__intro { max-width: 42rem; margin-bottom: clamp(2rem, 4vw, 2.75rem); }
+
+/* ---------- 06 — Built For Your Workflow ---------- */
+.about-workflow__intro { max-width: 40rem; margin-bottom: clamp(2rem, 4vw, 2.75rem); }
 .about-why-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -160,7 +175,7 @@
 .about-why-item { display: flex; gap: 1rem; align-items: flex-start; }
 .about-why-item__icon { flex: none; color: var(--stone-deep); margin-top: 0.15rem; }
 
-/* ---------- 09 — Free Test Offer ---------- */
+/* ---------- 07 — Try Us First ---------- */
 .about-offer { background: var(--ivory-deep); text-align: center; }
 .about-offer__inner {
   display: flex;
@@ -170,11 +185,17 @@
   max-width: 38rem;
   margin-inline: auto;
 }
+.about-offer__eyebrow {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  color: var(--charcoal-80);
+}
 .about-offer__title { margin: 0; }
 .about-offer__copy { margin: 0; }
 .about-offer__note { margin-top: 0.1rem; }
 
-/* ---------- 10 — Final cinematic CTA ---------- */
+/* ---------- 08 — Final cinematic CTA ---------- */
 .about-final {
   position: relative;
   display: flex;
@@ -213,31 +234,24 @@
 
 /* ==========================================================================
    Responsive — the mobile page is its own composition, not a shrunk desktop
-   layout: image-first stacking, a vertical process rail, and a 2-column
-   service grid, per section.
+   layout: image-first stacking, a vertical process rail, and both carousels
+   stay horizontally swipeable (never stacked vertically) at every width.
    ========================================================================== */
 
 @media (max-width: 1024px) {
-  .about-philosophy__head { grid-template-columns: 1fr; align-items: start; gap: 1.5rem; }
-  .about-philosophy__copy { max-width: none; }
-  .about-principles { grid-template-columns: repeat(3, 1fr); }
+  .about-style-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   .about-why-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
 }
 
 @media (max-width: 860px) {
-  .about-hero__grid,
-  .about-split {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+  .about-hero__grid { grid-template-columns: 1fr; gap: 2rem; }
   /* Mobile hero: image first, then the headline/paragraph below it. */
   .about-hero__media { order: -1; }
-  .about-hero__lead { max-width: none; }
-  .about-split__text .lead,
-  .about-split__text .muted { max-width: none; }
+  .about-hero__lead,
+  .about-hero__note { max-width: none; }
 
-  .about-edit-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
-  .about-proof-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-style-grid { grid-template-columns: 1fr; gap: 2rem; max-width: 26rem; margin-inline: auto; }
+  .about-style__copy { max-width: none; }
 
   /* Vertical process rail with a connecting line, one thumb-scroll down. */
   .about-process {
@@ -255,9 +269,7 @@
     width: 1px;
     background: var(--line-strong);
   }
-  .about-process__step {
-    padding: 0 0 2.5rem 0;
-  }
+  .about-process__step { padding: 0 0 2.5rem 0; }
   .about-process__step::before {
     content: '';
     position: absolute;
@@ -270,14 +282,14 @@
   }
   .about-process__step:last-child { padding-bottom: 0; }
   .about-process__arrow { display: none; }
+
+  /* Arrow controls are a precision-pointer affordance; touch users swipe. */
+  .about-carousel__arrow { display: none; }
+  .about-carousel__controls--work { display: none; }
+
+  .about-why-grid { grid-template-columns: 1fr; gap: 1.75rem; }
 }
 
 @media (max-width: 620px) {
-  .about-principles { grid-template-columns: repeat(2, 1fr); }
-  .about-why-grid { grid-template-columns: 1fr; }
   .about-final { min-height: 26rem; }
-}
-
-@media (max-width: 420px) {
-  .about-edit-grid { gap: 1.25rem 0.85rem; }
 }
