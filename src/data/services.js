@@ -3,8 +3,10 @@
 // `type: 'photo'` renders Before/After examples in the modal.
 // `type: 'video'` renders video thumbnails that open a Video Modal.
 //
-// `order` controls display order on the Services page and homepage carousel.
-// Numbering (01, 02, …) is derived from this order — never hard-coded.
+// `order` controls display order on the Services page, homepage carousel and
+// the About page carousel. Numbering (01, 02, …) is derived from this order
+// — never hard-coded — so to REORDER SERVICES, just change the `order`
+// values below; nothing else in the codebase needs to change.
 //
 // MEDIA: every path below is the REAL path your files will live at once you
 // upload them (e.g. /public/images/services/hdr/cover.webp). Until then
@@ -73,7 +75,7 @@ export const services = [
   {
     id: 's02',
     slug: 'virtual-staging',
-    order: 2,
+    order: 9, // moved to last position — was order 2
     name: 'Virtual Staging',
     type: 'photo',
     tagline: 'Realistic furniture, lighting-matched',
@@ -92,7 +94,7 @@ export const services = [
   {
     id: 's03',
     slug: 'hdr',
-    order: 3,
+    order: 2,
     name: 'HDR Editing',
     type: 'photo',
     tagline: 'Bracketed exposures, merged and balanced',
@@ -111,7 +113,7 @@ export const services = [
   {
     id: 's04',
     slug: 'object-removal',
-    order: 4,
+    order: 3,
     name: 'Object Removal',
     type: 'photo',
     tagline: 'Clutter, cars, cables — cleanly gone',
@@ -130,7 +132,7 @@ export const services = [
   {
     id: 's05',
     slug: 'flambient',
-    order: 5,
+    order: 4,
     name: 'Flambient Editing',
     type: 'photo',
     tagline: 'Flash-ambient blending, true-to-life color',
@@ -150,7 +152,7 @@ export const services = [
   {
     id: 's06',
     slug: 'twilight',
-    order: 6,
+    order: 5,
     name: 'Twilight Editing',
     type: 'photo',
     tagline: 'Golden-hour exteriors from daytime frames',
@@ -169,7 +171,7 @@ export const services = [
   {
     id: 's07',
     slug: 'day-to-dusk',
-    order: 7,
+    order: 6,
     name: 'Day to Dusk',
     type: 'photo',
     tagline: 'Soft evening mood, fully controlled',
@@ -188,7 +190,7 @@ export const services = [
   {
     id: 's08',
     slug: 'drone-aerial',
-    order: 8,
+    order: 7,
     name: 'Drone / Aerial Editing',
     type: 'photo',
     tagline: 'Sky replacement & aerial color match',
@@ -207,7 +209,7 @@ export const services = [
   {
     id: 's09',
     slug: 'single',
-    order: 9,
+    order: 8,
     name: 'Single Exposure Editing',
     type: 'photo',
     tagline: 'Single-exposure correction, per image',

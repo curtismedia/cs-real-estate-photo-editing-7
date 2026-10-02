@@ -225,27 +225,50 @@
 .about-why-item { display: flex; gap: 1rem; align-items: flex-start; }
 .about-why-item__icon { flex: none; color: var(--stone-deep); margin-top: 0.15rem; }
 
-/* ---------- 07 — Try Us First ---------- */
-.about-offer { background: var(--ivory-deep); text-align: center; }
-.about-offer__inner {
+/* Mobile-only trust marquee (replaces .about-why-grid below 860px — see the
+   media query at the bottom of this file). Hidden by default/desktop. */
+.about-marquee {
+  display: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* A soft fade at both edges hints there's more to scroll/swipe. */
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+}
+.about-marquee::-webkit-scrollbar { display: none; }
+.about-marquee__track {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  max-width: 38rem;
-  margin-inline: auto;
+  width: max-content;
+  white-space: nowrap;
+  animation: about-marquee-scroll 22s linear infinite;
 }
-.about-offer__eyebrow {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+.about-marquee__track.is-paused { animation-play-state: paused; }
+.about-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9em;
+  flex: none;
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
   color: var(--charcoal-80);
+  padding-right: 0.9em;
 }
-.about-offer__title { margin: 0; max-width: 24ch; text-wrap: balance; }
-.about-offer__copy { margin: 0; }
-.about-offer__note { margin-top: 0.1rem; }
+.about-marquee__dot { color: var(--stone); }
+/* Content is duplicated once in the markup, so translating by exactly -50%
+   of the (double-length) track repeats seamlessly with no visible jump. */
+@keyframes about-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-marquee__track { animation: none; }
+}
 
-/* ---------- 08 — Final cinematic CTA ---------- */
+/* ---------- 07 — Final cinematic CTA ---------- */
 .about-final {
   position: relative;
   display: flex;
@@ -279,8 +302,21 @@
 .label.about-final__eyebrow { color: var(--light-70); display: block; margin-bottom: 1rem; }
 .about-final__title { color: var(--light); margin-bottom: 1rem; max-width: 20ch; text-wrap: balance; }
 .about-final__copy { color: var(--light-70); max-width: 30rem; margin-bottom: 1.75rem; }
-.about-final__actions { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; }
-.link.about-final__email { color: var(--light); }
+.about-final__actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+/* A solid light-filled button for the dark final CTA — the primary action
+   (Start Your Free Test). .btn--light (outline, already defined globally) is
+   used as-is for the secondary action (Contact Us) right beside it.
+   Specificity note: combined with `.btn` (like `.label.about-final__eyebrow`
+   above) so this wins regardless of Vite's CSS bundle order — a lone
+   `.btn--solid-light` has the same specificity as `.btn` itself and could
+   lose to it, leaving the button background transparent. */
+.btn.btn--solid-light {
+  background: var(--light);
+  border-color: var(--light);
+  color: var(--charcoal);
+}
+.btn.btn--solid-light:hover { background: transparent; color: var(--light); }
+.link.about-final__email { display: block; color: var(--light); margin-top: 1.5rem; }
 
 /* ==========================================================================
    Responsive — the mobile page is its own composition, not a shrunk desktop
@@ -353,7 +389,10 @@
   .about-carousel__arrow { display: none; }
   .about-carousel__controls--work { display: none; }
 
-  .about-why-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+  /* Trust bar: swap the 4-row grid for the one-line looping marquee so it
+     never wraps onto a second line on a narrow screen. */
+  .about-why-grid { display: none; }
+  .about-marquee { display: block; margin-top: 0.5rem; }
 }
 
 @media (max-width: 620px) {

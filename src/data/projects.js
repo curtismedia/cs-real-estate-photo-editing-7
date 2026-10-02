@@ -36,12 +36,28 @@ const realImg = (slug, n, ext = 'webp') =>
 const realGallery = (slug, count, ext = 'webp') =>
   Array.from({ length: count }, (_, i) => realImg(slug, i + 1, ext))
 
-export const projects = [
+// ---------------------------------------------------------------------------
+// ADD NEW PROJECTS HERE — anywhere in the array, in any order.
+//
+// `date` is the human-readable label shown under the title. `dateValue` is
+// the SAME date in plain "YYYY-MM-DD" form, used only for sorting — it must
+// stay in that format so newest-first ordering is reliable (string-sorting
+// "2026-09-19" against "2026-08-30" always works; sorting "19 Sep 2026"
+// against "30 Aug 2026" as text would not).
+//
+// You never need to renumber anything: `projects` below is automatically
+// sorted newest → oldest by `dateValue`, and every page (Home, Work, About)
+// numbers projects 01, 02, 03… from that sorted order, not from a hardcoded
+// number. Add a project with a newer `dateValue` than everything else and it
+// automatically becomes Project 01; everything else shifts down on its own.
+// ---------------------------------------------------------------------------
+const rawProjects = [
   {
     id: 'p001',
     slug: 'project-01',
     title: 'Project 01',
-    date: '20/6/2026',
+    date: '19 Sep 2026',
+    dateValue: '2026-09-19',
     // Real media — 63 .jpg files, no picsum fallback for this project.
     // Cover is file 03; the gallery still starts at 01 and stays in order.
     cover: realImg('project-01', 3, 'jpg'),
@@ -55,7 +71,8 @@ export const projects = [
     id: 'p002',
     slug: 'project-02',
     title: 'Project 02',
-    date: '20/6/2026',
+    date: '30 Aug 2026',
+    dateValue: '2026-08-30',
     // Real media — 102 .jpg files, numbered 01–102 with no gaps.
     // Cover is file 74; the gallery still starts at 01 and stays in order.
     cover: realImg('project-02', 74, 'jpg'),
@@ -69,7 +86,8 @@ export const projects = [
     id: 'p003',
     slug: 'project-03',
     title: 'Project 03',
-    date: '20/6/2026',
+    date: '18 Aug 2026',
+    dateValue: '2026-08-18',
     // Real media — 46 .jpg files, no picsum fallback for this project.
     // Cover is file 06; the gallery still starts at 01 and stays in order.
     cover: realImg('project-03', 6, 'jpg'),
@@ -83,7 +101,8 @@ export const projects = [
     id: 'p004',
     slug: 'project-04',
     title: 'Project 04',
-    date: '20/6/2026',
+    date: '05 Aug 2026',
+    dateValue: '2026-08-05',
     // Real media — 57 .jpg files, numbered 01–57 with no gaps.
     cover: realImg('project-04', 1, 'jpg'),
     gallery: realGallery('project-04', 57, 'jpg'),
@@ -96,7 +115,8 @@ export const projects = [
     id: 'p005',
     slug: 'project-05',
     title: 'Project 05',
-    date: '20/6/2026',
+    date: '22 Jul 2026',
+    dateValue: '2026-07-22',
     // Real media — 36 .jpg files, numbered 01–36 with no gaps.
     // Cover is file 04; the gallery still starts at 01 and stays in order.
     cover: realImg('project-05', 4, 'jpg'),
@@ -110,7 +130,8 @@ export const projects = [
     id: 'p006',
     slug: 'project-06',
     title: 'Project 06',
-    date: '20/6/2026',
+    date: '10 Jul 2026',
+    dateValue: '2026-07-10',
     // Real media — 70 .jpg files, numbered 01–70 with no gaps.
     // Cover is file 68; the gallery still starts at 01 and stays in order.
     cover: realImg('project-06', 68, 'jpg'),
@@ -121,6 +142,12 @@ export const projects = [
     videos: [],
   },
 ]
+
+// THE single source of truth every page reads from — always sorted newest
+// first by `dateValue`. Home, Work and About all number projects from this
+// array's order, so adding/reordering/dating a project here is the only
+// edit needed anywhere on the site.
+export const projects = [...rawProjects].sort((a, b) => b.dateValue.localeCompare(a.dateValue))
 
 // Homepage "Selected Work" shows the first N projects — same objects, same
 // numbering, same order as the Work page.

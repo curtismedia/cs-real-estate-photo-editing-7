@@ -9,85 +9,30 @@ import ProjectModal from '../../components/ProjectModal/ProjectModal'
 import { cta, contact, brand } from '../../data/siteData'
 import { projects } from '../../data/projects'
 import { orderedServices } from '../../data/services'
-import { withBase } from '../../lib/assetPath'
+import {
+  ABOUT_IMAGES,
+  ABOUT_STYLE_EXAMPLES,
+  ABOUT_PROCESS_STEPS,
+  ABOUT_WORKFLOW,
+  pickImage,
+} from './aboutContent'
 import './About.css'
 
 // ---------------------------------------------------------------------------
-// Every image below is a REAL delivered edit already uploaded to this repo
-// (see /public/images/work and /public/images/services) — no stock imagery,
-// no invented clients, stats or testimonials.
+// All copy/images for this page live in ./aboutContent.js — see that file to
+// replace a photo, add a high-resolution version, or edit the process/
+// workflow text. This file (About.jsx) is layout only.
 //
 // SERVICES NOTE: this page shows the 9 services that actually exist in
 // src/data/services.js (the same catalogue used on /services and the
-// homepage). "Floor Plans" and "3D / Virtual Tours" are not part of the real
-// catalogue (Floor Plans was retired; 3D/Virtual Tours was never built), so
-// they are not shown here — Object Removal is the studio's real 9th service.
+// homepage, reordered there — see that file's `order` field). "Floor Plans"
+// and "3D / Virtual Tours" are not part of the real catalogue (Floor Plans
+// was retired; 3D/Virtual Tours was never built), so they are not shown here.
+//
+// PROJECTS NOTE: project numbers (01, 02, …) and dates come from
+// src/data/projects.js, sorted newest-first automatically — see that file to
+// add, date or reorder a project.
 // ---------------------------------------------------------------------------
-const img = (p) => withBase(p)
-
-const HERO_IMG = img('/images/work/project-02/project-02-74.jpg')
-const FINAL_CTA_IMG = img('/images/services/twilight/after-01.jpg')
-
-const FEATURED_BA = {
-  before: img('/images/services/day-to-dusk/before-01.jpg'),
-  after: img('/images/services/day-to-dusk/after-01.jpg'),
-  label: 'One capture, edited to the brief — day to dusk',
-}
-
-const styleExamples = [
-  {
-    before: img('/images/services/hdr/before-01.jpg'),
-    after: img('/images/services/hdr/after-01.jpg'),
-    name: 'Natural & balanced',
-    text: 'Accurate color, open shadows, true window detail — the everyday standard for listing photography.',
-  },
-  {
-    before: img('/images/services/twilight/before-01.jpg'),
-    after: img('/images/services/twilight/after-01.jpg'),
-    name: 'Warm & golden-hour',
-    text: 'The same property, taken to a twilight mood — deep sky, warm glow, nothing overdone.',
-  },
-  {
-    before: img('/images/services/virtual-staging/before-01.jpg'),
-    after: img('/images/services/virtual-staging/after-01.jpg'),
-    name: 'Styled & furnished',
-    text: 'An empty room brought to life with furnishing matched to the space’s own light and perspective.',
-  },
-]
-
-const process = [
-  {
-    n: '01',
-    kicker: 'Send',
-    title: 'Send your files & references',
-    text: 'Upload your RAW files, references, instructions, and any specific requirements.',
-  },
-  {
-    n: '02',
-    kicker: 'Understand',
-    title: 'We learn your style',
-    text: 'We review your references and requirements before editing, so our team knows exactly what you’re looking for.',
-  },
-  {
-    n: '03',
-    kicker: 'Edit',
-    title: 'We bring it together',
-    text: 'Our editors work through the project with your preferred style, requirements, and delivery standards in mind.',
-  },
-  {
-    n: '04',
-    kicker: 'QC & Deliver',
-    title: 'We check before delivery',
-    text: 'Every project goes through a final quality check for consistency, details, and your specific requirements before delivery.',
-  },
-]
-
-const workflow = [
-  { icon: 'layers', title: 'Consistent', text: 'Your preferences and requirements are documented and followed across projects.' },
-  { icon: 'workflow', title: 'Reliable', text: 'A clear workflow and quality control process from start to finish.' },
-  { icon: 'bolt', title: 'Fast', text: 'Typical turnaround of 8–12 hours, depending on the project.' },
-  { icon: 'calendar', title: 'Flexible', text: 'From individual properties to recurring weekly production volume.' },
-]
 
 // Thin, editorial line icons — same stroke weight as the Before/After
 // slider's handle arrows already in this codebase (strokeWidth 1.4).
@@ -237,6 +182,9 @@ export default function About() {
 
   const [activeService, setActiveService] = useState(null)
   const [activeProject, setActiveProject] = useState(null)
+  // Mobile trust marquee: paused while the visitor is touching/dragging it,
+  // so manual swipe never fights the automatic scroll.
+  const [marqueePaused, setMarqueePaused] = useState(false)
 
   const serviceSlides = orderedServices.length + 1 // + final CTA slide
   const workSlides = projects.length + 1 // + final CTA slide
@@ -258,6 +206,9 @@ export default function About() {
   const prevProject = () => setActiveProject(projects[(projIndex - 1 + projects.length) % projects.length])
 
   const serviceNum = String(Math.min(services.index + 1, orderedServices.length)).padStart(2, '0')
+
+  // Duplicated once so the marquee can loop seamlessly at -50% translateX.
+  const marqueeItems = [...ABOUT_WORKFLOW, ...ABOUT_WORKFLOW]
 
   return (
     <>
@@ -281,7 +232,12 @@ export default function About() {
             </p>
           </div>
           <figure className="about-hero__media">
-            <img src={HERO_IMG} alt="Bright, naturally lit interior — edited by Curtis Visuals" loading="eager" fetchpriority="high" />
+            <img
+              src={pickImage(ABOUT_IMAGES.hero, { large: true })}
+              alt="Bright, naturally lit interior — edited by Curtis Visuals"
+              loading="eager"
+              fetchpriority="high"
+            />
           </figure>
         </div>
       </section>
@@ -309,9 +265,9 @@ export default function About() {
           </div>
 
           <div className="about-style-grid">
-            {styleExamples.map((ex) => (
+            {ABOUT_STYLE_EXAMPLES.map((ex) => (
               <div className="about-style-example" key={ex.name}>
-                <BeforeAfterSlider before={ex.before} after={ex.after} alt={ex.name} />
+                <BeforeAfterSlider before={pickImage(ex.before)} after={pickImage(ex.after)} alt={ex.name} />
                 <h3 className="h3 about-style-example__name">{ex.name}</h3>
                 <p className="muted about-style-example__text">{ex.text}</p>
               </div>
@@ -335,7 +291,7 @@ export default function About() {
           </p>
 
           <ol className="about-process">
-            {process.map((step) => (
+            {ABOUT_PROCESS_STEPS.map((step) => (
               <li className="about-process__step" key={step.n}>
                 <span className="about-process__num label">{step.n} — {step.kicker}</span>
                 <h3 className="h3 about-process__title">{step.title}</h3>
@@ -410,12 +366,18 @@ export default function About() {
             </div>
           </div>
           <p className="lead about-work__intro">
-            From individual images to complete property campaigns, every project brings together
-            multiple pieces of visual content. Explore a selection of work across photo, video and
-            3D — and see how different projects come together from capture to final delivery.
+            Every property has its own visual story — from polished photography and twilight
+            imagery to video and immersive 3D experiences. Explore a selection of projects across
+            our services and see how each shoot can become a complete set of marketing-ready
+            visuals.
           </p>
 
-          <BeforeAfterSlider before={FEATURED_BA.before} after={FEATURED_BA.after} alt={FEATURED_BA.label} label={FEATURED_BA.label} />
+          <BeforeAfterSlider
+            before={pickImage(ABOUT_IMAGES.workFeatured.before, { large: true })}
+            after={pickImage(ABOUT_IMAGES.workFeatured.after, { large: true })}
+            alt={ABOUT_IMAGES.workFeatured.label}
+            label={ABOUT_IMAGES.workFeatured.label}
+          />
 
           <div className="about-carousel__controls about-carousel__controls--work">
             <button type="button" className="about-carousel__arrow" onClick={() => work.scrollToIndex(work.index - 1)} aria-label="Previous project">
@@ -468,8 +430,9 @@ export default function About() {
             the final project.
           </p>
 
+          {/* Desktop/tablet: 4-column grid. */}
           <div className="about-why-grid">
-            {workflow.map((w) => (
+            {ABOUT_WORKFLOW.map((w) => (
               <div className="about-why-item" key={w.title}>
                 <span className="about-why-item__icon" aria-hidden="true">
                   <Icon name={w.icon} />
@@ -481,29 +444,41 @@ export default function About() {
               </div>
             ))}
           </div>
+
+          {/* Mobile: one-line looping marquee instead of a 4-row stack — see
+              .about-marquee in About.css. Native horizontal scroll means the
+              visitor can still swipe/drag it; the CSS animation just pauses
+              while they're touching it (onPointerDown/Up below) and picks
+              back up afterwards. Content is duplicated so the loop point
+              (-50% translateX) is seamless. */}
+          <div
+            className="about-marquee"
+            onPointerDown={() => setMarqueePaused(true)}
+            onPointerUp={() => setMarqueePaused(false)}
+            onPointerLeave={() => setMarqueePaused(false)}
+            role="list"
+            aria-label="Consistent, reliable, fast, flexible"
+          >
+            <div className={`about-marquee__track${marqueePaused ? ' is-paused' : ''}`}>
+              {marqueeItems.map((w, i) => (
+                <span className="about-marquee__item" key={`${w.title}-${i}`} role="listitem">
+                  {w.title.toUpperCase()}
+                  <span className="about-marquee__dot" aria-hidden="true">•</span>
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 07 — Try Us First */}
-      <section className="section about-offer">
-        <div className="container about-offer__inner">
-          <span className="label">Try us first</span>
-          <p className="about-offer__eyebrow">Not sure we’re the right fit?</p>
-          <h2 className="display about-offer__title">Send us 10 images. We’ll edit them for free.</h2>
-          <p className="lead about-offer__copy">
-            See how we work before committing to a project. Send us up to 10 images along with
-            your references or editing instructions, and we’ll show you what we can do.
-          </p>
-          <Link to={cta.primary.to} className="btn btn--solid">
-            Get 10 Free Test Images <span className="arrow" aria-hidden="true">→</span>
-          </Link>
-          <span className="about-offer__note muted">No commitment. No subscription. Just a test.</span>
-        </div>
-      </section>
-
-      {/* 08 — Final CTA */}
+      {/* 07 — Final CTA (one combined ending: free test OR contact us) */}
       <section className="about-final">
-        <img className="about-final__media" src={FINAL_CTA_IMG} alt="Twilight exterior, edited by Curtis Visuals" loading="lazy" />
+        <img
+          className="about-final__media"
+          src={pickImage(ABOUT_IMAGES.finalCTA, { large: true })}
+          alt="Twilight exterior, edited by Curtis Visuals"
+          loading="lazy"
+        />
         <div className="about-final__scrim" aria-hidden="true" />
         <div className="container about-final__content">
           <span className="label about-final__eyebrow">Let’s work together</span>
@@ -513,13 +488,16 @@ export default function About() {
             from there.
           </p>
           <div className="about-final__actions">
-            <Link to={cta.primary.to} className="btn btn--light">
+            <Link to={cta.primary.to} className="btn btn--solid-light">
               Start Your Free Test <span className="arrow" aria-hidden="true">→</span>
             </Link>
-            <a href={`mailto:${contact.email}`} className="link about-final__email">
-              {contact.email}
-            </a>
+            <Link to="/contact" className="btn btn--light">
+              Contact Us <span className="arrow" aria-hidden="true">→</span>
+            </Link>
           </div>
+          <a href={`mailto:${contact.email}`} className="link about-final__email">
+            {contact.email}
+          </a>
         </div>
       </section>
 
