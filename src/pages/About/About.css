@@ -1,5 +1,5 @@
 /* ==========================================================================
-   About page — premium, image-led editorial redesign (v2).
+   About page â€” premium, image-led editorial redesign (v2).
 
    Reuses the site's existing type/color/spacing tokens (variables.css),
    utility classes (.label, .display, .h2, .h3, .lead, .muted, .btn, .link,
@@ -17,7 +17,7 @@
    bundle the CSS in. See Hero.css for the bug this pattern avoids.
    ========================================================================== */
 
-/* ---------- 01 — About Curtis Visuals (hero) ---------- */
+/* ---------- 01 â€” About Curtis Visuals (hero) ---------- */
 .about-hero.section {
   padding-top: calc(var(--header-offset) + clamp(2rem, 6vw, 4rem));
   padding-bottom: clamp(3rem, 6vw, 5rem);
@@ -54,8 +54,34 @@
   text-wrap: balance;
 }
 
-/* ---------- 02 — Your Style, Your Vision ---------- */
+/* ---------- 02 â€” Your Style, Your Vision ---------- */
 .about-style__head { max-width: 46rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+
+/* On wide screens a single 46rem text column leaves a very large, jarring
+   blank gap before the full-width grid below it (the .container itself is
+   correctly capped/centered â€” this was reported as "page not full" but was
+   actually just too much unused space beside a narrow text block). From
+   1025px up, split the head into two columns â€” label/title on the left,
+   the body copy + highlight on the right â€” so the block uses the full
+   container width while each column keeps a comfortable reading length. */
+@media (min-width: 1025px) {
+  .about-style__head {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    column-gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .about-style__head > .label { grid-column: 1; grid-row: 1; }
+  .about-style__head > .about-style__title { grid-column: 1; grid-row: 2; margin-top: 1rem; }
+  .about-style__head > p.about-style__copy:nth-of-type(1) { grid-column: 2; grid-row: 1; margin-top: 0; }
+  .about-style__head > p.about-style__copy:nth-of-type(2) { grid-column: 2; grid-row: 2; }
+  /* The highlight line runs full-width below both columns (rather than
+     tucked under the shorter right column) so the section always closes on
+     one consistent horizontal rule, regardless of how the title/copy
+     heights compare in a given viewport. */
+  .about-style__head > p.about-style__highlight { grid-column: 1 / -1; grid-row: 3; margin-top: clamp(2rem, 4vw, 3rem); max-width: none; }
+}
 .about-style__title {
   margin: 1rem 0 1.25rem;
   max-width: 24ch;
@@ -84,11 +110,11 @@
 .about-style-example { display: flex; flex-direction: column; }
 .about-style-example__name { margin-top: 1.1rem; margin-bottom: 0.35rem; }
 
-/* ---------- 03 — Our Process ----------
+/* ---------- 03 â€” Our Process ----------
    A real CSS grid (not four independently-sized flex columns), so the four
    steps read as one designed system: every step label sits on the same
    baseline, every title starts on the same baseline, and every description
-   starts on the same baseline — regardless of how many words any one label
+   starts on the same baseline â€” regardless of how many words any one label
    or title happens to wrap to. Thin vertical dividers between columns stand
    in for the old floating arrow glyph (which could land at a different
    height per column depending on text length). */
@@ -207,7 +233,7 @@
 }
 .about-carousel__arrow:hover { background: var(--charcoal); border-color: var(--charcoal); color: var(--light); }
 
-/* ---------- 04 / 05 / 06 — intro paragraphs ----------
+/* ---------- 04 / 05 / 06 â€” intro paragraphs ----------
    One shared reading width across every section intro on the page, so the
    paragraph column feels like part of one continuous system rather than a
    slightly different width in each section. */
@@ -225,7 +251,7 @@
 .about-why-item { display: flex; gap: 1rem; align-items: flex-start; }
 .about-why-item__icon { flex: none; color: var(--stone-deep); margin-top: 0.15rem; }
 
-/* Mobile-only trust marquee (replaces .about-why-grid below 860px — see the
+/* Mobile-only trust marquee (replaces .about-why-grid below 860px â€” see the
    media query at the bottom of this file). Hidden by default/desktop. */
 .about-marquee {
   display: none;
@@ -268,7 +294,7 @@
   .about-marquee__track { animation: none; }
 }
 
-/* ---------- 07 — Final cinematic CTA ---------- */
+/* ---------- 07 â€” Final cinematic CTA ---------- */
 .about-final {
   position: relative;
   display: flex;
@@ -303,11 +329,11 @@
 .about-final__title { color: var(--light); margin-bottom: 1rem; max-width: 20ch; text-wrap: balance; }
 .about-final__copy { color: var(--light-70); max-width: 30rem; margin-bottom: 1.75rem; }
 .about-final__actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-/* A solid light-filled button for the dark final CTA — the primary action
+/* A solid light-filled button for the dark final CTA â€” the primary action
    (Start Your Free Test). .btn--light (outline, already defined globally) is
    used as-is for the secondary action (Contact Us) right beside it.
    Specificity note: combined with `.btn` (like `.label.about-final__eyebrow`
-   above) so this wins regardless of Vite's CSS bundle order — a lone
+   above) so this wins regardless of Vite's CSS bundle order â€” a lone
    `.btn--solid-light` has the same specificity as `.btn` itself and could
    lose to it, leaving the button background transparent. */
 .btn.btn--solid-light {
@@ -319,7 +345,7 @@
 .link.about-final__email { display: block; color: var(--light); margin-top: 1.5rem; }
 
 /* ==========================================================================
-   Responsive — the mobile page is its own composition, not a shrunk desktop
+   Responsive â€” the mobile page is its own composition, not a shrunk desktop
    layout: image-first stacking, a vertical process rail, and both carousels
    stay horizontally swipeable (never stacked vertically) at every width.
    ========================================================================== */
@@ -345,7 +371,7 @@
   .about-style-grid { grid-template-columns: 1fr; gap: 2rem; max-width: 26rem; margin-inline: auto; }
   .about-style__copy { max-width: none; }
 
-  /* Vertical process rail with a connecting line, one thumb-scroll down —
+  /* Vertical process rail with a connecting line, one thumb-scroll down â€”
      a deliberate mobile composition, not the desktop grid shrunk down. */
   .about-process {
     display: flex;
