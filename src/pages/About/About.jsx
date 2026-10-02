@@ -326,7 +326,7 @@ export default function About() {
           <div className="section-head">
             <div className="section-head__title">
               <span className="label">Our process</span>
-              <h2 className="h2">Simple on your side. Detailed on ours.</h2>
+              <h2 className="h2 about-section-title">Simple on your side. Detailed on ours.</h2>
             </div>
           </div>
           <p className="lead about-process__intro">
@@ -335,14 +335,11 @@ export default function About() {
           </p>
 
           <ol className="about-process">
-            {process.map((step, i) => (
+            {process.map((step) => (
               <li className="about-process__step" key={step.n}>
                 <span className="about-process__num label">{step.n} — {step.kicker}</span>
                 <h3 className="h3 about-process__title">{step.title}</h3>
                 <p className="muted">{step.text}</p>
-                {i < process.length - 1 && (
-                  <span className="about-process__arrow" aria-hidden="true">→</span>
-                )}
               </li>
             ))}
           </ol>
@@ -359,7 +356,7 @@ export default function About() {
           <div className="section-head">
             <div className="section-head__title">
               <span className="label">Our services</span>
-              <h2 className="h2">Everything you need after the shoot.</h2>
+              <h2 className="h2 about-section-title">Everything you need after the shoot.</h2>
             </div>
             <div className="about-carousel__controls">
               <span className="about-carousel__progress label">{serviceNum} / {String(orderedServices.length).padStart(2, '0')}</span>
@@ -409,7 +406,7 @@ export default function About() {
           <div className="section-head">
             <div className="section-head__title">
               <span className="label">The work</span>
-              <h2 className="h2">One project. A complete visual story.</h2>
+              <h2 className="h2 about-section-title">One project. A complete visual story.</h2>
             </div>
           </div>
           <p className="lead about-work__intro">
@@ -462,7 +459,7 @@ export default function About() {
           <div className="section-head">
             <div className="section-head__title">
               <span className="label">Built for your workflow</span>
-              <h2 className="h2">Good post-production should make your job easier.</h2>
+              <h2 className="h2 about-section-title">Good post-production should make your job easier.</h2>
             </div>
           </div>
           <p className="lead about-workflow__intro">

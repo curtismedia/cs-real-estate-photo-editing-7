@@ -28,19 +28,44 @@
   gap: clamp(2.5rem, 6vw, 5rem);
   align-items: center;
 }
-.about-hero__title { margin: 1.25rem 0 1.5rem; }
-.about-hero__lead { max-width: 32rem; margin-bottom: 1.1rem; }
+.about-hero__title {
+  margin: 1.25rem 0 1.5rem;
+  max-width: 30ch;
+  text-wrap: balance;
+}
+/* Both stacked paragraphs share one max-width so their wrapped lines read as
+   one consistent column, rather than one paragraph "sticking out" past the
+   other's right edge. */
+.about-hero__lead,
 .about-hero__note { max-width: 30rem; }
+.about-hero__lead { margin-bottom: 1.1rem; }
 .about-hero__media img {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
 }
 
+/* A single page-scoped heading treatment for every section headline on this
+   page (used alongside the shared .h2 utility): a controlled max-width plus
+   balanced wrapping so two-line headlines break at an intentional point
+   instead of leaving a short, accidental-looking final line. */
+.about-section-title {
+  max-width: 26ch;
+  text-wrap: balance;
+}
+
 /* ---------- 02 — Your Style, Your Vision ---------- */
 .about-style__head { max-width: 46rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-.about-style__title { margin: 1rem 0 1.25rem; }
-.about-style__copy { margin-bottom: 1rem; max-width: 42rem; }
+.about-style__title {
+  margin: 1rem 0 1.25rem;
+  max-width: 24ch;
+  text-wrap: balance;
+}
+/* Both body paragraphs AND the highlight line share one max-width, so the
+   highlight never visually "sticks out" past the paragraph edges above it. */
+.about-style__copy,
+.about-style__highlight { max-width: 42rem; }
+.about-style__copy { margin-bottom: 1rem; }
 .about-style__highlight {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
@@ -54,32 +79,55 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(1.75rem, 3vw, 2.5rem);
+  align-items: start;
 }
+.about-style-example { display: flex; flex-direction: column; }
 .about-style-example__name { margin-top: 1.1rem; margin-bottom: 0.35rem; }
 
-/* ---------- 03 — Our Process ---------- */
-.about-process__intro { max-width: 38rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
+/* ---------- 03 — Our Process ----------
+   A real CSS grid (not four independently-sized flex columns), so the four
+   steps read as one designed system: every step label sits on the same
+   baseline, every title starts on the same baseline, and every description
+   starts on the same baseline — regardless of how many words any one label
+   or title happens to wrap to. Thin vertical dividers between columns stand
+   in for the old floating arrow glyph (which could land at a different
+   height per column depending on text length). */
+.about-process__intro { max-width: 42rem; margin-bottom: clamp(2rem, 4vw, 3rem); }
 .about-process {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(1.5rem, 3vw, 2.5rem);
+  row-gap: 0;
+  align-items: start;
   list-style: none;
   padding: 0;
   margin: 0;
-  gap: clamp(1.5rem, 4vw, 3rem);
 }
 .about-process__step {
-  position: relative;
-  flex: 1;
-  padding-right: clamp(1rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-left: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-left: 1px solid var(--line);
 }
-.about-process__num { display: block; margin-bottom: 0.85rem; color: var(--stone); }
-.about-process__title { margin-bottom: 0.5rem; }
-.about-process__arrow {
-  position: absolute;
-  top: 0.05em;
-  right: 0;
-  transform: translateX(60%);
-  color: var(--charcoal-30);
-  font-size: 1.15rem;
+.about-process__step:first-child { padding-left: 0; border-left: none; }
+.about-process__step p { margin: 0; }
+.about-process__num {
+  display: flex;
+  align-items: flex-end;
+  /* Reserves room for a label that wraps to two lines, so a column whose
+     label fits on one line still starts its title at the same height as a
+     column whose label wrapped. */
+  min-height: 2.6em;
+  margin-bottom: 1rem;
+  color: var(--stone);
+}
+.about-process__title {
+  /* Same idea for the title row: ~2 lines at .h3's 1.2 line-height, so every
+     description below starts on a shared baseline whether its own title was
+     one line ("We learn your style") or two ("We check before delivery"). */
+  min-height: 2.5em;
+  margin-bottom: 0.65rem;
 }
 .about-process__footer {
   margin-top: clamp(2.5rem, 4vw, 3.5rem);
@@ -127,7 +175,7 @@
   aspect-ratio: 4 / 5;
 }
 .about-carousel__item--work .about-carousel__cta-slide { aspect-ratio: 4 / 3; }
-.about-carousel__cta-slide h3 { max-width: 20ch; }
+.about-carousel__cta-slide h3 { max-width: 20ch; text-wrap: balance; }
 
 .about-carousel__controls {
   display: flex;
@@ -159,14 +207,16 @@
 }
 .about-carousel__arrow:hover { background: var(--charcoal); border-color: var(--charcoal); color: var(--light); }
 
-/* ---------- 04 — Our Services ---------- */
-.about-services__intro { max-width: 38rem; margin-bottom: clamp(2rem, 4vw, 2.75rem); }
-
-/* ---------- 05 — The Work ---------- */
-.about-work__intro { max-width: 42rem; margin-bottom: clamp(2rem, 4vw, 2.75rem); }
-
-/* ---------- 06 — Built For Your Workflow ---------- */
-.about-workflow__intro { max-width: 40rem; margin-bottom: clamp(2rem, 4vw, 2.75rem); }
+/* ---------- 04 / 05 / 06 — intro paragraphs ----------
+   One shared reading width across every section intro on the page, so the
+   paragraph column feels like part of one continuous system rather than a
+   slightly different width in each section. */
+.about-services__intro,
+.about-work__intro,
+.about-workflow__intro {
+  max-width: 42rem;
+  margin-bottom: clamp(2rem, 4vw, 2.75rem);
+}
 .about-why-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -191,7 +241,7 @@
   font-size: clamp(1.1rem, 1.6vw, 1.35rem);
   color: var(--charcoal-80);
 }
-.about-offer__title { margin: 0; }
+.about-offer__title { margin: 0; max-width: 24ch; text-wrap: balance; }
 .about-offer__copy { margin: 0; }
 .about-offer__note { margin-top: 0.1rem; }
 
@@ -227,7 +277,7 @@
   max-width: 42rem;
 }
 .label.about-final__eyebrow { color: var(--light-70); display: block; margin-bottom: 1rem; }
-.about-final__title { color: var(--light); margin-bottom: 1rem; }
+.about-final__title { color: var(--light); margin-bottom: 1rem; max-width: 20ch; text-wrap: balance; }
 .about-final__copy { color: var(--light-70); max-width: 30rem; margin-bottom: 1.75rem; }
 .about-final__actions { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; }
 .link.about-final__email { color: var(--light); }
@@ -241,6 +291,12 @@
 @media (max-width: 1024px) {
   .about-style-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   .about-why-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem 1.5rem; }
+
+  /* Tablet: the process grid steps down to 2 columns rather than cramming
+     four, with the divider pattern re-applied for the new 2-up shape. */
+  .about-process { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: clamp(2rem, 4vw, 2.75rem); }
+  .about-process__step:nth-child(odd) { padding-left: 0; border-left: none; }
+  .about-process__step:nth-child(even) { padding-left: clamp(1.25rem, 2.5vw, 1.75rem); border-left: 1px solid var(--line); }
 }
 
 @media (max-width: 860px) {
@@ -253,9 +309,12 @@
   .about-style-grid { grid-template-columns: 1fr; gap: 2rem; max-width: 26rem; margin-inline: auto; }
   .about-style__copy { max-width: none; }
 
-  /* Vertical process rail with a connecting line, one thumb-scroll down. */
+  /* Vertical process rail with a connecting line, one thumb-scroll down —
+     a deliberate mobile composition, not the desktop grid shrunk down. */
   .about-process {
+    display: flex;
     flex-direction: column;
+    grid-template-columns: none;
     gap: 0;
     position: relative;
     padding-left: 1.75rem;
@@ -269,7 +328,12 @@
     width: 1px;
     background: var(--line-strong);
   }
-  .about-process__step { padding: 0 0 2.5rem 0; }
+  .about-process__step,
+  .about-process__step:nth-child(odd),
+  .about-process__step:nth-child(even) {
+    padding: 0 0 2.5rem 0;
+    border-left: none;
+  }
   .about-process__step::before {
     content: '';
     position: absolute;
@@ -281,7 +345,9 @@
     background: var(--charcoal);
   }
   .about-process__step:last-child { padding-bottom: 0; }
-  .about-process__arrow { display: none; }
+  /* No cross-column alignment to preserve once the steps are stacked. */
+  .about-process__num,
+  .about-process__title { min-height: 0; display: block; }
 
   /* Arrow controls are a precision-pointer affordance; touch users swipe. */
   .about-carousel__arrow { display: none; }
